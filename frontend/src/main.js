@@ -3,6 +3,7 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/tailwind.css'
+import './assets/styles/global.less'
 import VueRouter from 'vue-router'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/bar'
@@ -21,28 +22,45 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('./views/Home.vue')
+    component: () => import('./views/Home.vue'),
+    meta: { title: '题库管理', navIndex: 0 }
+  },
+  {
+    path: '/rules',
+    name: 'RuleManagement',
+    component: () => import('./views/RuleManagement.vue'),
+    meta: { title: '规则管理', navIndex: 1 }
   },
   {
     path: '/question-bank',
     name: 'QuestionBank',
-    component: () => import('./views/QuestionBank.vue')
+    component: () => import('./views/QuestionBank.vue'),
+    meta: { title: '题库管理', navIndex: 0 }
   },
   {
     path: '/ai-generate',
     name: 'AIGenerate',
-    component: () => import('./views/AIGenerate.vue')
+    component: () => import('./views/AIGenerate.vue'),
+    meta: { title: 'AI生成', navIndex: 2 }
   },
   {
     path: '/analysis',
     name: 'Analysis',
-    component: () => import('./views/Analysis.vue')
+    component: () => import('./views/Analysis.vue'),
+    meta: { title: '数据分析', navIndex: 3 }
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta && to.meta.title) {
+    document.title = to.meta.title + ' - 智能教学系统'
+  }
+  next()
 })
 
 new Vue({

@@ -29,10 +29,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment
+# Environment Variables (敏感信息)
 .env
 .env.local
 .env.*.local
+backend/.env
 *.local
 
 # Build
@@ -48,7 +49,7 @@ backend/__pycache__/
 venv/
 .venv/
 env/
-.env/
+TraeAI-*/
 
 # Database
 *.db
@@ -56,3 +57,4 @@ env/
 
 # Uploads
 uploads/
+backend/knowledge_base/uploads/

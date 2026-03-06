@@ -1,7 +1,16 @@
 module.exports = {
   devServer: {
-    port: 8081,  // 修改为8081端口
+    port: 8081,
     open: true
   },
-  lintOnSave: false  // 禁用ESLint检查
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          javascriptEnabled: true
+        }
+      }
+    }
+  },
+  lintOnSave: false
 }

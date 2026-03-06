@@ -1,0 +1,55 @@
+---
+description: Vue 2.x 开发约定与 UI 风格（模板、响应式、样式、布局）
+globs: "**/*.vue,**/*.less,src/**/*.js"
+alwaysApply: false
+---
+
+# Vue 2 开发与 UI 规范
+
+## Vue 2 约定
+
+### 单根元素
+模板必须有且仅有一个根元素，多根时用 `<div>` 包裹。
+
+### 响应式数据
+- 动态添加对象属性：必须 `this.$set(obj, key, value)`
+- 数组按索引赋值：必须 `this.$set(arr, index, value)`
+
+### 组件通信
+- 父→子：props；子→父：`$emit`
+- 跨层级：事件透传或 prop 逐层传递（无 Vuex）
+
+### 自定义指令
+组件内 `directives` 定义局部指令；Vue 2 用 `bind`/`unbind`，不用 `mounted`/`unmounted`。
+
+### 路由
+- 懒加载：`component: () => import('../views/Xxx.vue')`
+- meta 中设置 `title` 和 `navIndex`
+
+### 构建验证
+修改后运行 `npx vue-cli-service build` 验证，并跑 `ReadLints` 无报错。
+
+---
+
+## UI 风格
+
+### 原则
+- **简洁克制**：与首页干净、极简设计一致
+- **一致性**：header、card、按钮、字体与首页统一
+- **禁止硬编码**：颜色、间距必须用 `src/assets/styles/variables.less` 中的变量
+
+### 颜色（variables.less）
+- 主色 `@primary-color: #1a1a2e`；背景 `@bg-page: #e9e7e2`；卡片 `@bg-card: #ffffff`
+- 禁止蓝绿不协调配色，仅用 variables 中定义的颜色
+
+### 布局
+- 首页：三栏 Grid，`max-width: 1366px` 居中
+- 二级学习页：page-header + 内容区，标题用 `.label-en` + `h2`，返回用 `btn-ghost back-btn`
+
+### 按钮与卡片
+- `btn-primary`（主操作）、`btn-ghost`（次要）、`btn-outline`；尺寸用 `btn-sm`/`btn-xs`
+- 卡片用全局 `.card`，内边距用 `@spacing-lg` 或 `@spacing-2xl`
+
+### 组件样式
+- 必须 `<style lang="less" scoped>`，首行：`@import '路径/variables.less';`
+- 全局类 `.card`、`.btn-*`、`.label-en` 定义在 `global.less`，scoped 内可直接使用

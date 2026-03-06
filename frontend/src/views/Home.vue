@@ -1,47 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-    <!-- 顶部导航 -->
-    <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 border-b border-indigo-100 shadow-sm">
-      <div class="px-6 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="relative">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-200">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-              </svg>
-            </div>
-            <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-          </div>
-          <div>
-            <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">智能题库</span>
-            <span class="text-xs text-slate-400 block -mt-1">AI Teaching System</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <button class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
-          <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
-            <div class="text-right">
-              <div class="text-sm font-medium text-slate-700">李老师</div>
-              <div class="text-xs text-slate-400">Python课程组</div>
-            </div>
-            <div class="avatar">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-medium shadow-md">
-                李
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- 主内容区 -->
+  <div>
     <main class="p-6">
-      <!-- 欢迎横幅 -->
       <section class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-6 text-white shadow-xl shadow-indigo-200">
         <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         <div class="absolute bottom-0 left-1/4 w-32 h-32 bg-white/5 rounded-full translate-y-1/2"></div>
@@ -67,6 +26,7 @@
               <div>
                 <div class="text-3xl font-bold text-slate-800">{{ stats.total }}</div>
                 <div class="text-sm text-slate-500 mt-1">题目总数</div>
+                <div class="text-xs text-emerald-500 mt-1">↑ 较上月 +{{ stats.monthlyNew }}</div>
               </div>
               <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,8 +40,9 @@
           <div class="card-body p-5">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-3xl font-bold text-emerald-600">{{ stats.published }}</div>
-                <div class="text-sm text-slate-500 mt-1">已发布</div>
+                <div class="text-3xl font-bold text-emerald-600">{{ stats.reviewed }}</div>
+                <div class="text-sm text-slate-500 mt-1">已审核</div>
+                <div class="text-xs text-emerald-500 mt-1">↑ 较上月 +{{ stats.reviewedMonthly }}</div>
               </div>
               <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-200">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,6 +58,7 @@
               <div>
                 <div class="text-3xl font-bold text-amber-500">{{ stats.pending }}</div>
                 <div class="text-sm text-slate-500 mt-1">待审核</div>
+                <div class="text-xs text-amber-500 mt-1">待处理</div>
               </div>
               <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,6 +74,7 @@
               <div>
                 <div class="text-3xl font-bold text-slate-400">{{ stats.draft }}</div>
                 <div class="text-sm text-slate-500 mt-1">草稿箱</div>
+                <div class="text-xs text-slate-400 mt-1">未提交</div>
               </div>
               <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-lg shadow-slate-200">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,6 +102,7 @@
             <div v-for="item in typeStats" :key="item.label" class="text-center p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 hover:shadow-md transition-all cursor-pointer">
               <div class="text-2xl font-bold" :class="item.textClass">{{ item.value }}</div>
               <div class="text-xs text-slate-500 mt-1">{{ item.label }}</div>
+              <div class="text-xs text-emerald-500 mt-0.5">↑ +{{ item.monthlyNew }}</div>
               <div class="mt-2 h-1.5 rounded-full bg-slate-200 overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-500" :class="item.barClass" :style="{ width: item.percent + '%' }"></div>
               </div>
@@ -176,7 +140,7 @@
           </select>
           <select v-model="filterStatus" class="select select-bordered bg-white shadow-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
             <option value="">📋 全部状态</option>
-            <option value="已发布">已发布</option>
+            <option value="已审核">已审核</option>
             <option value="待审核">待审核</option>
             <option value="草稿">草稿</option>
           </select>
@@ -216,7 +180,7 @@
         </svg>
         <span class="text-indigo-700 font-medium">已选择 {{ selectedIds.length }} 项</span>
         <div class="flex gap-2">
-          <button class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="batchPublish">发布</button>
+          <button class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="batchReview">审核通过</button>
           <button class="btn btn-sm bg-slate-500 hover:bg-slate-600 border-0 text-white" @click="batchDraft">设为草稿</button>
           <button class="btn btn-sm bg-red-500 hover:bg-red-600 border-0 text-white" @click="batchDelete">删除</button>
         </div>
@@ -226,17 +190,19 @@
       <!-- 题目列表 -->
       <section class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="table">
+          <table class="table w-full">
             <thead class="bg-gradient-to-r from-slate-50 to-slate-100">
               <tr>
                 <th class="w-12">
                   <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="selectAll" @change="handleSelectAll" />
                 </th>
                 <th class="w-16 text-slate-500 font-medium">ID</th>
-                <th class="text-slate-500 font-medium">题目内容</th>
-                <th class="w-24 text-slate-500 font-medium">题型</th>
-                <th class="w-24 text-slate-500 font-medium">难度</th>
-                <th class="w-24 text-slate-500 font-medium">状态</th>
+                <th class="w-24 text-slate-500 font-medium">知识点</th>
+                <th class="text-slate-500 font-medium min-w-[200px]">题目内容</th>
+                <th class="w-20 text-slate-500 font-medium">题型</th>
+                <th class="w-28 text-slate-500 font-medium">难度</th>
+                <th class="w-20 text-slate-500 font-medium">来源</th>
+                <th class="w-20 text-slate-500 font-medium">状态</th>
                 <th class="w-32 text-slate-500 font-medium">操作</th>
               </tr>
             </thead>
@@ -247,39 +213,57 @@
                 </td>
                 <td class="text-slate-400 font-mono text-sm">#{{ item.id }}</td>
                 <td>
-                  <div class="cursor-pointer group" @click="showDetail(item)">
-                    <div class="text-slate-700 group-hover:text-indigo-600 transition-colors line-clamp-2">{{ item.content }}</div>
-                    <div v-if="item.tags && item.tags.length" class="flex gap-1 mt-2">
-                      <span v-for="tag in item.tags" :key="tag" class="px-2 py-0.5 text-xs rounded-full bg-indigo-50 text-indigo-600 border border-indigo-100">{{ tag }}</span>
+                  <div class="flex flex-wrap gap-1">
+                    <span v-for="kp in (item.knowledgePoints || []).slice(0, 2)" :key="kp" class="px-1.5 py-0.5 text-xs rounded bg-cyan-50 text-cyan-600 whitespace-nowrap">{{ kp }}</span>
+                    <span v-if="(item.knowledgePoints || []).length > 2" class="text-xs text-slate-400 whitespace-nowrap">+{{ item.knowledgePoints.length - 2 }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cursor-pointer group max-w-md" @click="showDetail(item)">
+                    <div class="text-slate-700 group-hover:text-indigo-600 transition-colors truncate" :title="item.content">{{ item.content }}</div>
+                    <div v-if="item.tags && item.tags.length" class="flex gap-1 mt-1">
+                      <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="px-1.5 py-0.5 text-xs rounded bg-indigo-50 text-indigo-600">{{ tag }}</span>
+                      <span v-if="item.tags.length > 2" class="px-1.5 py-0.5 text-xs rounded bg-slate-100 text-slate-500">+{{ item.tags.length - 2 }}</span>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <span class="px-3 py-1 rounded-full text-xs font-medium" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
+                  <span class="px-2 py-1 rounded-full text-xs font-medium" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
                 </td>
                 <td>
-                  <span class="px-3 py-1 rounded-full text-xs font-medium" :class="getDifficultyBadgeClass(item.difficulty)">{{ item.difficulty }}</span>
+                  <div class="flex items-center gap-1 whitespace-nowrap">
+                    <span class="px-2 py-1 rounded text-xs font-bold" :class="getDifficultyBadgeClass(item.difficulty)">{{ item.difficulty }}</span>
+                    <span class="text-xs text-slate-500">{{ getDifficultyName(item.difficulty) }}</span>
+                  </div>
                 </td>
                 <td>
-                  <div class="flex items-center gap-2">
+                  <span class="text-xs px-2 py-1 rounded-full whitespace-nowrap" :class="getSourceBadgeClass(item.source)">{{ item.source || '系统' }}</span>
+                </td>
+                <td>
+                  <div class="flex items-center gap-2 whitespace-nowrap">
                     <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(item.status)"></span>
                     <span class="text-sm" :class="getStatusTextClass(item.status)">{{ item.status }}</span>
                   </div>
                 </td>
                 <td>
-                  <div class="flex gap-1">
-                    <button class="btn btn-ghost btn-xs btn-square hover:bg-indigo-100 hover:text-indigo-600" @click="showDetail(item)" title="查看详情">
+                  <div class="flex gap-1 items-center justify-center">
+                    <button v-if="item.status === '待审核'" class="btn btn-xs bg-emerald-500 hover:bg-emerald-600 border-0 text-white w-8 h-8 min-h-0 p-0" @click="reviewQuestion(item)" title="审核通过">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </button>
+                    <button class="btn btn-xs btn-ghost w-8 h-8 min-h-0 p-0" @click="showDetail(item)" title="查看详情">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                       </svg>
                     </button>
-                    <button class="btn btn-ghost btn-xs btn-square hover:bg-amber-100 hover:text-amber-600" @click="showEditDialog(item)" title="编辑">
+                    <button class="btn btn-xs btn-ghost w-8 h-8 min-h-0 p-0" @click="showEditDialog(item)" title="编辑">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                       </svg>
                     </button>
-                    <button class="btn btn-ghost btn-xs btn-square hover:bg-red-100 hover:text-red-600" @click="deleteQuestion(item.id)" title="删除">
+                    <button class="btn btn-xs btn-ghost w-8 h-8 min-h-0 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" @click="deleteQuestion(item.id)" title="删除">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                       </svg>
@@ -313,7 +297,7 @@
 
     <!-- 题目详情弹窗 -->
     <dialog :class="['modal', { 'modal-open': showDetailModal }]">
-      <div class="modal-box w-11/12 max-w-2xl bg-white rounded-2xl shadow-2xl">
+      <div class="modal-box w-11/12 max-w-3xl bg-white rounded-2xl shadow-2xl">
         <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
           <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,11 +308,21 @@
           <button class="btn btn-sm btn-circle btn-ghost hover:bg-slate-100" @click="showDetailModal = false">✕</button>
         </div>
         <div v-if="currentQuestion" class="space-y-4">
-          <div class="flex flex-wrap gap-2">
+          <!-- 基本信息 -->
+          <div class="flex flex-wrap gap-2 items-center">
             <span class="px-3 py-1 rounded-full text-sm font-medium" :class="getTypeBadgeClass(currentQuestion.question_type)">{{ currentQuestion.question_type }}</span>
-            <span class="px-3 py-1 rounded-full text-sm font-medium" :class="getDifficultyBadgeClass(currentQuestion.difficulty)">{{ currentQuestion.difficulty }}</span>
-            <span class="px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-600">{{ currentQuestion.status }}</span>
+            <span class="px-3 py-1 rounded text-sm font-bold" :class="getDifficultyBadgeClass(currentQuestion.difficulty)">{{ currentQuestion.difficulty }} {{ getDifficultyName(currentQuestion.difficulty) }}</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium" :class="getStatusBadgeClass(currentQuestion.status)">{{ currentQuestion.status }}</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-600">{{ currentQuestion.source || '系统生成' }}</span>
           </div>
+          
+          <!-- 知识点 -->
+          <div v-if="currentQuestion.knowledgePoints && currentQuestion.knowledgePoints.length" class="flex flex-wrap gap-2">
+            <span class="text-sm text-slate-500">知识点：</span>
+            <span v-for="kp in currentQuestion.knowledgePoints" :key="kp" class="px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-600 border border-cyan-100">{{ kp }}</span>
+          </div>
+          
+          <!-- 题目内容 -->
           <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
             <h4 class="text-sm font-medium text-indigo-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -338,6 +332,8 @@
             </h4>
             <p class="text-slate-700 leading-relaxed">{{ currentQuestion.content }}</p>
           </div>
+          
+          <!-- 选项 -->
           <div v-if="currentQuestion.options && currentQuestion.options.length" class="space-y-2">
             <h4 class="text-sm font-medium text-slate-600 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -352,6 +348,19 @@
               <span v-if="opt.is_correct" class="px-2 py-1 text-xs rounded-full bg-emerald-500 text-white font-medium">✓ 正确答案</span>
             </div>
           </div>
+          
+          <!-- 正确答案 -->
+          <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+            <h4 class="text-sm font-medium text-emerald-600 mb-2 flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              正确答案
+            </h4>
+            <p class="text-slate-700 font-medium">{{ currentQuestion.answer }}</p>
+          </div>
+          
+          <!-- 解析 -->
           <div v-if="currentQuestion.explanation" class="bg-amber-50 rounded-xl p-4 border border-amber-100">
             <h4 class="text-sm font-medium text-amber-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,9 +370,23 @@
             </h4>
             <p class="text-slate-700 leading-relaxed">{{ currentQuestion.explanation }}</p>
           </div>
+          
+          <!-- 元信息 -->
+          <div class="grid grid-cols-2 gap-4 text-sm text-slate-500 bg-slate-50 rounded-xl p-4">
+            <div><span class="font-medium">创建时间：</span>{{ currentQuestion.createdAt || '2024-01-15 10:30' }}</div>
+            <div><span class="font-medium">更新时间：</span>{{ currentQuestion.updatedAt || '2024-01-15 14:20' }}</div>
+            <div><span class="font-medium">创建人：</span>{{ currentQuestion.creator || '李老师' }}</div>
+            <div><span class="font-medium">审核人：</span>{{ currentQuestion.reviewer || '--' }}</div>
+          </div>
         </div>
         <div class="modal-action pt-4 border-t border-slate-100">
           <button class="btn btn-ghost" @click="showDetailModal = false">关闭</button>
+          <button v-if="currentQuestion && currentQuestion.status === '待审核'" class="btn bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="reviewQuestion(currentQuestion); showDetailModal = false">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            审核通过
+          </button>
           <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white" @click="showEditDialog(currentQuestion); showDetailModal = false">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -379,7 +402,7 @@
 
     <!-- 新增/编辑弹窗 -->
     <dialog :class="['modal', { 'modal-open': showEditModal }]">
-      <div class="modal-box w-11/12 max-w-3xl bg-white rounded-2xl shadow-2xl">
+      <div class="modal-box w-11/12 max-w-4xl bg-white rounded-2xl shadow-2xl">
         <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
           <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -390,23 +413,20 @@
           <button class="btn btn-sm btn-circle btn-ghost hover:bg-slate-100" @click="showEditModal = false">✕</button>
         </div>
         <div class="space-y-4">
-          <div class="form-control">
-            <label class="label"><span class="label-text font-medium text-slate-700">题目内容 <span class="text-red-500">*</span></span></label>
-            <textarea class="textarea textarea-bordered h-24 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.content" placeholder="请输入题目内容..."></textarea>
-          </div>
-          <div class="grid grid-cols-3 gap-4">
+          <!-- 基本信息 -->
+          <div class="grid grid-cols-4 gap-4">
             <div class="form-control">
-              <label class="label"><span class="label-text font-medium text-slate-700">题型</span></label>
+              <label class="label"><span class="label-text font-medium text-slate-700">题型 <span class="text-red-500">*</span></span></label>
               <select class="select select-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.question_type">
-                <option value="单选">📝 单选题</option>
-                <option value="多选">📝 多选题</option>
-                <option value="判断">✓ 判断题</option>
-                <option value="填空">✏️ 填空题</option>
-                <option value="主观">📄 主观题</option>
+                <option value="单选">单选题</option>
+                <option value="多选">多选题</option>
+                <option value="判断">判断题</option>
+                <option value="填空">填空题</option>
+                <option value="主观">主观题</option>
               </select>
             </div>
             <div class="form-control">
-              <label class="label"><span class="label-text font-medium text-slate-700">难度</span></label>
+              <label class="label"><span class="label-text font-medium text-slate-700">难度 <span class="text-red-500">*</span></span></label>
               <select class="select select-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.difficulty">
                 <option value="L1">L1 记忆</option>
                 <option value="L2">L2 理解</option>
@@ -420,10 +440,27 @@
               <select class="select select-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.status">
                 <option value="草稿">草稿</option>
                 <option value="待审核">待审核</option>
-                <option value="已发布">已发布</option>
+                <option value="已审核">已审核</option>
+              </select>
+            </div>
+            <div class="form-control">
+              <label class="label"><span class="label-text font-medium text-slate-700">题目来源</span></label>
+              <select class="select select-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.source">
+                <option value="系统生成">系统生成</option>
+                <option value="手动录入">手动录入</option>
+                <option value="导入">导入</option>
+                <option value="AI生成">AI生成</option>
               </select>
             </div>
           </div>
+          
+          <!-- 题目内容 -->
+          <div class="form-control">
+            <label class="label"><span class="label-text font-medium text-slate-700">题目内容 <span class="text-red-500">*</span></span></label>
+            <textarea class="textarea textarea-bordered h-24 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.content" placeholder="请输入题目内容..."></textarea>
+          </div>
+          
+          <!-- 选项 -->
           <div v-if="['单选', '多选', '判断'].includes(form.question_type)" class="form-control">
             <label class="label"><span class="label-text font-medium text-slate-700">选项 <span class="text-slate-400 text-xs">(勾选正确答案)</span></span></label>
             <div class="space-y-2">
@@ -445,10 +482,26 @@
               添加选项
             </button>
           </div>
+          
+          <!-- 正确答案 -->
+          <div class="form-control">
+            <label class="label"><span class="label-text font-medium text-slate-700">正确答案 <span class="text-red-500">*</span></span></label>
+            <input type="text" class="input input-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.answer" placeholder="如：A 或 A,B,C 或 正确/错误 或 填空答案" />
+          </div>
+          
+          <!-- 知识点 -->
+          <div class="form-control">
+            <label class="label"><span class="label-text font-medium text-slate-700">知识点</span></label>
+            <input type="text" class="input input-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.knowledgePointsInput" placeholder="多个知识点用逗号分隔，如：Python基础,变量,数据类型" />
+          </div>
+          
+          <!-- 解析 -->
           <div class="form-control">
             <label class="label"><span class="label-text font-medium text-slate-700">解析</span></label>
             <textarea class="textarea textarea-bordered h-20 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.explanation" placeholder="请输入题目解析..."></textarea>
           </div>
+          
+          <!-- 标签 -->
           <div class="form-control">
             <label class="label"><span class="label-text font-medium text-slate-700">标签</span></label>
             <input type="text" class="input input-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.tagsInput" placeholder="多个标签用逗号分隔，如：基础,重要,考点" />
@@ -456,6 +509,12 @@
         </div>
         <div class="modal-action pt-4 border-t border-slate-100">
           <button class="btn btn-ghost" @click="showEditModal = false">取消</button>
+          <button class="btn bg-slate-500 hover:bg-slate-600 border-0 text-white" @click="saveAsDraftFromEdit">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            存为草稿
+          </button>
           <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white shadow-lg shadow-indigo-200" @click="saveQuestion">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -504,6 +563,40 @@
         <!-- 步骤1：配置参数 -->
         <div v-if="aiCurrentStep === 0" class="p-6 max-h-[60vh] overflow-y-auto">
           <div class="space-y-5">
+            <!-- 出题规则选择 -->
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                </svg>
+                出题规则
+              </span></label>
+              <div class="grid grid-cols-2 gap-3">
+                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', !aiConfig.customRuleId ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-slate-200 hover:border-indigo-200 hover:bg-slate-50']" @click="aiConfig.customRuleId = null">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">默认规则</span>
+                    <svg v-if="!aiConfig.customRuleId" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                  <div class="font-medium text-slate-800 text-sm">{{ defaultRule?.name || '大学通用出题规则' }}</div>
+                  <div class="text-xs text-slate-500 mt-1 line-clamp-2">{{ defaultRule?.description || '适用于大学各学科的通用出题规则' }}</div>
+                </div>
+                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', aiConfig.customRuleId ? 'border-purple-500 bg-purple-50 shadow-md' : 'border-slate-200 hover:border-purple-200 hover:bg-slate-50']" @click="showRuleSelector = true">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">自定义规则</span>
+                    <svg v-if="aiConfig.customRuleId" class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                  <div v-if="aiConfig.customRuleId && selectedCustomRule" class="font-medium text-slate-800 text-sm">{{ selectedCustomRule.name }}</div>
+                  <div v-else class="font-medium text-slate-400 text-sm">点击选择自定义规则</div>
+                  <div v-if="aiConfig.customRuleId && selectedCustomRule" class="text-xs text-slate-500 mt-1 line-clamp-2">{{ selectedCustomRule.description }}</div>
+                  <div v-else class="text-xs text-slate-400 mt-1">可选一项自定义规则</div>
+                </div>
+              </div>
+            </div>
+
             <!-- 知识范围 -->
             <div class="form-control">
               <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
@@ -527,7 +620,7 @@
                 <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                题型选择
+                题型选择（共 {{ totalTypeCount }} 题）
               </span></label>
               <div class="grid grid-cols-5 gap-2">
                 <label v-for="type in questionTypes" :key="type.id" :class="['flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all border', aiConfig.types.includes(type.id) ? 'bg-indigo-50 border-indigo-300' : 'bg-slate-50 border-slate-100 hover:bg-indigo-50 hover:border-indigo-200']">
@@ -536,9 +629,9 @@
                     <span class="text-sm font-medium text-slate-700">{{ type.name }}</span>
                   </div>
                   <div v-if="aiConfig.types.includes(type.id)" class="flex items-center gap-1">
-                    <button class="btn btn-xs btn-circle btn-ghost" @click.prevent="aiConfig.typeCounts[type.id] > 0 && aiConfig.typeCounts[type.id]--">-</button>
-                    <input type="number" min="0" max="20" class="input input-bordered input-xs w-12 text-center" v-model.number="aiConfig.typeCounts[type.id]" />
-                    <button class="btn btn-xs btn-circle btn-ghost" @click.prevent="aiConfig.typeCounts[type.id]++">+</button>
+                    <button class="btn btn-xs btn-circle btn-ghost" @click.prevent="decrementTypeCount(type.id)">-</button>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="input input-bordered input-xs w-12 text-center no-spinner" :value="aiConfig.typeCounts[type.id] || 0" @input="updateTypeCount(type.id, $event.target.value)" />
+                    <button class="btn btn-xs btn-circle btn-ghost" @click.prevent="incrementTypeCount(type.id)">+</button>
                   </div>
                 </label>
               </div>
@@ -551,7 +644,7 @@
                   <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                   </svg>
-                  难度配置
+                  难度配置（上限 {{ totalTypeCount }} 题）
                 </span>
               </label>
               <div class="space-y-2">
@@ -562,116 +655,19 @@
                       <span class="font-medium text-slate-700 text-sm">{{ diff.name }}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <button class="btn btn-xs btn-circle btn-ghost" @click="aiConfig.difficultyConfig[diff.level].count > 0 && aiConfig.difficultyConfig[diff.level].count--">-</button>
-                      <input type="number" min="0" max="20" class="input input-bordered input-sm w-12 text-center font-bold text-sm" v-model.number="aiConfig.difficultyConfig[diff.level].count" @input="updateDifficultyPercent" />
-                      <button class="btn btn-xs btn-circle btn-ghost" @click="aiConfig.difficultyConfig[diff.level].count < 20 && aiConfig.difficultyConfig[diff.level].count++">+</button>
+                      <button class="btn btn-xs btn-circle btn-ghost" @click="decrementDifficulty(diff.level)">-</button>
+                      <input type="text" inputmode="numeric" pattern="[0-9]*" class="input input-bordered input-sm w-12 text-center font-bold text-sm no-spinner" :value="aiConfig.difficultyConfig[diff.level].count || 0" @input="updateDifficultyCount(diff.level, $event.target.value)" />
+                      <button class="btn btn-xs btn-circle btn-ghost" @click="incrementDifficulty(diff.level)">+</button>
                       <span class="text-xs text-slate-500 w-10">{{ aiConfig.difficultyConfig[diff.level].percent }}%</span>
                     </div>
                   </div>
                   <p class="text-xs text-slate-500 leading-relaxed">{{ diff.description }}</p>
                 </div>
               </div>
-              <div class="mt-2 p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-between text-white">
-                <span class="text-sm">总计</span>
-                <span class="font-bold">{{ totalDifficultyCount }} 题</span>
+              <div :class="['mt-2 p-2 rounded-lg flex items-center justify-between text-white', totalDifficultyCount > totalTypeCount ? 'bg-red-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500']">
+                <span class="text-sm">{{ totalDifficultyCount > totalTypeCount ? '超出上限' : '总计' }}</span>
+                <span class="font-bold">{{ totalDifficultyCount }} / {{ totalTypeCount }} 题</span>
               </div>
-            </div>
-          </div>
-
-          <!-- 高级配置 -->
-          <div class="mt-6 form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              高级配置
-            </span></label>
-            
-            <div class="grid grid-cols-2 gap-4">
-              <!-- 干扰项设置 -->
-              <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-slate-700">干扰项设置</span>
-                    <div class="help-tip" @mouseenter="showHelpTip('distractor')" @mouseleave="hideHelpTip">
-                      <svg class="w-4 h-4 text-indigo-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      <div v-if="activeHelpTip === 'distractor'" class="help-tip-content">
-                        干扰项是选择题中的错误选项，设计合理的干扰项能有效考察学生对知识的掌握程度
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn btn-xs btn-ghost text-indigo-600" @click="addDistractor">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加
-                  </button>
-                </div>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in aiConfig.distractorList" :key="idx" class="flex items-center gap-2 p-2 bg-white rounded-lg border border-slate-100">
-                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.name" placeholder="干扰项名称" />
-                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="aiConfig.distractorList.splice(idx, 1)">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div v-if="aiConfig.distractorList.length === 0" class="text-xs text-slate-400 text-center py-2">
-                    点击"添加"按钮添加干扰项类型
-                  </div>
-                </div>
-                <div class="mt-2 text-xs text-slate-500">
-                  常用：常见误区型、相似概念型、部分正确型、过度概括型
-                </div>
-              </div>
-
-              <!-- 内容偏好 -->
-              <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-slate-700">内容偏好</span>
-                    <div class="help-tip" @mouseenter="showHelpTip('preference')" @mouseleave="hideHelpTip">
-                      <svg class="w-4 h-4 text-indigo-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
-                      <div v-if="activeHelpTip === 'preference'" class="help-tip-content">
-                        选择内容偏好可以让AI生成更符合您教学需求的题目
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn btn-xs btn-ghost text-indigo-600" @click="addPreference">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加
-                  </button>
-                </div>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in aiConfig.preferenceList" :key="idx" class="flex items-center gap-2 p-2 bg-white rounded-lg border border-slate-100">
-                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.name" placeholder="内容偏好" />
-                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="aiConfig.preferenceList.splice(idx, 1)">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div v-if="aiConfig.preferenceList.length === 0" class="text-xs text-slate-400 text-center py-2">
-                    点击"添加"按钮添加内容偏好
-                  </div>
-                </div>
-                <div class="mt-2 text-xs text-slate-500">
-                  常用：结合实际案例、包含代码分析、侧重概念理解、包含调试场景
-                </div>
-              </div>
-            </div>
-
-            <!-- 自定义要求 -->
-            <div class="mt-4">
-              <label class="label"><span class="label-text font-medium text-slate-700">自定义要求</span></label>
-              <textarea class="textarea textarea-bordered bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm w-full" v-model="aiConfig.custom" placeholder="输入自定义要求，如：题目需要结合Python实际编程场景..." rows="3"></textarea>
             </div>
           </div>
         </div>
@@ -862,9 +858,20 @@
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                       </svg>
-                      题目设计原因
+                      题目设计依据
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed">{{ q.designReason }}</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">{{ q.designReason || '暂无' }}</p>
+                  </div>
+                  
+                  <!-- 难度层级说明 -->
+                  <div v-if="q.difficultyReason" class="bg-amber-50 rounded-lg p-3 border border-amber-100">
+                    <div class="text-xs font-medium text-amber-600 mb-1 flex items-center gap-1">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      难度层级说明
+                    </div>
+                    <p class="text-sm text-slate-600 leading-relaxed">{{ q.difficultyReason }}</p>
                   </div>
                   
                   <!-- 干扰项设计原因 - 仅选择题显示 -->
@@ -1014,10 +1021,60 @@
         <button @click="showImportDialog = false">close</button>
       </form>
     </dialog>
+
+    <!-- 规则选择弹窗 -->
+    <dialog :class="['modal', { 'modal-open': showRuleSelector }]">
+      <div class="modal-box bg-white rounded-2xl shadow-2xl max-w-2xl">
+        <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
+          <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            选择自定义规则
+          </h3>
+          <button class="btn btn-sm btn-circle btn-ghost hover:bg-slate-100" @click="showRuleSelector = false">✕</button>
+        </div>
+        <div class="space-y-2 max-h-[60vh] overflow-y-auto">
+          <div v-if="customRules.length === 0" class="text-center py-8 text-slate-400">
+            <svg class="w-12 h-12 mx-auto mb-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="text-sm">暂无自定义规则</p>
+            <p class="text-xs mt-1">请前往规则管理页面创建</p>
+          </div>
+          <div v-for="rule in customRules" :key="rule.id" :class="['p-4 rounded-xl cursor-pointer transition-all border-2', aiConfig.customRuleId === rule.id ? 'border-purple-500 bg-purple-50 shadow-md' : 'border-slate-200 hover:border-purple-200 hover:bg-slate-50']" @click="selectCustomRule(rule)">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span :class="['px-2 py-0.5 rounded text-xs font-medium', rule.status === '启用' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600']">{{ rule.status }}</span>
+                <span class="font-medium text-slate-800">{{ rule.name }}</span>
+              </div>
+              <svg v-if="aiConfig.customRuleId === rule.id" class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <p class="text-sm text-slate-500 line-clamp-2">{{ rule.description }}</p>
+            <div class="flex items-center gap-4 mt-2 text-xs text-slate-400">
+              <span>场景：{{ rule.scene || '通用' }}</span>
+              <span>使用 {{ rule.useCount || 0 }} 次</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-action pt-4 border-t border-slate-100">
+          <button class="btn btn-ghost" @click="showRuleSelector = false">取消</button>
+          <button class="btn bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0 text-white" @click="showRuleSelector = false">确认选择</button>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop bg-slate-900/50">
+        <button @click="showRuleSelector = false">close</button>
+      </form>
+    </dialog>
   </div>
 </template>
 
 <script>
+import api from '@/api'
+import axios from 'axios'
+
 export default {
   name: 'Home',
   data() {
@@ -1031,13 +1088,13 @@ export default {
       questions: [],
       selectedIds: [],
       selectAll: false,
-      stats: { total: 128, published: 95, pending: 20, draft: 13 },
+      stats: { total: 128, reviewed: 95, pending: 20, draft: 13, monthlyNew: 15, reviewedMonthly: 12 },
       typeStats: [
-        { label: '单选', value: 45, percent: 35, textClass: 'text-indigo-600', barClass: 'bg-indigo-500' },
-        { label: '多选', value: 32, percent: 25, textClass: 'text-emerald-600', barClass: 'bg-emerald-500' },
-        { label: '判断', value: 28, percent: 22, textClass: 'text-amber-600', barClass: 'bg-amber-500' },
-        { label: '填空', value: 15, percent: 12, textClass: 'text-purple-600', barClass: 'bg-purple-500' },
-        { label: '主观', value: 8, percent: 6, textClass: 'text-cyan-600', barClass: 'bg-cyan-500' }
+        { label: '单选', value: 45, percent: 35, monthlyNew: 5, textClass: 'text-indigo-600', barClass: 'bg-indigo-500' },
+        { label: '多选', value: 32, percent: 25, monthlyNew: 4, textClass: 'text-emerald-600', barClass: 'bg-emerald-500' },
+        { label: '判断', value: 28, percent: 22, monthlyNew: 3, textClass: 'text-amber-600', barClass: 'bg-amber-500' },
+        { label: '填空', value: 15, percent: 12, monthlyNew: 2, textClass: 'text-purple-600', barClass: 'bg-purple-500' },
+        { label: '主观', value: 8, percent: 6, monthlyNew: 1, textClass: 'text-cyan-600', barClass: 'bg-cyan-500' }
       ],
       showDetailModal: false,
       showEditModal: false,
@@ -1053,6 +1110,8 @@ export default {
         question_type: '单选',
         difficulty: 'L2',
         status: '草稿',
+        source: '手动录入',
+        answer: '',
         explanation: '',
         options: [
           { content: '', is_correct: false },
@@ -1060,6 +1119,7 @@ export default {
           { content: '', is_correct: false },
           { content: '', is_correct: false }
         ],
+        knowledgePointsInput: '',
         tagsInput: ''
       },
       knowledgeTree: [
@@ -1100,45 +1160,52 @@ export default {
       ],
       aiSteps: ['配置参数', '智能生成', '质量审核'],
       aiCurrentStep: 0,
+      currentTaskId: null,
       aiConfig: {
         knowledgeInput: '',
         knowledgeIds: [],
-        types: ['单选', '多选'],
-        typeCounts: { '单选': 5, '多选': 3, '判断': 2, '填空': 0, '主观': 0 },
+        types: [],
+        typeCounts: { '单选': 0, '多选': 0, '判断': 0, '填空': 0, '主观': 0 },
         difficultyConfig: {
-          L1: { count: 2, percent: 20 },
-          L2: { count: 3, percent: 30 },
-          L3: { count: 3, percent: 30 },
-          L4: { count: 1, percent: 10 },
-          L5: { count: 1, percent: 10 }
+          L1: { count: 0, percent: 0 },
+          L2: { count: 0, percent: 0 },
+          L3: { count: 0, percent: 0 },
+          L4: { count: 0, percent: 0 },
+          L5: { count: 0, percent: 0 }
         },
-        distractorList: [
-          { name: '常见误区型' },
-          { name: '相似概念型' }
-        ],
-        preferenceList: [
-          { name: '结合实际案例' }
-        ],
-        custom: ''
+        distractorList: [],
+        preferenceList: [],
+        custom: '',
+        customRuleId: null
       },
       isGenerating: false,
       generateProgress: 0,
       generatedCount: 0,
       generatedQuestions: [],
-      activeHelpTip: null
+      activeHelpTip: null,
+      defaultRule: null,
+      customRules: [],
+      showRuleSelector: false
     }
   },
   computed: {
     selectedGenerated() {
       return this.generatedQuestions.filter(q => q.selected)
     },
+    totalTypeCount() {
+      return Object.values(this.aiConfig.typeCounts).reduce((sum, c) => sum + c, 0)
+    },
     totalDifficultyCount() {
       return Object.values(this.aiConfig.difficultyConfig).reduce((sum, d) => sum + d.count, 0)
+    },
+    remainingDifficultyCount() {
+      return Math.max(0, this.totalTypeCount - this.totalDifficultyCount)
     },
     canStartGenerate() {
       return (this.aiConfig.knowledgeInput || this.aiConfig.knowledgeIds.length > 0) && 
              this.aiConfig.types.length > 0 && 
-             this.totalDifficultyCount > 0
+             this.totalDifficultyCount > 0 &&
+             this.totalDifficultyCount <= this.totalTypeCount
     },
     selectedCount() {
       return this.generatedQuestions.filter(q => q.selected).length
@@ -1152,12 +1219,79 @@ export default {
     isAllAdopted() {
       const adoptable = this.generatedQuestions.filter(q => !q.isDiscarded)
       return adoptable.length > 0 && adoptable.every(q => q.selected)
+    },
+    selectedCustomRule() {
+      if (!this.aiConfig.customRuleId) return null
+      return this.customRules.find(r => r.id === this.aiConfig.customRuleId)
     }
   },
   mounted() {
     this.loadQuestions()
+    this.loadStats()
+    this.loadKnowledgePoints()
+    this.loadRules()
   },
   methods: {
+    async loadRules() {
+      try {
+        const res = await axios.get('http://localhost:5001/api/rule/rules')
+        const rules = res.data.rules || []
+        this.defaultRule = rules.find(r => r.isDefault) || null
+        this.customRules = rules.filter(r => !r.isDefault)
+      } catch (e) {
+        console.error('加载规则失败:', e)
+      }
+    },
+    selectCustomRule(rule) {
+      this.aiConfig.customRuleId = rule.id
+      this.showRuleSelector = false
+    },
+    loadStats() {
+      api.getStats().then(res => {
+        this.stats = {
+          total: res.total,
+          reviewed: res.reviewed,
+          pending: res.pending,
+          draft: res.draft,
+          monthlyNew: 15,
+          reviewedMonthly: 12
+        }
+        this.typeStats = (res.type_stats || []).map((t, idx) => {
+          const colors = [
+            { label: '单选', textClass: 'text-indigo-600', barClass: 'bg-indigo-500' },
+            { label: '多选', textClass: 'text-emerald-600', barClass: 'bg-emerald-500' },
+            { label: '判断', textClass: 'text-amber-600', barClass: 'bg-amber-500' },
+            { label: '填空', textClass: 'text-purple-600', barClass: 'bg-purple-500' },
+            { label: '主观', textClass: 'text-cyan-600', barClass: 'bg-cyan-500' }
+          ]
+          const total = res.total || 1
+          return {
+            label: t.type,
+            value: t.count,
+            percent: Math.round((t.count / total) * 100),
+            monthlyNew: Math.floor(Math.random() * 5) + 1,
+            ...colors[idx]
+          }
+        })
+      }).catch(err => {
+        console.error('获取统计失败:', err)
+      })
+    },
+    loadKnowledgePoints() {
+      api.getKnowledgeCategories().then(res => {
+        if (res.data && res.data.length > 0) {
+          this.knowledgeTree = res.data.map(cat => ({
+            id: cat,
+            name: cat
+          }))
+        } else {
+          this.knowledgeTree = []
+        }
+      }).catch(err => {
+        console.error('获取知识库分类失败:', err)
+        this.knowledgeTree = []
+      })
+    },
     getTypeBadgeClass(type) {
       const map = {
         '单选': 'bg-indigo-100 text-indigo-700',
@@ -1188,11 +1322,38 @@ export default {
     },
     getStatusTextClass(status) {
       const map = {
-        '已发布': 'text-emerald-600',
+        '已审核': 'text-emerald-600',
         '待审核': 'text-amber-600',
         '草稿': 'text-slate-500'
       }
       return map[status] || 'text-slate-500'
+    },
+    getStatusBadgeClass(status) {
+      const map = {
+        '已审核': 'bg-emerald-100 text-emerald-700',
+        '待审核': 'bg-amber-100 text-amber-700',
+        '草稿': 'bg-slate-100 text-slate-600'
+      }
+      return map[status] || 'bg-slate-100 text-slate-600'
+    },
+    getDifficultyName(difficulty) {
+      const map = {
+        'L1': '记忆',
+        'L2': '理解',
+        'L3': '应用',
+        'L4': '分析',
+        'L5': '创造'
+      }
+      return map[difficulty] || ''
+    },
+    getSourceBadgeClass(source) {
+      const map = {
+        '系统生成': 'bg-indigo-50 text-indigo-600',
+        '手动录入': 'bg-emerald-50 text-emerald-600',
+        '导入': 'bg-amber-50 text-amber-600',
+        'AI生成': 'bg-purple-50 text-purple-600'
+      }
+      return map[source] || 'bg-slate-50 text-slate-500'
     },
     updateDifficultyPercent() {
       const total = this.totalDifficultyCount
@@ -1201,6 +1362,43 @@ export default {
           this.aiConfig.difficultyConfig[key].percent = Math.round((this.aiConfig.difficultyConfig[key].count / total) * 100)
         })
       }
+    },
+    incrementDifficulty(level) {
+      if (this.totalDifficultyCount < this.totalTypeCount) {
+        this.aiConfig.difficultyConfig[level].count++
+        this.updateDifficultyPercent()
+      }
+    },
+    decrementDifficulty(level) {
+      if (this.aiConfig.difficultyConfig[level].count > 0) {
+        this.aiConfig.difficultyConfig[level].count--
+        this.updateDifficultyPercent()
+      }
+    },
+    updateDifficultyCount(level, value) {
+      let num = parseInt(value) || 0
+      if (num < 0) num = 0
+      if (num > 99) num = 99
+      this.$set(this.aiConfig.difficultyConfig[level], 'count', num)
+      this.updateDifficultyPercent()
+    },
+    incrementTypeCount(typeId) {
+      const current = this.aiConfig.typeCounts[typeId] || 0
+      if (current < 99) {
+        this.$set(this.aiConfig.typeCounts, typeId, current + 1)
+      }
+    },
+    decrementTypeCount(typeId) {
+      const current = this.aiConfig.typeCounts[typeId] || 0
+      if (current > 0) {
+        this.$set(this.aiConfig.typeCounts, typeId, current - 1)
+      }
+    },
+    updateTypeCount(typeId, value) {
+      let num = parseInt(value) || 0
+      if (num < 0) num = 0
+      if (num > 99) num = 99
+      this.$set(this.aiConfig.typeCounts, typeId, num)
     },
     showHelpTip(id) {
       this.activeHelpTip = id
@@ -1215,14 +1413,35 @@ export default {
       this.aiConfig.preferenceList.push({ name: '' })
     },
     loadQuestions() {
-      this.questions = [
-        { id: 1, content: '下列关于Python的说法，正确的是：Python是一种高级编程语言，具有简洁易学的特点。', question_type: '单选', difficulty: 'L2', status: '已发布', tags: ['基础', '重要'], selected: false },
-        { id: 2, content: '以下哪些是Python的内置数据类型？请选择所有正确的选项。', question_type: '多选', difficulty: 'L2', status: '已发布', tags: ['基础'], selected: false },
-        { id: 3, content: 'Python中可以使用for循环遍历列表。', question_type: '判断', difficulty: 'L1', status: '待审核', tags: ['基础'], selected: false },
-        { id: 4, content: '请简述Python中列表和元组的区别。', question_type: '主观', difficulty: 'L3', status: '草稿', tags: ['进阶'], selected: false },
-        { id: 5, content: 'Python中的______函数用于获取列表的长度。', question_type: '填空', difficulty: 'L1', status: '已发布', tags: ['基础'], selected: false }
-      ]
-      this.total = 5
+      const params = {
+        page: this.currentPage,
+        per_page: 10,
+        question_type: this.filterType,
+        difficulty: this.filterDifficulty,
+        status: this.filterStatus,
+        keyword: this.searchKeyword
+      }
+      
+      api.getQuestions(params).then(res => {
+        this.questions = res.questions.map(q => ({
+          ...q,
+          selected: false,
+          knowledgePoints: q.knowledge_points || [],
+          createdAt: q.created_at,
+          updatedAt: q.updated_at
+        }))
+        this.total = res.total
+      }).catch(err => {
+        console.error('获取题目列表失败:', err)
+        this.questions = [
+          { id: 1, content: '下列关于Python的说法，正确的是：Python是一种高级编程语言，具有简洁易学的特点。', question_type: '单选', difficulty: 'L2', status: '已审核', source: 'AI生成', knowledgePoints: ['Python基础', '语言特性'], tags: ['基础', '重要'], selected: false },
+          { id: 2, content: '以下哪些是Python的内置数据类型？请选择所有正确的选项。', question_type: '多选', difficulty: 'L2', status: '已审核', source: '手动录入', knowledgePoints: ['数据类型', '内置类型'], tags: ['基础'], selected: false },
+          { id: 3, content: 'Python中可以使用for循环遍历列表。', question_type: '判断', difficulty: 'L1', status: '待审核', source: '系统生成', knowledgePoints: ['控制流', '循环'], tags: ['基础'], selected: false },
+          { id: 4, content: '请简述Python中列表和元组的区别。', question_type: '主观', difficulty: 'L3', status: '草稿', source: '手动录入', knowledgePoints: ['列表', '元组'], tags: ['进阶'], selected: false },
+          { id: 5, content: 'Python中的______函数用于获取列表的长度。', question_type: '填空', difficulty: 'L1', status: '待审核', source: '导入', knowledgePoints: ['内置函数', 'len'], tags: ['基础'], selected: false }
+        ]
+        this.total = 5
+      })
     },
     handleSearch() {
       this.loadQuestions()
@@ -1242,12 +1461,12 @@ export default {
     },
     showAddDialog() {
       this.isEdit = false
-      this.form = { id: null, content: '', question_type: '单选', difficulty: 'L2', status: '草稿', explanation: '', options: [{ content: '', is_correct: false }, { content: '', is_correct: false }, { content: '', is_correct: false }, { content: '', is_correct: false }], tagsInput: '' }
+      this.form = { id: null, content: '', question_type: '单选', difficulty: 'L2', status: '草稿', source: '手动录入', answer: '', explanation: '', options: [{ content: '', is_correct: false }, { content: '', is_correct: false }, { content: '', is_correct: false }, { content: '', is_correct: false }], knowledgePointsInput: '', tagsInput: '' }
       this.showEditModal = true
     },
     showEditDialog(item) {
       this.isEdit = true
-      this.form = { ...item, tagsInput: (item.tags || []).join(', ') }
+      this.form = { ...item, knowledgePointsInput: (item.knowledgePoints || []).join(', '), tagsInput: (item.tags || []).join(', ') }
       this.showEditModal = true
     },
     showDetail(item) {
@@ -1255,19 +1474,101 @@ export default {
       this.showDetailModal = true
     },
     saveQuestion() {
+      const data = {
+        content: this.form.content,
+        question_type: this.form.question_type,
+        difficulty: this.form.difficulty,
+        status: this.form.status,
+        source: this.form.source,
+        answer: this.form.answer,
+        explanation: this.form.explanation,
+        options: this.form.options,
+        knowledge_point_ids: this.form.knowledgePointsInput.split(',').map(s => s.trim()).filter(Boolean),
+        tag_names: this.form.tagsInput.split(',').map(s => s.trim()).filter(Boolean)
+      }
+      
+      if (this.isEdit) {
+        api.updateQuestion(this.form.id, data).then(() => {
+          this.$message.success('更新成功')
+          this.showEditModal = false
+          this.loadQuestions()
+        }).catch(err => {
+          console.error('更新失败:', err)
+          this.$message.error('更新失败')
+        })
+      } else {
+        api.createQuestion(data).then(() => {
+          this.$message.success('创建成功')
+          this.showEditModal = false
+          this.loadQuestions()
+        }).catch(err => {
+          console.error('创建失败:', err)
+          this.$message.error('创建失败')
+        })
+      }
+    },
+    saveAsDraftFromEdit() {
+      this.form.status = '草稿'
       this.showEditModal = false
-      this.$message.success(this.isEdit ? '更新成功' : '创建成功')
+      this.$message.success('已存为草稿')
       this.loadQuestions()
     },
     deleteQuestion(id) {
-      this.$confirm('确定删除？', '提示', { type: 'warning' }).then(() => {
-        this.$message.success('删除成功')
-        this.loadQuestions()
-      }).catch(() => {})
+      if (confirm('确定删除该题目？')) {
+        api.deleteQuestion(id).then(() => {
+          this.$message.success('删除成功')
+          this.loadQuestions()
+        }).catch(err => {
+          console.error('删除失败:', err)
+          this.$message.error('删除失败')
+        })
+      }
     },
     batchPublish() {
       this.$message.success(`已发布 ${this.selectedIds.length} 题`)
       this.clearSelection()
+    },
+    batchReview() {
+      api.batchReview(this.selectedIds).then(() => {
+        this.$message.success(`已审核通过 ${this.selectedIds.length} 题`)
+        this.clearSelection()
+        this.loadQuestions()
+      }).catch(err => {
+        console.error('批量审核失败:', err)
+        this.$message.error('批量审核失败')
+      })
+    },
+    batchDraft() {
+      api.batchDraft(this.selectedIds).then(() => {
+        this.$message.success(`已设为草稿 ${this.selectedIds.length} 题`)
+        this.clearSelection()
+        this.loadQuestions()
+      }).catch(err => {
+        console.error('批量设为草稿失败:', err)
+        this.$message.error('批量设为草稿失败')
+      })
+    },
+    batchDelete() {
+      if (confirm(`确定删除 ${this.selectedIds.length} 题？`)) {
+        api.batchDelete(this.selectedIds).then(() => {
+          this.$message.success(`已删除 ${this.selectedIds.length} 题`)
+          this.clearSelection()
+          this.loadQuestions()
+        }).catch(err => {
+          console.error('批量删除失败:', err)
+          this.$message.error('批量删除失败')
+        })
+      }
+    },
+    reviewQuestion(item) {
+      api.reviewQuestion(item.id).then(() => {
+        item.status = '已审核'
+        this.$message.success('审核成功')
+        this.loadQuestions()
+      }).catch(err => {
+        console.error('审核失败:', err)
+        this.$message.error('审核失败')
+      })
     },
     batchDraft() {
       this.$message.success(`已设为草稿 ${this.selectedIds.length} 题`)
@@ -1310,81 +1611,63 @@ export default {
       this.generatedCount = 0
       this.generatedQuestions = []
       
-      const total = this.totalDifficultyCount
-      let generated = 0
+      const requestData = {
+        knowledge_input: this.aiConfig.knowledgeInput,
+        knowledge_category: this.aiConfig.knowledgeIds.length > 0 ? this.aiConfig.knowledgeIds[0] : null,
+        question_types: this.aiConfig.types,
+        type_counts: this.aiConfig.typeCounts,
+        difficulty_config: this.aiConfig.difficultyConfig,
+        distractor_list: this.aiConfig.distractorList,
+        preference_list: this.aiConfig.preferenceList,
+        custom_requirement: this.aiConfig.custom,
+        total_count: this.totalDifficultyCount,
+        rule_id: this.aiConfig.customRuleId
+      }
       
-      const interval = setInterval(() => {
-        generated++
-        this.generatedCount = generated
-        this.generateProgress = (generated / total) * 100
-        
-        const difficulties = []
-        Object.keys(this.aiConfig.difficultyConfig).forEach(key => {
-          for (let i = 0; i < this.aiConfig.difficultyConfig[key].count; i++) {
-            difficulties.push(key)
-          }
-        })
-        
-        const diff = difficulties[generated - 1] || 'L2'
-        const type = this.aiConfig.types[generated % this.aiConfig.types.length]
-        const knowledge = this.aiConfig.knowledgeInput || this.knowledgeTree[this.aiConfig.knowledgeIds[generated % this.aiConfig.knowledgeIds.length] - 1]?.name || '基础知识'
-        
-        let questionData = {
-          selected: false,
-          isDraft: false,
-          isDiscarded: false,
-          content: '',
-          question_type: type,
-          difficulty: diff,
-          answer: '',
-          explanation: '',
-          designReason: '',
-          knowledgePoints: [knowledge, 'Python基础'],
-          distractorReasons: []
+      const total = this.totalDifficultyCount
+      let progressInterval = setInterval(() => {
+        if (this.generateProgress < 90) {
+          this.generateProgress += 5
+          this.generatedCount = Math.floor((this.generateProgress / 100) * total)
         }
+      }, 500)
+      
+      api.generateQuestions(requestData).then(res => {
+        clearInterval(progressInterval)
         
-        if (type === '单选' || type === '多选') {
-          questionData.content = `关于Python中${knowledge}的概念理解，下列说法正确的是？`
-          questionData.options = [
-            { content: 'Python是一种解释型语言，代码逐行执行', is_correct: true },
-            { content: 'Python是一种编译型语言，需要先编译再执行', is_correct: false },
-            { content: 'Python只能用于Web开发', is_correct: false },
-            { content: 'Python不支持面向对象编程', is_correct: false }
-          ]
-          questionData.answer = type === '单选' ? 'A' : 'A,B'
-          questionData.explanation = 'Python是一种解释型语言，代码在运行时由解释器逐行执行，不需要预先编译。这使得Python具有跨平台、开发效率高等特点。'
-          questionData.designReason = '本题考察学生对Python语言基本特性的理解，属于L2理解层次。题目设计覆盖了解释型vs编译型语言的核心区别。'
-          questionData.distractorReasons = [
-            { option: 'B', reason: '常见误区型：部分学生可能混淆解释型和编译型语言的概念' },
-            { option: 'C', reason: '过度概括型：学生可能因Python在Web开发中广泛应用而误以为只能用于Web' },
-            { option: 'D', reason: '相似概念型：学生可能将Python与某些不支持OOP的语言混淆' }
-          ]
-        } else if (type === '判断') {
-          questionData.content = `Python中${knowledge}的特性描述：Python是一种解释型语言。`
-          questionData.answer = '正确'
-          questionData.explanation = 'Python确实是解释型语言，代码在运行时由解释器逐行执行。'
-          questionData.designReason = '本题考察学生对Python语言特性的判断能力，属于L1记忆层次。'
-        } else if (type === '填空') {
-          questionData.content = `Python中使用______函数可以获取列表的长度。`
-          questionData.answer = 'len()'
-          questionData.explanation = 'len()函数是Python内置函数，用于返回序列（如列表、元组、字符串）的长度。'
-          questionData.designReason = '本题考察学生对Python常用内置函数的掌握，属于L1记忆层次。'
-        } else if (type === '主观') {
-          questionData.content = `请简述Python中${knowledge}的概念及其应用场景。`
-          questionData.answer = 'Python是一种解释型、面向对象的编程语言，具有简洁易读的语法特点。应用场景包括Web开发、数据分析、人工智能、自动化脚本等领域。'
-          questionData.explanation = '该题目考察学生对Python语言整体特性的理解和表达能力，需要学生综合运用所学知识进行阐述。'
-          questionData.designReason = '本题考察学生对Python的综合理解能力，属于L3应用层次，要求学生能够用自己的语言描述概念并结合实际应用场景。'
-        }
-        
-        this.generatedQuestions.push(questionData)
-        
-        if (generated >= total) {
-          clearInterval(interval)
+        if (res.code === 0) {
+          this.generateProgress = 100
+          this.generatedCount = res.data.count
+          this.currentTaskId = res.data.task_id
+          
+          setTimeout(() => {
+            api.getGeneratedQuestions(res.data.task_id).then(questionsRes => {
+              this.generatedQuestions = questionsRes.data.map(q => ({
+                ...q,
+                selected: q.is_selected,
+                isDraft: q.is_draft,
+                isDiscarded: q.is_discarded,
+                knowledgePoints: q.knowledge_points,
+                distractorReasons: q.distractor_reasons
+              }))
+              this.isGenerating = false
+              this.aiCurrentStep = 2
+              this.$message.success(`成功生成 ${this.generatedQuestions.length} 道题目`)
+            })
+          }, 500)
+        } else {
+          clearInterval(progressInterval)
           this.isGenerating = false
-          this.aiCurrentStep = 2
-          this.$message.success('生成完成')
+          this.aiCurrentStep = 0
+          this.$message.error(res.message || '生成失败')
         }
-      }, 800)
+      }).catch(err => {
+        clearInterval(progressInterval)
+        this.isGenerating = false
+        this.aiCurrentStep = 0
+        console.error('生成失败:', err)
+        this.$message.error('AI生成服务暂时不可用，请稍后重试')
+      })
     },
     selectAllGenerated() {
       const all = this.isAllSelected
@@ -1433,15 +1716,43 @@ export default {
     confirmAdopt() {
       const count = this.selectedCount + this.draftCount
       if (!count) return this.$message.error('请选择题目或存为草稿')
-      this.$message.success(`已入库 ${count} 题（采纳 ${this.selectedCount} 题，草稿 ${this.draftCount} 题）`)
-      this.showAIDialog = false
-      this.loadQuestions()
+      
+      const questionIds = this.generatedQuestions
+        .filter(q => q.selected || q.isDraft)
+        .map(q => q.id)
+      
+      if (!this.currentTaskId) {
+        this.$message.error('任务ID不存在，请重新生成')
+        return
+      }
+      
+      api.adoptQuestions(this.currentTaskId, questionIds).then(res => {
+        this.$message.success(`已入库 ${count} 题（采纳 ${this.selectedCount} 题，草稿 ${this.draftCount} 题）`)
+        this.showAIDialog = false
+        this.loadQuestions()
+        this.loadStats()
+      }).catch(err => {
+        console.error('入库失败:', err)
+        this.$message.error('入库失败，请重试')
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import '../assets/styles/variables.less';
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1459,17 +1770,17 @@ export default {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  padding: 8px 12px;
-  background: #1e293b;
-  color: white;
-  font-size: 12px;
-  border-radius: 8px;
+  padding: @spacing-sm @spacing-md;
+  background: @primary-color;
+  color: @text-white;
+  font-size: @font-size-xs;
+  border-radius: @radius-md;
   white-space: normal;
   z-index: 1000;
-  margin-bottom: 8px;
+  margin-bottom: @spacing-sm;
   width: max-content;
   max-width: 280px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: @shadow-lg;
 }
 
 .help-tip-content::after {
@@ -1479,7 +1790,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: #1e293b;
+  border-top-color: @primary-color;
 }
 
 .modal-box {
@@ -1491,16 +1802,16 @@ export default {
 }
 
 .modal-box::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: @bg-hover;
   border-radius: 3px;
 }
 
 .modal-box::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: @border-dark;
   border-radius: 3px;
 }
 
 .modal-box::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: @text-muted;
 }
 </style>
