@@ -27,29 +27,24 @@ def generate_questions_with_kimi(
     knowledge_chunks: List[Dict] = None,
     task_id: Optional[int] = None,
     db = None,
-    rule = None
+    default_rule = None,
+    custom_rule = None
 ) -> List[Dict]:
     
     prompt = build_generation_prompt(
         knowledge_input, question_types, type_counts,
         difficulty_config, distractor_list, preference_list, custom_requirement,
         knowledge_chunks,
-        rule
+        default_rule,
+        custom_rule
     )
-    
-    logger.info("=" * 80)
-    logger.info("【完整PROMPT内容】")
-    logger.info("=" * 80)
-    logger.info(prompt)
-    logger.info("=" * 80)
-    logger.info("【PROMPT结束】")
-    logger.info("=" * 80)
     
     logger.info(f"=== 开始调用Kimi API ===")
     logger.info(f"知识范围: {knowledge_input}")
     logger.info(f"题型: {question_types}")
     logger.info(f"题型数量: {type_counts}")
-    logger.info(f"API Key: {KIMI_API_KEY[:20]}...")
+    logger.debug(f"API Key: {KIMI_API_KEY[:20]}...")
+    logger.debug(f"完整Prompt长度: {len(prompt)} 字符")
     
     system_prompt = """你是一位资深的教育测量与评价专家，拥有20年的考试命题经验。你擅长：
 1. 根据布鲁姆认知分类设计不同层次的题目
@@ -65,7 +60,7 @@ def generate_questions_with_kimi(
         ai_call_log = AICallLog(
             task_id=task_id,
             call_type="question_generation",
-            model="moonshot-v1-8k",
+            model="kimi-k2-0711-preview",
             prompt=prompt,
             system_prompt=system_prompt,
             status="running"
@@ -76,6 +71,12 @@ def generate_questions_with_kimi(
         logger.info(f"创建AI调用记录: log_id={ai_call_log.id}")
     
     start_time = time.time()
+    
+    logger.info("=" * 80)
+    logger.info("【发送给AI的Prompt内容】")
+    logger.info("=" * 80)
+    logger.info(prompt)
+    logger.info("=" * 80)
     
     max_retries = 3
     retry_delay = 2
@@ -96,7 +97,7 @@ def generate_questions_with_kimi(
                         "Content-Type": "application/json"
                     },
                     json={
-                        "model": "moonshot-v1-8k",
+                        "model": "kimi-k2-turbo-preview",
                         "messages": [
                             {
                                 "role": "system",
@@ -107,8 +108,8 @@ def generate_questions_with_kimi(
                                 "content": prompt
                             }
                         ],
-                        "temperature": 0.7,
-                        "max_tokens": 8000
+                        "temperature": 1,
+                        "max_tokens": 32768
                     }
                 )
                 
@@ -122,14 +123,11 @@ def generate_questions_with_kimi(
                     token_count = result.get("usage", {}).get("total_tokens", 0)
                     
                     logger.info("=" * 80)
-                    logger.info("【AI返回完整内容】")
+                    logger.info("【AI返回的内容】")
                     logger.info("=" * 80)
                     logger.info(content)
                     logger.info("=" * 80)
-                    logger.info("【AI返回内容结束】")
-                    logger.info("=" * 80)
-                    
-                    logger.info(f"Kimi返回内容长度: {len(content)}, tokens: {token_count}")
+                    logger.info(f"返回内容长度: {len(content)} 字符, tokens: {token_count}")
                     
                     if ai_call_log:
                         ai_call_log.response = content
@@ -139,10 +137,10 @@ def generate_questions_with_kimi(
                         db.commit()
                     
                     questions = parse_ai_response(content)
-                    logger.info(f"解析成功，共 {len(questions)} 道题目")
+                    logger.info(f"题目解析成功，共 {len(questions)} 道题目")
                     
                     if len(questions) == 0:
-                        logger.warning("解析结果为空，使用fallback")
+                        logger.warning("题目解析结果为空，使用fallback生成")
                         return generate_fallback_questions(knowledge_input, question_types, type_counts, difficulty_config)
                     
                     return questions
@@ -167,7 +165,7 @@ def generate_questions_with_kimi(
         except Exception as e:
             duration_ms = int((time.time() - start_time) * 1000)
             error_msg = f"{type(e).__name__}: {str(e)}"
-            logger.error(f"Kimi API Exception (尝试 {attempt + 1}/{max_retries}): {error_msg}")
+            logger.error(f"Kimi API调用失败 (尝试 {attempt + 1}/{max_retries}): {error_msg}")
             last_error = error_msg
             
             if attempt < max_retries - 1:
@@ -192,14 +190,13 @@ def build_generation_prompt(
     preference_list: List[Dict],
     custom_requirement: str,
     knowledge_chunks: List[Dict] = None,
-    rule = None
+    default_rule = None,
+    custom_rule = None
 ) -> str:
     difficulty_desc = {
-        "L1": "记忆层次 - 考查对基本概念、定义、事实的记忆和回忆",
-        "L2": "理解层次 - 考查对概念原理的理解、解释和归纳",
-        "L3": "应用层次 - 考查在具体情境中运用知识解决问题的能力",
-        "L4": "分析层次 - 考查分析、比较、推理、归纳的能力",
-        "L5": "创造层次 - 考查创新思维、综合运用、评价判断的能力"
+        "简单": "考察高频核心考点，情境描述直接，干扰项区分度明显。对应认知层级：L1记忆/L2理解",
+        "中等": "引入标准专业情境，要求多步逻辑推导，干扰项包含典型概念混淆。对应认知层级：L3应用/L4分析",
+        "困难": "提供复杂或陌生场景，要求综合评判或方案构建，逻辑链条长且隐蔽。对应认知层级：L5评价/L6创造"
     }
     
     total_count = sum(type_counts.values())
@@ -221,118 +218,114 @@ def build_generation_prompt(
             knowledge_content += f"### {chunk.get('title', '知识点')}\n\n{chunk.get('content', '')}\n\n"
     
     rule_content = ""
-    if rule:
-        rule_content = "\n\n## 🎯 出题规则（必须严格遵守）\n\n"
+    
+    def build_rule_content(rule, rule_type: str) -> str:
+        if not rule:
+            return ""
         
+        content = ""
         if rule.role:
-            rule_content += f"### 角色设定\n{rule.role}\n\n"
+            content += f"### 角色设定\n{rule.role}\n\n"
         
         if rule.core_principles:
             try:
                 principles = json.loads(rule.core_principles) if isinstance(rule.core_principles, str) else rule.core_principles
-                rule_content += "### 核心原则\n"
+                content += "### 核心原则\n"
                 for p in principles:
-                    rule_content += f"- **{p.get('title', '')}**：{p.get('content', '')}\n"
-                rule_content += "\n"
+                    content += f"- **{p.get('title', '')}**：{p.get('content', '')}\n"
+                content += "\n"
             except:
                 pass
         
         if rule.workflow:
             try:
                 workflow = json.loads(rule.workflow) if isinstance(rule.workflow, str) else rule.workflow
-                rule_content += "### 工作流程\n"
+                content += "### 工作流程\n"
                 for w in workflow:
-                    rule_content += f"- **{w.get('title', '')}**：{w.get('content', '')}\n"
-                rule_content += "\n"
+                    content += f"- **{w.get('title', '')}**：{w.get('content', '')}\n"
+                content += "\n"
             except:
                 pass
         
         if rule.specifications:
             try:
                 specs = json.loads(rule.specifications) if isinstance(rule.specifications, str) else rule.specifications
-                rule_content += "### 命题规范\n"
+                content += "### 命题规范\n"
                 for s in specs:
-                    rule_content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
-                rule_content += "\n"
+                    content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
+                content += "\n"
             except:
                 pass
         
         if rule.distractor_mechanics:
             try:
                 mechanics = json.loads(rule.distractor_mechanics) if isinstance(rule.distractor_mechanics, str) else rule.distractor_mechanics
-                rule_content += "### 干扰项设置逻辑\n"
+                content += "### 干扰项设置逻辑\n"
                 for m in mechanics:
-                    rule_content += f"- **{m.get('type', '')}**：{m.get('description', '')}\n"
-                rule_content += "\n"
+                    content += f"- **{m.get('type', '')}**：{m.get('description', '')}\n"
+                content += "\n"
             except:
                 pass
         
         if rule.domain_skills:
             try:
                 skills = json.loads(rule.domain_skills) if isinstance(rule.domain_skills, str) else rule.domain_skills
-                rule_content += "### 专项命题技能\n"
+                content += "### 专项命题技能\n"
                 for s in skills:
-                    rule_content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
-                rule_content += "\n"
+                    content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
+                content += "\n"
             except:
                 pass
         
         if rule.output_template:
-            rule_content += f"### 输出模板\n{rule.output_template}\n\n"
+            content += f"### 输出模板\n{rule.output_template}\n\n"
+        
+        return content
+    
+    default_rule_content = build_rule_content(default_rule, "默认")
+    custom_rule_content = build_rule_content(custom_rule, "自定义")
+    
+    has_custom_rule = custom_rule is not None and custom_rule_content.strip()
+    
+    rule_section = ""
+    if default_rule_content.strip():
+        rule_section = f"""
+## 🎯 默认出题规则
+
+{default_rule_content}"""
+    
+    if has_custom_rule:
+        rule_section += """
+---
+
+⚠️ **以下为用户自定义规则，与上述默认规则冲突时以本节为准**
+
+---
+
+## 🔧 用户自定义规则
+
+""" + custom_rule_content
+    
+    difficulty_constraint_text = "、".join([f"{k}（{v.get('count', 0)}题）" for k, v in difficulty_config.items() if v.get('count', 0) > 0])
     
     prompt = f"""# 考试题目生成任务
+
+你是一位资深的教育测量与评价专家，拥有20年的考试命题经验。请根据以下要求生成高质量的考试题目。
 
 ## 基本信息
 - **知识范围**：{knowledge_input if knowledge_input else "根据选定的知识点生成"}
 - **总题数**：{total_count} 题（必须严格生成 {total_count} 道题，不能多也不能少！）
 - **题型分布**：{type_text}
-{knowledge_content}{rule_content}
+{knowledge_content}{rule_section}
 ## 难度层次要求（布鲁姆认知分类）
 {difficulty_text}
-
-## 题目设计要求
-
-### 干扰项设计原则
-{distractor_text}
-
-### 内容偏好
-{preference_text}
-
-### 自定义要求
-{custom_requirement if custom_requirement else "无"}
 
 ## ⚠️ 重要约束（必须严格遵守）
 
 1. **数量约束**：必须生成且仅生成 {total_count} 道题目，不能多也不能少！
 2. **题型约束**：严格按照题型数量分配：{type_text}
-3. **难度约束**：严格按照难度数量分配
-
-## 题目质量标准
-
-### 1. 题目内容
-- 必须是一个完整、清晰的问题
-- 题干要与知识点紧密相关
-- 避免直接复制知识点描述
-- 题目要有实际考查意义
-
-### 2. 选项设计（选择题）
-- 每个选项必须是具体、明确的内容
-- 正确答案必须准确无误
-- 干扰项要有迷惑性，基于常见错误理解
-- 选项之间不能有包含关系
-- 选项长度要基本一致
-
-### 3. 答案与解析
-- 答案要明确、准确
-- 解析要说明为什么这个答案正确
-- 解析要指出其他选项为什么错误
-
-### 4. 难度匹配
-- L1：直接考查概念记忆
-- L2：需要理解概念含义
-- L3：需要在具体场景中应用
-- L4：需要分析比较多个概念
-- L5：需要综合运用多个知识点
+3. **难度约束**：严格按照难度数量分配：{difficulty_constraint_text}
+4. **规则优先级**：如有冲突，以用户自定义规则为准{f"，自定义规则优先级高于默认规则" if has_custom_rule else ""}
 
 ## 输出格式要求
 
@@ -343,11 +336,11 @@ def build_generation_prompt(
   {{
     "content": "完整的题目内容（必须是一个问题）",
     "question_type": "单选",
-    "difficulty": "L2",
+    "difficulty": "简单",
     "answer": "A",
     "explanation": "详细解析：为什么A正确，其他选项为什么错误",
     "design_reason": "【必填】题目设计依据：说明本题考查哪个知识点，为什么这样设计题目，考查学生什么能力",
-    "difficulty_reason": "【必填】难度层级说明：例如'本题属于L2理解层次，因为需要学生理解XXX概念的含义，而不是简单记忆'",
+    "difficulty_reason": "【必填】难度层级说明：例如'本题属于简单难度，因为直接考查学生对XXX概念的记忆'",
     "knowledge_points": ["知识点1", "知识点2"],
     "options": [
       {{"content": "选项A的具体内容（不是'选项A'这样的占位符）", "is_correct": true}},
@@ -356,13 +349,42 @@ def build_generation_prompt(
       {{"content": "选项D的具体内容", "is_correct": false}}
     ],
     "distractor_reasons": [
-      {{"option": "B", "type": "概念混淆型", "reason": "【必填】说明为什么设置此干扰项，它是什么类型的干扰（如：概念混淆型、过度概括型、以偏概全型、逆向思维型等），针对学生的什么错误理解"}}
+      {{"option": "B", "type": "概念混淆型", "reason": "【必填】说明为什么设置此干扰项，它是什么类型的干扰，针对学生的什么错误理解"}},
+      {{"option": "C", "type": "常见误区型", "reason": "【必填】说明为什么设置此干扰项"}},
+      {{"option": "D", "type": "过度概括型", "reason": "【必填】说明为什么设置此干扰项"}}
     ]
   }}
 ]
 ```
 
+## 数学/物理/化学公式格式要求（重要！）
+
+所有数学、物理、化学公式及变量名**必须**使用标准 LaTeX 格式：
+
+1. **行内公式**：使用 `$...$` 包裹，如 `$E=mc^2$`、`$\\int_a^b f(x)dx$`、`$\\alpha + \\beta$`
+2. **块级公式**：使用 `$$...$$` 包裹，如 `$$\\sum_{{i=1}}^{{n}} x_i = x_1 + x_2 + \\cdots + x_n$$`
+3. **变量名**：所有变量必须使用 LaTeX 格式，如 `$x$`、`$y$`、`$\\theta$`、`$\\omega$`
+4. **常见符号**：
+   - 分数：`$\\frac{{a}}{{b}}$`
+   - 上标：`$x^2$`、`$e^{{ix}}$`
+   - 下标：`$x_1$`、`$A_{{ij}}$`
+   - 根号：`$\\sqrt{{2}}$`、`$\\sqrt[n]{{x}}$`
+   - 希腊字母：`$\\alpha$`、`$\\beta$`、`$\\gamma$`、`$\\theta$`、`$\\omega$`
+   - 运算符：`$\\times$`、`$\\div$`、`$\\pm$`、`$\\leq$`、`$\\geq$`
+   - 积分：`$\\int$`、`$\\iint$`、`$\\oint$`
+   - 求和：`$\\sum_{{i=1}}^{{n}}$`
+   - 极限：`$\\lim_{{x \\to \\infty}}$`
+
+**示例**：
+- 正确：`求 $x^2 + 2x + 1 = 0$ 的解`
+- 正确：`计算 $$\\int_0^1 x^2 dx$$ 的值`
+- 正确：`已知 $\\alpha = 30^\\circ$，求 $\\sin \\alpha$`
+- 错误：`求 x^2 + 2x + 1 = 0 的解`（变量未使用 LaTeX）
+
 ## 字段填写要求（重要！）
+
+### difficulty（难度）- 必填
+难度取值只能是：**简单**、**中等**、**困难** 三种之一，不能使用 L1、L2、L3 等其他格式。
 
 ### design_reason（题目设计依据）- 必填
 说明本题的设计意图，例如：
@@ -371,22 +393,25 @@ def build_generation_prompt(
 
 ### difficulty_reason（难度层级说明）- 必填
 说明为什么这道题属于该难度层级，例如：
-- "L1记忆层次：本题直接考查学生对CRH380空调系统组成的记忆，不需要理解或应用"
-- "L2理解层次：本题需要学生理解电控系统的工作原理，而非简单记忆"
-- "L3应用层次：本题要求学生将隔离锁安全机制的知识应用到具体故障场景中"
+- "简单难度：本题直接考查学生对CRH380空调系统组成的记忆，不需要理解或应用"
+- "中等难度：本题需要学生理解电控系统的工作原理，并进行简单的逻辑推导"
+- "困难难度：本题要求学生将隔离锁安全机制的知识应用到复杂故障场景中，需要综合分析"
 
 ### distractor_reasons（干扰项设计原因）- 选择题必填
+**选择题的所有错误选项都必须填写干扰项原因！**
+
 每个干扰项必须说明：
-1. 干扰类型：概念混淆型、过度概括型、以偏概全型、逆向思维型、常见误区型等
-2. 设计原因：针对学生的什么错误理解，为什么能起到干扰作用
+1. option：选项标识（如 B、C、D）
+2. type：干扰类型（概念混淆型、过度概括型、以偏概全型、逆向思维型、常见误区型等）
+3. reason：设计原因，针对学生的什么错误理解，为什么能起到干扰作用
 
 例如：
 ```json
-{{
-  "option": "B",
-  "type": "概念混淆型",
-  "reason": "学生常将空调系统的制冷剂类型与冷却液类型混淆，此干扰项针对这一常见错误"
-}}
+[
+  {{"option": "B", "type": "概念混淆型", "reason": "学生常将空调系统的制冷剂类型与冷却液类型混淆，此干扰项针对这一常见错误"}},
+  {{"option": "C", "type": "常见误区型", "reason": "学生容易误认为XXX，实际上应该是YYY，此干扰项针对这一误区"}},
+  {{"option": "D", "type": "过度概括型", "reason": "学生可能将特例错误地推广到一般情况，此干扰项检验学生是否真正理解"}}
+]
 ```
 
 ## 特别提醒
@@ -396,25 +421,172 @@ def build_generation_prompt(
 3. 选项必须是具体的内容，不能是"正确描述"、"错误描述"这样的占位符
 4. 每道题都要有完整的解析和设计原因
 5. design_reason、difficulty_reason、distractor_reasons 必须填写完整
+6. **选择题的所有错误选项都必须在 distractor_reasons 中说明干扰原因**
 
 现在请开始生成 {total_count} 道高质量的考试题目："""
     
     return prompt
 
 def parse_ai_response(content: str) -> List[Dict]:
+    import re
+    
     try:
+        logger.info(f"开始解析AI响应，内容长度: {len(content)}")
+        
         json_start = content.find('[')
         json_end = content.rfind(']') + 1
+        
         if json_start != -1 and json_end > json_start:
             json_str = content[json_start:json_end]
-            questions = json.loads(json_str)
-            return validate_questions(questions)
+            logger.info(f"提取JSON区间: [{json_start}, {json_end}], 长度: {len(json_str)}")
+            
+            def find_matching_bracket(s: str, start: int) -> int:
+                count = 0
+                in_string = False
+                escape_next = False
+                for i in range(start, len(s)):
+                    c = s[i]
+                    if escape_next:
+                        escape_next = False
+                        continue
+                    if c == '\\':
+                        escape_next = True
+                        continue
+                    if c == '"' and not escape_next:
+                        in_string = not in_string
+                        continue
+                    if in_string:
+                        continue
+                    if c == '[':
+                        count += 1
+                    elif c == ']':
+                        count -= 1
+                        if count == 0:
+                            return i
+                return -1
+            
+            matching_end = find_matching_bracket(json_str, 0)
+            if matching_end != -1:
+                json_str = json_str[:matching_end + 1]
+                logger.info(f"匹配括号位置: {matching_end}, 截取后长度: {len(json_str)}")
+            else:
+                logger.warning("未找到匹配的闭合括号")
+            
+            latex_placeholders = {}
+            placeholder_idx = 0
+            
+            def replace_latex(match):
+                nonlocal placeholder_idx
+                placeholder = f"__LATEX_{placeholder_idx}__"
+                latex_placeholders[placeholder] = match.group(0)
+                placeholder_idx += 1
+                return placeholder
+            
+            json_str_processed = re.sub(r'\$\$?[^$]+\$\$?', replace_latex, json_str)
+            logger.info(f"LaTeX替换后长度: {len(json_str_processed)}, 替换了 {len(latex_placeholders)} 处")
+            
+            def restore_latex(obj):
+                if isinstance(obj, str):
+                    for placeholder, latex in latex_placeholders.items():
+                        obj = obj.replace(placeholder, latex)
+                    return obj
+                elif isinstance(obj, dict):
+                    return {k: restore_latex(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [restore_latex(item) for item in obj]
+                return obj
+            
+            try:
+                questions = json.loads(json_str_processed)
+                questions = restore_latex(questions)
+                logger.info(f"JSON解析成功，共 {len(questions)} 道题目")
+                return validate_questions(questions)
+            except json.JSONDecodeError as e:
+                logger.warning(f"JSON解析失败: {e}")
+                
+                error_pos = e.pos if hasattr(e, 'pos') else 4778
+                start_pos = max(0, error_pos - 100)
+                end_pos = min(len(json_str_processed), error_pos + 100)
+                logger.info(f"错误位置附近内容 [{start_pos}:{end_pos}]:")
+                logger.info(json_str_processed[start_pos:end_pos])
+                
+                cleaned = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', json_str_processed)
+                
+                if cleaned != json_str_processed:
+                    logger.info("尝试移除控制字符后重新解析...")
+                    try:
+                        questions = json.loads(cleaned)
+                        questions = restore_latex(questions)
+                        logger.info("移除控制字符后解析成功")
+                        return validate_questions(questions)
+                    except Exception as e2:
+                        logger.warning(f"移除控制字符后仍然失败: {e2}")
+                
+                logger.info("尝试逐个提取题目对象...")
+                json_pattern = r'\{\s*"content"\s*:'
+                matches = list(re.finditer(json_pattern, cleaned))
+                logger.info(f"找到 {len(matches)} 个可能的题目对象起始位置")
+                
+                if matches:
+                    valid_objects = []
+                    for i, match in enumerate(matches):
+                        start = match.start()
+                        if i + 1 < len(matches):
+                            end = matches[i + 1].start()
+                            obj_str = cleaned[start:end].rstrip().rstrip(',')
+                        else:
+                            obj_str = cleaned[start:].rstrip().rstrip(',')
+                        
+                        brace_count = 0
+                        valid_end = -1
+                        in_str = False
+                        escape = False
+                        for j, c in enumerate(obj_str):
+                            if escape:
+                                escape = False
+                                continue
+                            if c == '\\':
+                                escape = True
+                                continue
+                            if c == '"' and not escape:
+                                in_str = not in_str
+                                continue
+                            if in_str:
+                                continue
+                            if c == '{':
+                                brace_count += 1
+                            elif c == '}':
+                                brace_count -= 1
+                                if brace_count == 0:
+                                    valid_end = j + 1
+                                    break
+                        
+                        if valid_end > 0:
+                            obj_str = obj_str[:valid_end]
+                        
+                        try:
+                            obj = json.loads(obj_str)
+                            obj = restore_latex(obj)
+                            if 'content' in obj and 'question_type' in obj:
+                                valid_objects.append(obj)
+                                logger.info(f"成功提取第 {len(valid_objects)} 道题目")
+                        except Exception as e3:
+                            logger.debug(f"提取第 {i+1} 个对象失败: {e3}")
+                            continue
+                    
+                    if valid_objects:
+                        logger.info(f"成功提取 {len(valid_objects)} 道题目")
+                        return validate_questions(valid_objects)
+                
+                logger.error("JSON解析失败，无法提取题目")
+                return []
         else:
-            logger.error("未找到JSON数组")
+            logger.error("未在AI响应中找到JSON数组")
             return []
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON解析错误: {e}")
-        logger.error(f"尝试解析的内容: {content[:1000]}")
+    except Exception as e:
+        logger.error(f"JSON解析异常: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         return []
 
 def validate_questions(questions: List[Dict]) -> List[Dict]:
@@ -427,13 +599,11 @@ def validate_questions(questions: List[Dict]) -> List[Dict]:
             design_reason = f"本题考查{', '.join(q.get('knowledge_points', ['相关知识']))}的内容，设计目的是检验学生对知识点的掌握程度。"
         
         if not difficulty_reason:
-            diff = q.get("difficulty", "L2")
+            diff = q.get("difficulty", "中等")
             diff_desc = {
-                "L1": "记忆层次，直接考查概念记忆",
-                "L2": "理解层次，需要理解概念含义",
-                "L3": "应用层次，需要在具体场景中应用",
-                "L4": "分析层次，需要分析比较多个概念",
-                "L5": "创造层次，需要综合运用多个知识点"
+                "简单": "简单难度，直接考查概念记忆",
+                "中等": "中等难度，需要理解概念含义",
+                "困难": "困难难度，需要综合运用知识"
             }
             difficulty_reason = f"本题属于{diff}{diff_desc.get(diff, '')}。"
         
@@ -447,7 +617,7 @@ def validate_questions(questions: List[Dict]) -> List[Dict]:
         validated_q = {
             "content": q.get("content", ""),
             "question_type": q.get("question_type", "单选"),
-            "difficulty": q.get("difficulty", "L2"),
+            "difficulty": q.get("difficulty", "中等"),
             "answer": q.get("answer", ""),
             "explanation": q.get("explanation", ""),
             "design_reason": design_reason,
@@ -468,7 +638,7 @@ def generate_fallback_questions(
     type_counts: Dict[str, int],
     difficulty_config: Dict[str, Any]
 ) -> List[Dict]:
-    logger.warning("=== 使用Fallback生成逻辑（Kimi API调用失败）===")
+    logger.warning("Kimi API调用失败，使用Fallback生成题目")
     
     questions = []
     difficulties = []
@@ -480,7 +650,7 @@ def generate_fallback_questions(
     for q_type in question_types:
         count = type_counts.get(q_type, 0)
         for i in range(count):
-            diff = difficulties[idx] if idx < len(difficulties) else "L2"
+            diff = difficulties[idx] if idx < len(difficulties) else "中等"
             
             if q_type == "单选":
                 questions.append({

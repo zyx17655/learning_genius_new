@@ -7,7 +7,7 @@ class KnowledgeDocument(Base):
     __tablename__ = "knowledge_documents"
     __table_args__ = {'comment': '知识文档表 - 存储上传的知识文档'}
     
-    id = Column(Integer, primary_key=True, index=True, comment='主键ID')
+    id = Column(Integer, primary_key=True, comment='主键ID')
     filename = Column(String(255), nullable=False, comment='文件名')
     original_name = Column(String(255), nullable=False, comment='原始文件名')
     file_path = Column(String(500), nullable=False, comment='文件存储路径')
@@ -68,11 +68,14 @@ class Question(Base):
     id = Column(Integer, primary_key=True, index=True, comment='主键ID')
     content = Column(Text, nullable=False, comment='题目内容')
     question_type = Column(String(20), default="单选", comment='题目类型：单选/多选/判断/填空/主观')
-    difficulty = Column(String(10), default="L2", comment='难度等级：L1-记忆, L2-理解, L3-应用, L4-分析, L5-综合')
+    difficulty = Column(String(10), default="Medium", comment='难度等级：Easy-简单, Medium-中等, Hard-困难')
     status = Column(String(20), default="草稿", comment='状态：草稿/已发布/已归档')
     source = Column(String(50), default="手动录入", comment='来源：手动录入/AI生成/导入')
     answer = Column(String(500), comment='正确答案')
     explanation = Column(Text, comment='答案解析')
+    design_reason = Column(Text, comment='题目设计依据')
+    difficulty_reason = Column(Text, comment='难度设定理由')
+    distractor_reasons = Column(Text, comment='干扰项设计理由JSON')
     creator = Column(String(50), default="系统", comment='创建者')
     reviewer = Column(String(50), comment='审核者')
     created_at = Column(DateTime, server_default=func.now(), comment='创建时间')
@@ -112,7 +115,7 @@ class GenerationTask(Base):
     __tablename__ = "generation_tasks"
     __table_args__ = {'comment': '生成任务表 - 记录AI生成题目的任务'}
     
-    id = Column(Integer, primary_key=True, index=True, comment='主键ID')
+    id = Column(Integer, primary_key=True, comment='主键ID')
     knowledge_input = Column(String(500), comment='知识范围输入')
     knowledge_ids = Column(String(255), comment='关联知识点ID列表，逗号分隔')
     question_types = Column(String(255), nullable=False, comment='题目类型列表，逗号分隔')
@@ -134,11 +137,11 @@ class GeneratedQuestion(Base):
     __tablename__ = "generated_questions"
     __table_args__ = {'comment': '生成题目表 - 存储AI生成的题目'}
     
-    id = Column(Integer, primary_key=True, index=True, comment='主键ID')
+    id = Column(Integer, primary_key=True, comment='主键ID')
     task_id = Column(Integer, ForeignKey("generation_tasks.id", ondelete="CASCADE"), nullable=False, comment='关联生成任务ID')
     content = Column(Text, nullable=False, comment='题目内容')
     question_type = Column(String(20), nullable=False, comment='题目类型：单选/多选/判断/填空/主观')
-    difficulty = Column(String(10), nullable=False, comment='难度等级：L1-L5')
+    difficulty = Column(String(10), nullable=False, comment='难度等级：Easy-简单/Medium-中等/Hard-困难')
     answer = Column(String(500), comment='正确答案')
     explanation = Column(Text, comment='答案解析')
     design_reason = Column(Text, comment='设计理由')
@@ -170,6 +173,11 @@ class QuestionRule(Base):
     distractor_mechanics = Column(Text, comment='干扰项设置JSON')
     domain_skills = Column(Text, comment='专项技能JSON')
     output_template = Column(Text, comment='输出模板')
+    notation_convention = Column(Text, comment='学科表达与符号习惯')
+    assessment_focus = Column(Text, comment='考察偏好与方法论')
+    subject_traps = Column(Text, comment='干扰项逻辑陷阱')
+    stem_style = Column(Text, comment='语言风格与题干结构')
+    solution_blueprint = Column(Text, comment='解析深度与标准')
     creator = Column(String(50), default="系统", comment='创建者')
     use_count = Column(Integer, default=0, comment='使用次数')
     created_at = Column(DateTime, server_default=func.now(), comment='创建时间')
@@ -179,7 +187,7 @@ class AICallLog(Base):
     __tablename__ = "ai_call_logs"
     __table_args__ = {'comment': 'AI调用日志表 - 记录每次AI调用的prompt和响应'}
     
-    id = Column(Integer, primary_key=True, index=True, comment='主键ID')
+    id = Column(Integer, primary_key=True, comment='主键ID')
     task_id = Column(Integer, ForeignKey("generation_tasks.id", ondelete="CASCADE"), nullable=True, comment='关联生成任务ID')
     call_type = Column(String(50), nullable=False, comment='调用类型：question_generation-题目生成, rule_analysis-规则分析')
     model = Column(String(50), default="moonshot-v1-8k", comment='使用的AI模型')

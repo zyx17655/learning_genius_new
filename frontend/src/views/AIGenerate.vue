@@ -27,11 +27,9 @@
         
         <el-form-item label="难度">
           <el-radio-group v-model="form.difficulty">
-            <el-radio label="L1">L1 记忆</el-radio>
-            <el-radio label="L2">L2 理解</el-radio>
-            <el-radio label="L3">L3 应用</el-radio>
-            <el-radio label="L4">L4 分析</el-radio>
-            <el-radio label="L5">L5 创造</el-radio>
+            <el-radio label="简单">简单</el-radio>
+            <el-radio label="中等">中等</el-radio>
+            <el-radio label="困难">困难</el-radio>
           </el-radio-group>
         </el-form-item>
         
@@ -77,23 +75,29 @@
         <div v-for="(question, index) in generatedQuestions" :key="index" class="question-card">
           <el-checkbox v-model="question.selected" @change="handleQuestionSelect"></el-checkbox>
           <div class="question-content">
-            <h4>{{ index + 1 }}. {{ question.content }}</h4>
+            <h4><latex-renderer :content="index + 1 + '. ' + question.content" /></h4>
             <div v-if="['单选', '多选', '判断'].includes(question.question_type)" class="options">
               <div v-for="(option, optIndex) in question.options" :key="optIndex" class="option-item">
-                <el-tag :type="option.is_correct ? 'success' : ''">{{ String.fromCharCode(65 + optIndex) }}. {{ option.content }}</el-tag>
+                <el-tag :type="option.is_correct ? 'success' : ''">{{ String.fromCharCode(65 + optIndex) }}. <latex-renderer :content="option.content" /></el-tag>
               </div>
             </div>
             <div class="explanation" v-if="question.explanation">
               <h5>解析：</h5>
-              <p>{{ question.explanation }}</p>
+              <p><latex-renderer :content="question.explanation" /></p>
             </div>
             <div class="interpretability">
               <el-collapse>
                 <el-collapse-item title="可解释性信息">
-                  <p><strong>知识点对齐：</strong>{{ question.interpretability.knowledge_alignment }}</p>
-                  <p><strong>概念来源：</strong>{{ question.interpretability.concept_source }}</p>
-                  <p><strong>干扰项设计策略：</strong>{{ question.interpretability.distractor_strategy }}</p>
-                  <p><strong>选项依据：</strong>{{ question.interpretability.option_basis }}</p>
+                  <p v-if="question.design_reason"><strong>题目设计依据：</strong><latex-renderer :content="question.design_reason" /></p>
+                  <p v-if="question.difficulty_reason"><strong>难度设定理由：</strong><latex-renderer :content="question.difficulty_reason" /></p>
+                  <p v-if="question.distractor_reasons && question.distractor_reasons.length > 0">
+                    <strong>干扰项设计理由：</strong>
+                    <div v-for="(dr, drIdx) in question.distractor_reasons" :key="drIdx" class="distractor-item">
+                      <el-tag size="small" type="info">{{ dr.option }}</el-tag>
+                      <span class="distractor-type">[{{ dr.type }}]</span>
+                      <latex-renderer :content="dr.reason" />
+                    </div>
+                  </p>
                 </el-collapse-item>
               </el-collapse>
             </div>
@@ -129,11 +133,9 @@
         </el-form-item>
         <el-form-item label="难度">
           <el-select v-model="editForm.difficulty">
-            <el-option label="L1 记忆" value="L1"></el-option>
-            <el-option label="L2 理解" value="L2"></el-option>
-            <el-option label="L3 应用" value="L3"></el-option>
-            <el-option label="L4 分析" value="L4"></el-option>
-            <el-option label="L5 创造" value="L5"></el-option>
+            <el-option label="简单" value="简单"></el-option>
+            <el-option label="中等" value="中等"></el-option>
+            <el-option label="困难" value="困难"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="解析">

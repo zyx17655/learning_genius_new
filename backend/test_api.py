@@ -17,7 +17,7 @@ try:
     r = requests.post(
         "https://api.moonshot.cn/v1/chat/completions",
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-        json={"model": "moonshot-v1-8k", "messages": [{"role": "user", "content": "test"}]},
+        json={"model": "kimi-k2-turbo-preview", "messages": [{"role": "user", "content": "test"}], "temperature": 1},
         timeout=30,
         verify=False
     )

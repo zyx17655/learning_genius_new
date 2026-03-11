@@ -23,11 +23,11 @@ with httpx.Client(timeout=60.0, verify=False) as client:
             "Content-Type": "application/json"
         },
         json={
-            "model": "moonshot-v1-8k",
+            "model": "kimi-k2-turbo-preview",
             "messages": [
                 {"role": "user", "content": "请生成一道关于傅立叶变换的单选题，返回JSON格式"}
             ],
-            "temperature": 0.7,
+            "temperature": 1,
             "max_tokens": 500
         }
     )

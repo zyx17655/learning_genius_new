@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Union
 from datetime import datetime
 
 class KnowledgePointBase(BaseModel):
@@ -60,7 +60,7 @@ class QuestionUpdate(BaseModel):
     explanation: Optional[str] = None
     reviewer: Optional[str] = None
     options: Optional[List[OptionBase]] = None
-    knowledge_point_ids: Optional[List[int]] = None
+    knowledge_point_ids: Optional[List[Union[int, str]]] = None
     tag_names: Optional[List[str]] = None
 
 class QuestionResponse(QuestionBase):

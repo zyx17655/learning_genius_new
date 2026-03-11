@@ -114,6 +114,10 @@ export default {
     return api.get(`/knowledge/chunks/${category}`, { params: { max_chars: maxChars } })
   },
   
+  searchKnowledgeChunksByIds(ids) {
+    return api.post('/knowledge/chunks/by-ids', { ids: ids })
+  },
+  
   getKnowledgeStats() {
     return api.get('/knowledge/stats')
   }

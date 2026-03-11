@@ -29,11 +29,11 @@ try:
                 "Content-Type": "application/json"
             },
             json={
-                "model": "moonshot-v1-8k",
+                "model": "kimi-k2-turbo-preview",
                 "messages": [
                     {"role": "user", "content": "你好，请回复'测试成功'"}
                 ],
-                "temperature": 0.7,
+                "temperature": 1,
                 "max_tokens": 100
             }
         )

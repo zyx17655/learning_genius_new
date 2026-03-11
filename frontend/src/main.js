@@ -12,10 +12,12 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import axios from './api/axios'
+import LatexRenderer from './components/LatexRenderer.vue'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.component('el-chart', ECharts)
+Vue.component('latex-renderer', LatexRenderer)
 Vue.prototype.$axios = axios
 
 const routes = [

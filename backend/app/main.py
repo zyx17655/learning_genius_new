@@ -4,8 +4,19 @@ from app.database import engine, Base
 from app.routes import router
 from app.ai_routes import router as ai_router
 from app.knowledge_routes import router as knowledge_router
-from app.rule_routes import router as rule_router
 from app.ai_log_routes import router as ai_log_router
+from app.rule_routes import router as rule_router
+import logging
+import sys
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logging.getLogger().handlers[0].stream.reconfigure(encoding='utf-8')
 
 Base.metadata.create_all(bind=engine)
 
@@ -26,8 +37,8 @@ app.add_middleware(
 app.include_router(router, prefix="/api")
 app.include_router(ai_router, prefix="/api/ai", tags=["AI生成"])
 app.include_router(knowledge_router, prefix="/api/knowledge", tags=["知识库"])
-app.include_router(rule_router, prefix="/api/rule", tags=["规则管理"])
 app.include_router(ai_log_router, prefix="/api", tags=["AI调用日志"])
+app.include_router(rule_router, prefix="/api/rule", tags=["规则管理"])
 
 @app.get("/")
 def root():

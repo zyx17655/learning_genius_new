@@ -130,8 +130,15 @@ def create_question(question: QuestionCreate, db: Session = Depends(get_db)):
         )
         db.add(option)
     
-    for kp_id in question.knowledge_point_ids:
-        kp = db.query(KnowledgePoint).filter(KnowledgePoint.id == kp_id).first()
+    for kp_input in question.knowledge_point_ids:
+        if isinstance(kp_input, int):
+            kp = db.query(KnowledgePoint).filter(KnowledgePoint.id == kp_input).first()
+        else:
+            kp = db.query(KnowledgePoint).filter(KnowledgePoint.name == kp_input).first()
+            if not kp:
+                kp = KnowledgePoint(name=kp_input, level=1)
+                db.add(kp)
+                db.flush()
         if kp:
             q.knowledge_points.append(kp)
     
@@ -318,6 +325,9 @@ def adopt_generated_questions(task_id: int, question_ids: List[int], db: Session
                 source="AI生成",
                 answer=gq.answer,
                 explanation=gq.explanation,
+                design_reason=gq.design_reason,
+                difficulty_reason=gq.difficulty_reason,
+                distractor_reasons=gq.distractor_reasons,
                 creator="AI"
             )
             db.add(q)

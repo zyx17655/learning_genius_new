@@ -184,7 +184,7 @@
                 </div>
               </div>
 
-              <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
+              <div v-if="selectedRule.isDefault && selectedRule.corePrinciples?.length" class="bg-amber-50 rounded-xl p-4 border border-amber-100">
                 <div class="text-sm font-medium text-amber-600 mb-3 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
@@ -202,7 +202,7 @@
                 </div>
               </div>
 
-              <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+              <div v-if="selectedRule.isDefault && selectedRule.workflow?.length" class="bg-purple-50 rounded-xl p-4 border border-purple-100">
                 <div class="text-sm font-medium text-purple-600 mb-3 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -220,7 +220,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.specifications?.length" class="bg-cyan-50 rounded-xl p-4 border border-cyan-100">
+              <div v-if="selectedRule.isDefault && selectedRule.specifications?.length" class="bg-cyan-50 rounded-xl p-4 border border-cyan-100">
                 <div class="text-sm font-medium text-cyan-600 mb-3 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -236,7 +236,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.distractorMechanics?.length" class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+              <div v-if="selectedRule.isDefault && selectedRule.distractorMechanics?.length" class="bg-rose-50 rounded-xl p-4 border border-rose-100">
                 <div class="text-sm font-medium text-rose-600 mb-3 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -251,7 +251,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.domainSkills?.length" class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+              <div v-if="selectedRule.isDefault && selectedRule.domainSkills?.length" class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
                 <div class="text-sm font-medium text-emerald-600 mb-3 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
@@ -266,7 +266,67 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.outputTemplate" class="bg-slate-100 rounded-xl p-4 border border-slate-200">
+              <div v-if="!selectedRule.isDefault && selectedRule.notationConvention" class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                <div class="text-sm font-medium text-blue-600 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                  </svg>
+                  学科表达与符号习惯 (Notation & Convention)
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-blue-100">
+                  <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{{ selectedRule.notationConvention }}</p>
+                </div>
+              </div>
+
+              <div v-if="!selectedRule.isDefault && selectedRule.assessmentFocus" class="bg-violet-50 rounded-xl p-4 border border-violet-100">
+                <div class="text-sm font-medium text-violet-600 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                  </svg>
+                  考察偏好与方法论 (Assessment Focus)
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-violet-100">
+                  <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{{ selectedRule.assessmentFocus }}</p>
+                </div>
+              </div>
+
+              <div v-if="!selectedRule.isDefault && selectedRule.subjectTraps" class="bg-orange-50 rounded-xl p-4 border border-orange-100">
+                <div class="text-sm font-medium text-orange-600 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                  </svg>
+                  干扰项逻辑陷阱 (Subject-Specific Traps)
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-orange-100">
+                  <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{{ selectedRule.subjectTraps }}</p>
+                </div>
+              </div>
+
+              <div v-if="!selectedRule.isDefault && selectedRule.stemStyle" class="bg-teal-50 rounded-xl p-4 border border-teal-100">
+                <div class="text-sm font-medium text-teal-600 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                  </svg>
+                  语言风格与题干结构 (Stem Style)
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-teal-100">
+                  <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{{ selectedRule.stemStyle }}</p>
+                </div>
+              </div>
+
+              <div v-if="!selectedRule.isDefault && selectedRule.solutionBlueprint" class="bg-pink-50 rounded-xl p-4 border border-pink-100">
+                <div class="text-sm font-medium text-pink-600 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  解析深度与标准 (Solution Blueprint)
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-pink-100">
+                  <p class="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{{ selectedRule.solutionBlueprint }}</p>
+                </div>
+              </div>
+
+              <div v-if="selectedRule.isDefault && selectedRule.outputTemplate" class="bg-slate-100 rounded-xl p-4 border border-slate-200">
                 <div class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -335,158 +395,221 @@
             <textarea class="textarea textarea-bordered h-24 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm" v-model="ruleForm.role" placeholder="定义AI的角色身份，如：你是一位拥有深厚学术背景的大学教授及教务命题专家..."></textarea>
           </div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-              </svg>
-              核心原则 (Core Principles)
-            </span></label>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in ruleForm.corePrinciples" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">{{ idx + 1 }}</span>
-                  <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="原则标题，如：学术标准" />
-                  <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.corePrinciples.splice(idx, 1)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
-                </div>
-                <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="原则详细内容" rows="2"></textarea>
-              </div>
-              <button class="btn btn-sm btn-ghost text-amber-600 hover:bg-amber-50 w-full" @click="ruleForm.corePrinciples.push({ title: '', content: '' })">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                添加核心原则
-              </button>
-            </div>
-          </div>
+          <template v-if="ruleForm.isDefault">
+            <div class="divider text-slate-400 text-sm my-6">默认规则维度</div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-              </svg>
-              工作流程 (Workflow)
-            </span></label>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in ruleForm.workflow" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-bold">{{ idx + 1 }}</span>
-                  <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="步骤标题，如：知识拆解" />
-                  <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.workflow.splice(idx, 1)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
-                </div>
-                <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="步骤详细内容" rows="2"></textarea>
-              </div>
-              <button class="btn btn-sm btn-ghost text-purple-600 hover:bg-purple-50 w-full" @click="ruleForm.workflow.push({ title: '', content: '' })">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
                 </svg>
-                添加工作流程
-              </button>
-            </div>
-          </div>
-
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              命题核心规范 (Specifications) - 可选
-            </span></label>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in ruleForm.specifications" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div class="flex items-center gap-2 mb-2">
-                  <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="规范标题，如：数学与参数鲁棒性" />
-                  <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.specifications.splice(idx, 1)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
+                核心原则 (Core Principles)
+              </span></label>
+              <div class="space-y-2">
+                <div v-for="(item, idx) in ruleForm.corePrinciples" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">{{ idx + 1 }}</span>
+                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="原则标题，如：学术标准" />
+                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.corePrinciples.splice(idx, 1)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="原则详细内容" rows="2"></textarea>
                 </div>
-                <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="规范详细内容" rows="3"></textarea>
+                <button class="btn btn-sm btn-ghost text-amber-600 hover:bg-amber-50 w-full" @click="ruleForm.corePrinciples.push({ title: '', content: '' })">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  添加核心原则
+                </button>
               </div>
-              <button class="btn btn-sm btn-ghost text-cyan-600 hover:bg-cyan-50 w-full" @click="ruleForm.specifications.push({ title: '', content: '' })">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                添加命题规范
-              </button>
             </div>
-          </div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              干扰项设置 (Distractor Mechanics) - 可选
-            </span></label>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in ruleForm.distractorMechanics" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div class="flex items-center gap-2 mb-2">
-                  <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.type" placeholder="干扰项类型，如：时移陷阱" />
-                  <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.distractorMechanics.splice(idx, 1)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                工作流程 (Workflow)
+              </span></label>
+              <div class="space-y-2">
+                <div v-for="(item, idx) in ruleForm.workflow" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-bold">{{ idx + 1 }}</span>
+                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="步骤标题，如：知识拆解" />
+                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.workflow.splice(idx, 1)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="步骤详细内容" rows="2"></textarea>
                 </div>
-                <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.description" placeholder="干扰项设计原则和注意事项" rows="2"></textarea>
+                <button class="btn btn-sm btn-ghost text-purple-600 hover:bg-purple-50 w-full" @click="ruleForm.workflow.push({ title: '', content: '' })">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  添加工作流程
+                </button>
               </div>
-              <button class="btn btn-sm btn-ghost text-rose-600 hover:bg-rose-50 w-full" @click="ruleForm.distractorMechanics.push({ type: '', description: '' })">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                添加干扰项设置
-              </button>
             </div>
-          </div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-              </svg>
-              专项技能 (Domain Skills) - 可选
-            </span></label>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in ruleForm.domainSkills" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div class="flex items-center gap-2 mb-2">
-                  <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="技能标题，如：时域分析" />
-                  <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.domainSkills.splice(idx, 1)">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                命题核心规范 (Specifications)
+              </span></label>
+              <div class="space-y-2">
+                <div v-for="(item, idx) in ruleForm.specifications" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="规范标题，如：数学与参数鲁棒性" />
+                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.specifications.splice(idx, 1)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="规范详细内容" rows="3"></textarea>
                 </div>
-                <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="技能详细内容" rows="2"></textarea>
+                <button class="btn btn-sm btn-ghost text-cyan-600 hover:bg-cyan-50 w-full" @click="ruleForm.specifications.push({ title: '', content: '' })">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  添加命题规范
+                </button>
               </div>
-              <button class="btn btn-sm btn-ghost text-emerald-600 hover:bg-emerald-50 w-full" @click="ruleForm.domainSkills.push({ title: '', content: '' })">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                添加专项技能
-              </button>
             </div>
-          </div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-              输出标准模板 (Output Template) - 可选
-            </span></label>
-            <textarea class="textarea textarea-bordered bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-mono" v-model="ruleForm.outputTemplate" placeholder="定义输出的标准格式模板..." rows="6"></textarea>
-          </div>
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                干扰项设置 (Distractor Mechanics)
+              </span></label>
+              <div class="space-y-2">
+                <div v-for="(item, idx) in ruleForm.distractorMechanics" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.type" placeholder="干扰项类型，如：时移陷阱" />
+                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.distractorMechanics.splice(idx, 1)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.description" placeholder="干扰项设计原则和注意事项" rows="2"></textarea>
+                </div>
+                <button class="btn btn-sm btn-ghost text-rose-600 hover:bg-rose-50 w-full" @click="ruleForm.distractorMechanics.push({ type: '', description: '' })">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  添加干扰项设置
+                </button>
+              </div>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                专项技能 (Domain Skills)
+              </span></label>
+              <div class="space-y-2">
+                <div v-for="(item, idx) in ruleForm.domainSkills" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="技能标题，如：时域分析" />
+                    <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.domainSkills.splice(idx, 1)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="技能详细内容" rows="2"></textarea>
+                </div>
+                <button class="btn btn-sm btn-ghost text-emerald-600 hover:bg-emerald-50 w-full" @click="ruleForm.domainSkills.push({ title: '', content: '' })">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                  添加专项技能
+                </button>
+              </div>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                输出标准模板 (Output Template)
+              </span></label>
+              <textarea class="textarea textarea-bordered bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm font-mono" v-model="ruleForm.outputTemplate" placeholder="定义输出的标准格式模板..." rows="6"></textarea>
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="divider text-slate-400 text-sm my-6">自定义规则专属维度</div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                学科表达与符号习惯 (Notation & Convention) - 可选
+              </span></label>
+              <textarea class="textarea textarea-bordered h-24 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-sm" v-model="ruleForm.notationConvention" placeholder="特定的物理量符号（如信号处理中的 $j$ vs $i$）、公式表示法（算子法 vs 变换法）、计算结果的精度要求（保留根号、π还是四舍五入）..."></textarea>
+              <label class="label"><span class="label-text-alt text-slate-400">保证生成的题目在视觉和表达上与用户习惯的教材高度统一</span></label>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+                考察偏好与方法论 (Assessment Focus) - 可选
+              </span></label>
+              <textarea class="textarea textarea-bordered h-24 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 text-sm" v-model="ruleForm.assessmentFocus" placeholder="该卷子侧重于"数学推导"、"图形解析"还是"数值计算"？是否有特定定理的"出题执念"（如必考收敛域判别）..."></textarea>
+              <label class="label"><span class="label-text-alt text-slate-400">确保 AI 能够从知识素材中挖掘出用户真正感兴趣的命题切入点</span></label>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                干扰项逻辑陷阱 (Subject-Specific Traps) - 可选
+              </span></label>
+              <textarea class="textarea textarea-bordered h-24 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 text-sm" v-model="ruleForm.subjectTraps" placeholder="提取该学科、该水平段学生最容易掉进去的坑（如信号时移方向弄反、积分限写错）..."></textarea>
+              <label class="label"><span class="label-text-alt text-slate-400">让 AI 生成的"功能性干扰项"不再是凑数，而是精准打击知识盲区</span></label>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                </svg>
+                语言风格与题干结构 (Stem Style) - 可选
+              </span></label>
+              <textarea class="textarea textarea-bordered h-24 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 text-sm" v-model="ruleForm.stemStyle" placeholder="是简洁的"指令式"（已知...求...）还是复杂的"情境式"（某系统在...环境下...）..."></textarea>
+              <label class="label"><span class="label-text-alt text-slate-400">保持与原卷一致的语感</span></label>
+            </div>
+
+            <div class="form-control">
+              <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                <svg class="w-4 h-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                解析深度与标准 (Solution Blueprint) - 可选
+              </span></label>
+              <textarea class="textarea textarea-bordered h-24 focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm" v-model="ruleForm.solutionBlueprint" placeholder="解析中是否需要列出所有中间公式？是否需要说明物理意义？是否需要总结解题技巧？..."></textarea>
+              <label class="label"><span class="label-text-alt text-slate-400">确保生成的答案解析符合用户的教学要求</span></label>
+            </div>
+          </template>
         </div>
         <div class="modal-action pt-4 border-t border-slate-100">
           <button class="btn btn-ghost" @click="showCreateDialog = false">取消</button>
@@ -673,118 +796,56 @@
                 <textarea class="textarea textarea-bordered h-20 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-sm" v-model="ruleForm.role" placeholder="定义AI的角色身份"></textarea>
               </div>
 
+              <div class="divider text-slate-400 text-sm my-4">自定义规则专属维度</div>
+
               <div class="form-control">
                 <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                  <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                   </svg>
-                  核心原则 (Core Principles)
+                  学科表达与符号习惯 (Notation & Convention)
                 </span></label>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in ruleForm.corePrinciples" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <div class="flex items-center gap-2 mb-2">
-                      <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">{{ idx + 1 }}</span>
-                      <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="原则标题" />
-                      <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.corePrinciples.splice(idx, 1)">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="原则详细内容" rows="2"></textarea>
-                  </div>
-                  <button class="btn btn-sm btn-ghost text-amber-600 hover:bg-amber-50 w-full" @click="ruleForm.corePrinciples.push({ title: '', content: '' })">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加核心原则
-                  </button>
-                </div>
+                <textarea class="textarea textarea-bordered h-20 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-sm" v-model="ruleForm.notationConvention" placeholder="特定的物理量符号、公式表示法、计算结果的精度要求..."></textarea>
               </div>
 
               <div class="form-control">
                 <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                   </svg>
-                  干扰项设置 (Distractor Mechanics)
+                  考察偏好与方法论 (Assessment Focus)
                 </span></label>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in ruleForm.distractorMechanics" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <div class="flex items-center gap-2 mb-2">
-                      <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.type" placeholder="干扰项类型" />
-                      <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.distractorMechanics.splice(idx, 1)">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.description" placeholder="干扰项设计原则" rows="2"></textarea>
-                  </div>
-                  <button class="btn btn-sm btn-ghost text-rose-600 hover:bg-rose-50 w-full" @click="ruleForm.distractorMechanics.push({ type: '', description: '' })">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加干扰项设置
-                  </button>
-                </div>
+                <textarea class="textarea textarea-bordered h-20 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 text-sm" v-model="ruleForm.assessmentFocus" placeholder="侧重于"数学推导"、"图形解析"还是"数值计算"..."></textarea>
               </div>
 
               <div class="form-control">
                 <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                   </svg>
-                  数学约束与鲁棒性标准 (Specifications)
+                  干扰项逻辑陷阱 (Subject-Specific Traps)
                 </span></label>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in ruleForm.specifications" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <div class="flex items-center gap-2 mb-2">
-                      <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="规范标题" />
-                      <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.specifications.splice(idx, 1)">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="规范详细内容" rows="3"></textarea>
-                  </div>
-                  <button class="btn btn-sm btn-ghost text-cyan-600 hover:bg-cyan-50 w-full" @click="ruleForm.specifications.push({ title: '', content: '' })">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加规范
-                  </button>
-                </div>
+                <textarea class="textarea textarea-bordered h-20 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 text-sm" v-model="ruleForm.subjectTraps" placeholder="提取该学科学生最容易掉进去的坑..."></textarea>
               </div>
 
               <div class="form-control">
                 <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
                   </svg>
-                  专项命题技能 (Domain Skills)
+                  语言风格与题干结构 (Stem Style)
                 </span></label>
-                <div class="space-y-2">
-                  <div v-for="(item, idx) in ruleForm.domainSkills" :key="idx" class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <div class="flex items-center gap-2 mb-2">
-                      <input type="text" class="input input-sm input-bordered flex-1 bg-white" v-model="item.title" placeholder="技能标题" />
-                      <button class="btn btn-xs btn-circle btn-ghost text-red-500" @click="ruleForm.domainSkills.splice(idx, 1)">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <textarea class="textarea textarea-bordered w-full bg-white text-sm" v-model="item.content" placeholder="技能详细内容" rows="2"></textarea>
-                  </div>
-                  <button class="btn btn-sm btn-ghost text-emerald-600 hover:bg-emerald-50 w-full" @click="ruleForm.domainSkills.push({ title: '', content: '' })">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    添加专项技能
-                  </button>
-                </div>
+                <textarea class="textarea textarea-bordered h-20 focus:border-teal-400 focus:ring-2 focus:ring-teal-100 text-sm" v-model="ruleForm.stemStyle" placeholder="是简洁的"指令式"还是复杂的"情境式"..."></textarea>
+              </div>
+
+              <div class="form-control">
+                <label class="label"><span class="label-text font-semibold text-slate-700 flex items-center gap-2">
+                  <svg class="w-4 h-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  解析深度与标准 (Solution Blueprint)
+                </span></label>
+                <textarea class="textarea textarea-bordered h-20 focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm" v-model="ruleForm.solutionBlueprint" placeholder="解析中是否需要列出所有中间公式？是否需要说明物理意义..."></textarea>
               </div>
             </div>
           </div>
@@ -863,7 +924,12 @@ export default {
         specifications: [],
         distractorMechanics: [],
         domainSkills: [],
-        outputTemplate: ''
+        outputTemplate: '',
+        notationConvention: '',
+        assessmentFocus: '',
+        subjectTraps: '',
+        stemStyle: '',
+        solutionBlueprint: ''
       }
     }
   },
@@ -896,6 +962,7 @@ export default {
       this.isEdit = false
       this.ruleForm = {
         id: null,
+        isDefault: false,
         name: '',
         description: '',
         scene: '',
@@ -906,7 +973,12 @@ export default {
         specifications: [],
         distractorMechanics: [],
         domainSkills: [],
-        outputTemplate: ''
+        outputTemplate: '',
+        notationConvention: '',
+        assessmentFocus: '',
+        subjectTraps: '',
+        stemStyle: '',
+        solutionBlueprint: ''
       }
       this.showCreateDialog = true
     },
@@ -940,7 +1012,20 @@ export default {
     },
     editRule(rule) {
       this.isEdit = true
-      this.ruleForm = JSON.parse(JSON.stringify(rule))
+      this.ruleForm = {
+        ...JSON.parse(JSON.stringify(rule)),
+        isDefault: rule.isDefault || false,
+        corePrinciples: rule.corePrinciples || [],
+        workflow: rule.workflow || [],
+        specifications: rule.specifications || [],
+        distractorMechanics: rule.distractorMechanics || [],
+        domainSkills: rule.domainSkills || [],
+        notationConvention: rule.notationConvention || '',
+        assessmentFocus: rule.assessmentFocus || '',
+        subjectTraps: rule.subjectTraps || '',
+        stemStyle: rule.stemStyle || '',
+        solutionBlueprint: rule.solutionBlueprint || ''
+      }
       this.showCreateDialog = true
     },
     async deleteRule(rule) {
@@ -966,19 +1051,37 @@ export default {
       
       this.saving = true
       try {
-        const payload = {
-          name: this.ruleForm.name,
-          description: this.ruleForm.description,
-          scene: this.ruleForm.scene,
-          status: this.ruleForm.status,
-          role: this.ruleForm.role,
-          corePrinciples: this.ruleForm.corePrinciples,
-          workflow: this.ruleForm.workflow,
-          specifications: this.ruleForm.specifications,
-          distractorMechanics: this.ruleForm.distractorMechanics,
-          domainSkills: this.ruleForm.domainSkills,
-          outputTemplate: this.ruleForm.outputTemplate
+        let payload
+        if (this.ruleForm.isDefault) {
+          payload = {
+            name: this.ruleForm.name,
+            description: this.ruleForm.description,
+            scene: this.ruleForm.scene,
+            status: this.ruleForm.status,
+            role: this.ruleForm.role,
+            corePrinciples: this.ruleForm.corePrinciples || [],
+            workflow: this.ruleForm.workflow || [],
+            specifications: this.ruleForm.specifications || [],
+            distractorMechanics: this.ruleForm.distractorMechanics || [],
+            domainSkills: this.ruleForm.domainSkills || [],
+            outputTemplate: this.ruleForm.outputTemplate || ''
+          }
+        } else {
+          payload = {
+            name: this.ruleForm.name,
+            description: this.ruleForm.description,
+            scene: this.ruleForm.scene,
+            status: this.ruleForm.status,
+            role: this.ruleForm.role,
+            notationConvention: this.ruleForm.notationConvention || '',
+            assessmentFocus: this.ruleForm.assessmentFocus || '',
+            subjectTraps: this.ruleForm.subjectTraps || '',
+            stemStyle: this.ruleForm.stemStyle || '',
+            solutionBlueprint: this.ruleForm.solutionBlueprint || ''
+          }
         }
+        
+        console.log('保存规则 payload:', payload)
         
         if (this.isEdit && this.ruleForm.id) {
           await axios.put(`${API_BASE}/rules/${this.ruleForm.id}`, payload)
@@ -1032,11 +1135,18 @@ export default {
             this.isEdit = false
             this.ruleForm = {
               ...res.data.rule,
+              scene: res.data.rule.scene || '',
+              status: res.data.rule.status || '启用',
               corePrinciples: res.data.rule.corePrinciples || [],
               workflow: res.data.rule.workflow || [],
               specifications: res.data.rule.specifications || [],
               distractorMechanics: res.data.rule.distractorMechanics || [],
-              domainSkills: res.data.rule.domainSkills || []
+              domainSkills: res.data.rule.domainSkills || [],
+              notationConvention: res.data.rule.notationConvention || '',
+              assessmentFocus: res.data.rule.assessmentFocus || '',
+              subjectTraps: res.data.rule.subjectTraps || '',
+              stemStyle: res.data.rule.stemStyle || '',
+              solutionBlueprint: res.data.rule.solutionBlueprint || ''
             }
             this.analysisStep = 2
             this.$message.success('分析完成，请审核后保存')
@@ -1068,12 +1178,11 @@ export default {
           scene: this.ruleForm.scene,
           status: this.ruleForm.status,
           role: this.ruleForm.role,
-          corePrinciples: this.ruleForm.corePrinciples,
-          workflow: this.ruleForm.workflow,
-          specifications: this.ruleForm.specifications,
-          distractorMechanics: this.ruleForm.distractorMechanics,
-          domainSkills: this.ruleForm.domainSkills,
-          outputTemplate: this.ruleForm.outputTemplate
+          notationConvention: this.ruleForm.notationConvention,
+          assessmentFocus: this.ruleForm.assessmentFocus,
+          subjectTraps: this.ruleForm.subjectTraps,
+          stemStyle: this.ruleForm.stemStyle,
+          solutionBlueprint: this.ruleForm.solutionBlueprint
         }
         
         await axios.post(`${API_BASE}/rules`, payload)
@@ -1121,6 +1230,24 @@ export default {
         rule.domainSkills.forEach(s => {
           prompt += `- ${s.title}：${s.content}\n`
         })
+      }
+      
+      if (!rule.isDefault) {
+        if (rule.notationConvention) {
+          prompt += `\n# Notation & Convention\n${rule.notationConvention}\n`
+        }
+        if (rule.assessmentFocus) {
+          prompt += `\n# Assessment Focus\n${rule.assessmentFocus}\n`
+        }
+        if (rule.subjectTraps) {
+          prompt += `\n# Subject-Specific Traps\n${rule.subjectTraps}\n`
+        }
+        if (rule.stemStyle) {
+          prompt += `\n# Stem Style\n${rule.stemStyle}\n`
+        }
+        if (rule.solutionBlueprint) {
+          prompt += `\n# Solution Blueprint\n${rule.solutionBlueprint}\n`
+        }
       }
       
       if (rule.outputTemplate) {

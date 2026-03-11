@@ -16,7 +16,7 @@ router = APIRouter()
 class GenerateRequest(BaseModel):
     knowledge_input: Optional[str] = ""
     knowledge_ids: List[int] = []
-    knowledge_category: Optional[str] = None
+    knowledge_categories: List[str] = []
     question_types: List[str] = []
     type_counts: dict = {}
     difficulty_config: dict = {}
@@ -29,20 +29,21 @@ class GenerateRequest(BaseModel):
 @router.post("/generate")
 async def generate_questions(request: GenerateRequest, db: Session = Depends(get_db)):
     logger.info(f"=== 收到AI生成请求 ===")
-    logger.info(f"knowledge_input: {request.knowledge_input}")
-    logger.info(f"question_types: {request.question_types}")
-    logger.info(f"type_counts: {request.type_counts}")
-    logger.info(f"total_count: {request.total_count}")
-    logger.info(f"rule_id: {request.rule_id}")
+    logger.info(f"知识范围: {request.knowledge_input or request.knowledge_categories}")
+    logger.info(f"题型: {request.question_types}, 数量: {request.type_counts}")
+    logger.info(f"总题数: {request.total_count}")
     
-    rule = None
+    from app.models import QuestionRule
+    
+    default_rule = db.query(QuestionRule).filter(QuestionRule.is_default == True).first()
+    if default_rule:
+        logger.info(f"使用默认规则: {default_rule.name}")
+    
+    custom_rule = None
     if request.rule_id:
-        from app.models import QuestionRule
-        rule = db.query(QuestionRule).filter(QuestionRule.id == request.rule_id).first()
-        if rule:
-            logger.info(f"使用规则: {rule.name}")
-        else:
-            logger.warning(f"规则ID {request.rule_id} 不存在")
+        custom_rule = db.query(QuestionRule).filter(QuestionRule.id == request.rule_id).first()
+        if custom_rule:
+            logger.info(f"使用自定义规则: {custom_rule.name}")
     
     task = GenerationTask(
         knowledge_input=request.knowledge_input,
@@ -59,7 +60,7 @@ async def generate_questions(request: GenerateRequest, db: Session = Depends(get
     db.add(task)
     db.commit()
     db.refresh(task)
-    logger.info(f"创建任务: task_id={task.id}")
+    logger.info(f"创建生成任务: task_id={task.id}")
     
     try:
         knowledge_chunks = None
@@ -75,15 +76,23 @@ async def generate_questions(request: GenerateRequest, db: Session = Depends(get
                 "category": c.category,
                 "char_count": c.char_count
             } for c in chunks]
-            logger.info(f"按ID检索知识: {request.knowledge_ids}, 结果数: {len(knowledge_chunks)}")
-        elif request.knowledge_category:
-            knowledge_chunks = ks.get_chunks_by_category(request.knowledge_category)
-            logger.info(f"按分类检索知识: {request.knowledge_category}, 结果数: {len(knowledge_chunks) if knowledge_chunks else 0}")
+            logger.debug(f"按ID检索知识: {request.knowledge_ids}, 结果数: {len(knowledge_chunks)}")
+        elif request.knowledge_categories and len(request.knowledge_categories) > 0:
+            from app.models import KnowledgeChunk
+            chunks = db.query(KnowledgeChunk).filter(KnowledgeChunk.category.in_(request.knowledge_categories)).all()
+            knowledge_chunks = [{
+                "id": c.id,
+                "title": c.title,
+                "content": c.content,
+                "category": c.category,
+                "char_count": c.char_count
+            } for c in chunks]
+            logger.info(f"检索到 {len(knowledge_chunks)} 条相关知识")
         elif request.knowledge_input:
             knowledge_chunks = ks.search_chunks(query=request.knowledge_input)
-            logger.info(f"按关键词检索知识: {request.knowledge_input}, 结果数: {len(knowledge_chunks) if knowledge_chunks else 0}")
+            logger.info(f"检索到 {len(knowledge_chunks) if knowledge_chunks else 0} 条相关知识")
         
-        logger.info(f"调用Kimi API生成题目...")
+        logger.info(f"开始调用Kimi API生成题目...")
         questions = generate_questions_with_kimi(
             knowledge_input=request.knowledge_input,
             question_types=request.question_types,
@@ -95,25 +104,31 @@ async def generate_questions(request: GenerateRequest, db: Session = Depends(get
             knowledge_chunks=knowledge_chunks,
             task_id=task.id,
             db=db,
-            rule=rule
+            default_rule=default_rule,
+            custom_rule=custom_rule
         )
-        logger.info(f"Kimi API返回 {len(questions)} 道题目")
+        logger.info(f"Kimi API返回 {len(questions)} 道题目，开始保存...")
         
         for q in questions:
             kp = q.get("knowledge_points", [])
+            
             if isinstance(kp, list):
-                kp_str = ",".join(str(k) for k in kp)
+                kp_str = ",".join(str(k) for k in kp if k is not None)
             elif isinstance(kp, str):
                 kp_str = kp
             else:
                 kp_str = str(kp) if kp else ""
             
+            answer = q.get("answer", "")
+            if isinstance(answer, list):
+                answer = ",".join(str(a) for a in answer)
+            
             gq = GeneratedQuestion(
                 task_id=task.id,
                 content=q.get("content", ""),
                 question_type=q.get("question_type", "单选"),
-                difficulty=q.get("difficulty", "L2"),
-                answer=q.get("answer", ""),
+                difficulty=q.get("difficulty", "中等"),
+                answer=answer,
                 explanation=q.get("explanation", ""),
                 design_reason=q.get("design_reason", ""),
                 difficulty_reason=q.get("difficulty_reason", ""),
@@ -175,6 +190,7 @@ def get_generated_questions(task_id: int, db: Session = Depends(get_db)):
 
 @router.post("/tasks/{task_id}/adopt")
 def adopt_questions(task_id: int, question_ids: List[int], db: Session = Depends(get_db)):
+    from app.models import KnowledgePoint
     count = 0
     for qid in question_ids:
         gq = db.query(GeneratedQuestion).filter(
@@ -206,6 +222,16 @@ def adopt_questions(task_id: int, question_ids: List[int], db: Session = Depends
                         order_index=idx
                     )
                     db.add(option)
+            
+            if gq.knowledge_points:
+                kp_names = [kp.strip() for kp in gq.knowledge_points.split(",") if kp.strip()]
+                for kp_name in kp_names:
+                    kp = db.query(KnowledgePoint).filter(KnowledgePoint.name == kp_name).first()
+                    if not kp:
+                        kp = KnowledgePoint(name=kp_name, level=1)
+                        db.add(kp)
+                        db.flush()
+                    question.knowledge_points.append(kp)
             
             db.delete(gq)
             count += 1
