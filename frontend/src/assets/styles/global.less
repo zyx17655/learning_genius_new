@@ -1,24 +1,45 @@
 // ========================================
 // 智能教学系统 - 全局样式
+// 基于 vue2-and-ui.mdc 规范
 // ========================================
 
 @import './variables.less';
 
 // 重置样式
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html, body {
+  height: 100%;
   font-family: @font-family;
-  font-size: @font-size-md;
-  line-height: @line-height-normal;
+  font-size: @font-size-base;
   color: @text-primary;
-  background-color: @bg-page;
+  background: @bg-page !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: @bg-page !important;
+}
+
+a {
+  color: @primary-color;
+  text-decoration: none;
+}
+
+button {
+  font-family: @font-family;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
 }
 
 // 页面容器
@@ -32,16 +53,11 @@ html, body {
 .card {
   background: @bg-card;
   border-radius: @radius-lg;
-  box-shadow: @shadow-md;
-  padding: @spacing-lg;
-  
-  &.card-hover {
-    transition: box-shadow @transition-normal, transform @transition-normal;
-    
-    &:hover {
-      box-shadow: @shadow-lg;
-      transform: translateY(-2px);
-    }
+  box-shadow: @shadow-card;
+  transition: box-shadow @transition-base, transform @transition-base;
+
+  &:hover {
+    box-shadow: @shadow-card-hover;
   }
 }
 
@@ -82,13 +98,25 @@ html, body {
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 20px;
   background: @primary-color;
   color: @text-white;
-  border-color: @primary-color;
-  
-  &:hover:not(:disabled) {
+  border-radius: @radius-md;
+  font-size: @font-size-sm;
+  font-weight: 500;
+  transition: all @transition-fast;
+  white-space: nowrap;
+
+  &:hover {
     background: @primary-light;
-    border-color: @primary-light;
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 }
 
@@ -103,24 +131,39 @@ html, body {
 }
 
 .btn-ghost {
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
   color: @text-secondary;
-  border-color: transparent;
-  
-  &:hover:not(:disabled) {
-    background: @bg-hover;
-    color: @text-primary;
+  font-size: @font-size-sm;
+  border-radius: @radius-sm;
+  transition: all @transition-fast;
+
+  &:hover {
+    color: @primary-color;
+    background: rgba(26, 26, 46, 0.04);
   }
 }
 
 .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 20px;
   background: transparent;
-  color: @primary-color;
-  border-color: @primary-color;
-  
-  &:hover:not(:disabled) {
-    background: @primary-color;
-    color: @text-white;
+  color: @text-primary;
+  border: 1px solid @border-color;
+  border-radius: @radius-md;
+  font-size: @font-size-sm;
+  font-weight: 500;
+  transition: all @transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: @primary-color;
+    color: @primary-color;
   }
 }
 
@@ -142,10 +185,16 @@ html, body {
 // 标签样式
 .label-en {
   font-size: @font-size-xs;
-  color: @text-muted;
+  font-weight: 600;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: @spacing-xs;
+  color: @text-muted;
+}
+
+.label-zh {
+  font-size: @font-size-lg;
+  font-weight: 700;
+  color: @text-primary;
 }
 
 // 页面头部
@@ -215,6 +264,69 @@ html, body {
     &::placeholder {
       color: @text-light;
     }
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: @font-size-sm;
+  font-weight: 500;
+  color: @text-secondary;
+  margin-bottom: @spacing-sm;
+}
+
+.form-input {
+  width: 100%;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-md;
+  border: 1px solid @border-color;
+  border-radius: @radius-md;
+  background: @bg-card;
+  transition: border-color @transition-fast, box-shadow @transition-fast;
+  
+  &:focus {
+    outline: none;
+    border-color: @primary-color;
+  }
+  
+  &::placeholder {
+    color: @text-light;
+  }
+}
+
+.form-textarea {
+  width: 100%;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-md;
+  border: 1px solid @border-color;
+  border-radius: @radius-md;
+  background: @bg-card;
+  resize: vertical;
+  min-height: 80px;
+  font-family: @font-family;
+  
+  &:focus {
+    outline: none;
+    border-color: @primary-color;
+  }
+  
+  &::placeholder {
+    color: @text-light;
+  }
+}
+
+.form-select {
+  width: 100%;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-md;
+  border: 1px solid @border-color;
+  border-radius: @radius-md;
+  background: @bg-card;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: @primary-color;
   }
 }
 
@@ -335,6 +447,14 @@ html, body {
   }
 }
 
+// 页面过渡
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 // 工具类
 .text-center { text-align: center; }
 .text-left { text-align: left; }
@@ -389,3 +509,29 @@ html, body {
 .mt-md { margin-top: @spacing-md; }
 .mt-lg { margin-top: @spacing-lg; }
 .mt-xl { margin-top: @spacing-xl; }
+
+// 移动端适配
+@media (max-width: 768px) {
+  html, body { font-size: 12px; }
+  .btn-primary { padding: 8px 14px; font-size: 12px; }
+  .btn-outline { padding: 6px 12px; font-size: 12px; }
+}
+
+// 滚动条
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}

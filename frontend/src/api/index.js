@@ -4,7 +4,7 @@ const API_BASE_URL = 'http://localhost:5001/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 120000,
+  timeout: 180000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -66,7 +66,17 @@ export default {
   generateQuestions(data) {
     return api.post('/ai/generate', data)
   },
-  
+
+  // 带验证的异步生成接口
+  generateQuestionsWithVerification(data) {
+    return api.post('/ai/generate-with-verification', data)
+  },
+
+  // 查询任务状态
+  getTaskStatus(taskId) {
+    return api.get(`/ai/tasks/${taskId}/status`)
+  },
+
   getGeneratedQuestions(taskId) {
     return api.get(`/ai/tasks/${taskId}/questions`)
   },

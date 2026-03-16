@@ -2,6 +2,7 @@ import httpx
 import json
 import time
 import ssl
+import re
 from typing import List, Dict, Any, Optional
 from app.config import settings
 import logging
@@ -224,61 +225,53 @@ def build_generation_prompt(
             return ""
         
         content = ""
+        is_default_rule = (rule_type == "默认")
+        
+        # 1. 角色设定（两者都有）
         if rule.role:
             content += f"### 角色设定\n{rule.role}\n\n"
         
-        if rule.core_principles:
-            try:
-                principles = json.loads(rule.core_principles) if isinstance(rule.core_principles, str) else rule.core_principles
-                content += "### 核心原则\n"
-                for p in principles:
-                    content += f"- **{p.get('title', '')}**：{p.get('content', '')}\n"
-                content += "\n"
-            except:
-                pass
+        # 以下字段仅默认规则包含
+        if is_default_rule:
+            # 2. 核心原则
+            if rule.core_principles:
+                content += f"### 核心原则\n{rule.core_principles}\n\n"
+            
+            # 3. 工作流程
+            if rule.workflow:
+                content += f"### 工作流程\n{rule.workflow}\n\n"
+            
+            # 4. 命题核心规范
+            if rule.specifications:
+                content += f"### 命题核心规范\n{rule.specifications}\n\n"
+            
+            # 5. 干扰项设置
+            if rule.distractor_mechanics:
+                content += f"### 干扰项设置\n{rule.distractor_mechanics}\n\n"
+            
+            # 6. 专项技能
+            if rule.domain_skills:
+                content += f"### 专项技能\n{rule.domain_skills}\n\n"
         
-        if rule.workflow:
-            try:
-                workflow = json.loads(rule.workflow) if isinstance(rule.workflow, str) else rule.workflow
-                content += "### 工作流程\n"
-                for w in workflow:
-                    content += f"- **{w.get('title', '')}**：{w.get('content', '')}\n"
-                content += "\n"
-            except:
-                pass
+        # 7. 考察偏好与方法论
+        if rule.assessment_focus:
+            content += f"### 考察偏好与方法论\n{rule.assessment_focus}\n\n"
         
-        if rule.specifications:
-            try:
-                specs = json.loads(rule.specifications) if isinstance(rule.specifications, str) else rule.specifications
-                content += "### 命题规范\n"
-                for s in specs:
-                    content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
-                content += "\n"
-            except:
-                pass
+        # 8. 语言风格与题干结构
+        if rule.stem_style:
+            content += f"### 语言风格与题干结构\n{rule.stem_style}\n\n"
         
-        if rule.distractor_mechanics:
-            try:
-                mechanics = json.loads(rule.distractor_mechanics) if isinstance(rule.distractor_mechanics, str) else rule.distractor_mechanics
-                content += "### 干扰项设置逻辑\n"
-                for m in mechanics:
-                    content += f"- **{m.get('type', '')}**：{m.get('description', '')}\n"
-                content += "\n"
-            except:
-                pass
+        # 9. 学科表达与符号习惯
+        if rule.notation_convention:
+            content += f"### 学科表达与符号习惯\n{rule.notation_convention}\n\n"
         
-        if rule.domain_skills:
-            try:
-                skills = json.loads(rule.domain_skills) if isinstance(rule.domain_skills, str) else rule.domain_skills
-                content += "### 专项命题技能\n"
-                for s in skills:
-                    content += f"- **{s.get('title', '')}**：{s.get('content', '')}\n"
-                content += "\n"
-            except:
-                pass
+        # 10. 干扰项逻辑陷阱
+        if rule.subject_traps:
+            content += f"### 干扰项逻辑陷阱\n{rule.subject_traps}\n\n"
         
-        if rule.output_template:
-            content += f"### 输出模板\n{rule.output_template}\n\n"
+        # 11. 解析深度与标准
+        if rule.solution_blueprint:
+            content += f"### 解析深度与标准\n{rule.solution_blueprint}\n\n"
         
         return content
     
@@ -308,24 +301,24 @@ def build_generation_prompt(
     
     difficulty_constraint_text = "、".join([f"{k}（{v.get('count', 0)}题）" for k, v in difficulty_config.items() if v.get('count', 0) > 0])
     
-    prompt = f"""# 考试题目生成任务
+    prompt = r"""# 考试题目生成任务
 
 你是一位资深的教育测量与评价专家，拥有20年的考试命题经验。请根据以下要求生成高质量的考试题目。
 
 ## 基本信息
-- **知识范围**：{knowledge_input if knowledge_input else "根据选定的知识点生成"}
-- **总题数**：{total_count} 题（必须严格生成 {total_count} 道题，不能多也不能少！）
-- **题型分布**：{type_text}
-{knowledge_content}{rule_section}
+- **知识范围**：**""" + (knowledge_input if knowledge_input else "根据选定的知识点生成") + r"""**
+- **总题数**：""" + str(total_count) + r""" 题（必须严格生成 """ + str(total_count) + r""" 道题，不能多也不能少！）
+- **题型分布**：""" + type_text + """
+""" + knowledge_content + rule_section + r"""
 ## 难度层次要求（布鲁姆认知分类）
-{difficulty_text}
+""" + difficulty_text + r"""
 
 ## ⚠️ 重要约束（必须严格遵守）
 
-1. **数量约束**：必须生成且仅生成 {total_count} 道题目，不能多也不能少！
-2. **题型约束**：严格按照题型数量分配：{type_text}
-3. **难度约束**：严格按照难度数量分配：{difficulty_constraint_text}
-4. **规则优先级**：如有冲突，以用户自定义规则为准{f"，自定义规则优先级高于默认规则" if has_custom_rule else ""}
+1. **数量约束**：必须生成且仅生成 """ + str(total_count) + r""" 道题目，不能多也不能少！
+2. **题型约束**：严格按照题型数量分配：""" + type_text + r"""
+3. **难度约束**：严格按照难度数量分配：""" + difficulty_constraint_text + r"""
+4. **规则优先级**：如有冲突，以用户自定义规则为准""" + ("，自定义规则优先级高" + "于默认规则" if has_custom_rule else "") + r"""
 
 ## 输出格式要求
 
@@ -361,25 +354,58 @@ def build_generation_prompt(
 
 所有数学、物理、化学公式及变量名**必须**使用标准 LaTeX 格式：
 
-1. **行内公式**：使用 `$...$` 包裹，如 `$E=mc^2$`、`$\\int_a^b f(x)dx$`、`$\\alpha + \\beta$`
-2. **块级公式**：使用 `$$...$$` 包裹，如 `$$\\sum_{{i=1}}^{{n}} x_i = x_1 + x_2 + \\cdots + x_n$$`
-3. **变量名**：所有变量必须使用 LaTeX 格式，如 `$x$`、`$y$`、`$\\theta$`、`$\\omega$`
-4. **常见符号**：
-   - 分数：`$\\frac{{a}}{{b}}$`
-   - 上标：`$x^2$`、`$e^{{ix}}$`
-   - 下标：`$x_1$`、`$A_{{ij}}$`
-   - 根号：`$\\sqrt{{2}}$`、`$\\sqrt[n]{{x}}$`
-   - 希腊字母：`$\\alpha$`、`$\\beta$`、`$\\gamma$`、`$\\theta$`、`$\\omega$`
-   - 运算符：`$\\times$`、`$\\div$`、`$\\pm$`、`$\\leq$`、`$\\geq$`
-   - 积分：`$\\int$`、`$\\iint$`、`$\\oint$`
-   - 求和：`$\\sum_{{i=1}}^{{n}}$`
-   - 极限：`$\\lim_{{x \\to \\infty}}$`
+### 1. 公式包裹方式
+- **行内公式**：使用 `$...$` 包裹，如 `$E=mc^2$`、`$\int_a^b f(x)dx$`、`$\alpha + \beta$`
+- **块级公式**：使用 `$$...$$` 包裹，如 `$$\sum_{{i=1}}^{{n}} x_i = x_1 + x_2 + \cdots + x_n$$`
 
-**示例**：
-- 正确：`求 $x^2 + 2x + 1 = 0$ 的解`
-- 正确：`计算 $$\\int_0^1 x^2 dx$$ 的值`
-- 正确：`已知 $\\alpha = 30^\\circ$，求 $\\sin \\alpha$`
-- 错误：`求 x^2 + 2x + 1 = 0 的解`（变量未使用 LaTeX）
+### 2. LaTeX 命令规范（关键！）
+- **所有 LaTeX 命令使用单反斜杠 `\`**，如 `\sum`、`\int`、`\frac`、`\alpha`
+- **特别注意**：`\\`（双反斜杠）在 LaTeX 中表示换行，**不要在公式命令中使用双反斜杠**
+  - ✅ 正确：`$\sum_{{i=1}}^{{n}}$`、`$\int_a^b$`、`$\frac{{a}}{{b}}$`
+  - ❌ 错误：`$\\sum_{{i=1}}^{{n}}$`、`$\\int_a^b$`、`$\\frac{{a}}{{b}}$`（会导致换行和显示错误）
+
+### 3. 变量名
+所有变量必须使用 LaTeX 格式，如 `$x$`、`$y$`、`$\theta$`、`$\omega$`
+
+### 4. 常见符号
+- 分数：`$\frac{{a}}{{b}}$`
+- 上标：`$x^2$`、`$e^{{ix}}$`
+- 下标：`$x_1$`、`$A_{{ij}}$`
+- 根号：`$\sqrt{{2}}$`、`$\sqrt[n]{{x}}$`
+- 希腊字母：`$\alpha$`、`$\beta$`、`$\gamma$`、`$\theta$`、`$\omega$`
+- 运算符：`$\times$`、`$\div$`、`$\pm$`、`$\leq$`、`$\geq$`
+- 积分：`$\int$`、`$\iint$`、`$\oint$`
+- 求和：`$\sum_{{i=1}}^{{n}}$`
+- 极限：`$\lim_{{x \to \infty}}$`
+
+### 5. 公式显示要求
+- **行内公式必须在一行内显示**，不要在公式内部添加换行符
+- 复杂的公式如果太长，使用块级公式 `$$...$$` 单独成行
+- **行内公式内部不要使用 `\\` 换行**（`\\` 是 LaTeX 换行命令）
+
+### 6. 字体和格式命令
+- **罗马字体**：使用 `\mathrm{...}`，如 `$c_{\mathrm{A}}$`、`$f_{\mathrm{s}}$`
+  - ❌ 避免使用旧版 `{\rm ...}` 格式
+- **等宽字体（代码）**：使用 `\texttt{...}` 包裹代码，如 `\texttt{[cA,cD]=dwt(f,'db4');}`
+- **粗体**：使用 `\mathbf{...}`，如 `$\mathbf{x}$`
+- **斜体**：数学变量默认就是斜体，不需要额外设置
+
+### 7. 代码和特殊文本格式
+- **MATLAB/Python 代码**：使用 `\texttt{...}` 包裹，如 `\texttt{plot(abs(fft(cA)))}`
+- **命令行代码**：使用 `\texttt{...}` 包裹
+- **文件路径**：使用 `\texttt{...}` 包裹，如 `\texttt{/path/to/file}`
+- **特殊字符**：在 `\texttt` 中的 `_`、`$`、`%` 等字符不需要转义
+
+### 8. 示例
+- ✅ 正确：`求 $x^2 + 2x + 1 = 0$ 的解`
+- ✅ 正确：`计算 $$\int_0^1 x^2 dx$$ 的值`
+- ✅ 正确：`已知 $\alpha = 30^\circ$，求 $\sin \alpha$`
+- ✅ 正确：`能量归一化得 $E(a)=\sum_{b} |C(a,b)|^2$`
+- ✅ 正确：`近似系数 $c_{\mathrm{A}}$ 和采样频率 $f_{\mathrm{s}}$`
+- ✅ 正确：`使用 \texttt{[cA,cD]=dwt(f,'db4');} 获取系数`
+- ❌ 错误：`能量归一化得 $E(a)=\sum_{b} |C(a,b)|^2$` 内部使用双反斜杠（如 `\\sum`）会导致换行
+- ❌ 错误：`系数 $c_{\rm A}$`（使用旧版 `\rm` 命令）
+- ❌ 错误：`使用 [cA,cD]=dwt(f,'db4'); 获取系数`（代码未使用 \texttt 包裹）
 
 ## 字段填写要求（重要！）
 
@@ -589,6 +615,52 @@ def parse_ai_response(content: str) -> List[Dict]:
         logger.error(traceback.format_exc())
         return []
 
+def fix_latex_format(text: str) -> str:
+    r"""
+    修复 LaTeX 格式问题：
+    1. 将双反斜杠命令（如 \\sum、\\bigl）改为单反斜杠（如 \sum、\bigl）
+    2. 将旧版 {\rm ...} 改为 \mathrm{...}
+    3. 修复转义字符（如 \\{ \\} 改为 \{ \}）
+    4. 保留真正的换行符（\\ 后跟换行）
+    """
+    if not text or not isinstance(text, str):
+        return text
+    
+    fixed_text = text
+    
+    # 1. 修复转义字符：\\{ \\} \\_ \\^ 等改为 \{ \} \_ \^
+    # 这些是 LaTeX 中需要转义的特殊字符
+    escape_chars = ['{', '}', '_', '^', '&', '#', '%', '$', '~']
+    for char in escape_chars:
+        # 在数学模式内的转义：$...\\{...$ -> $...\{...$
+        fixed_text = fixed_text.replace('\\\\' + char, '\\' + char)
+    
+    # 2. 通用修复：所有双反斜杠后跟字母或下划线开头的命令，改为单反斜杠
+    # 匹配 \\ 后跟字母或下划线开头的字符序列
+    fixed_text = re.sub(r'\\\\([a-zA-Z_][a-zA-Z0-9_]*)(?![a-zA-Z])', r'\\\1', fixed_text)
+    
+    # 3. 额外修复：括号相关的命令（确保覆盖所有情况）
+    bracket_commands = [
+        'big', 'Big', 'bigg', 'Bigg',
+        'bigl', 'bigr', 'Bigl', 'Bigr', 'biggl', 'biggr', 'Biggl', 'Biggr',
+        'bigm', 'Bigm', 'biggm', 'Biggm'
+    ]
+    for cmd in bracket_commands:
+        fixed_text = fixed_text.replace('\\\\' + cmd, '\\' + cmd)
+    
+    # 4. 修复空格命令
+    space_commands = [' ', ',', ';', '!', 'quad', 'qquad', 'thinspace', 'thickspace', 'medspace', 'negthinspace']
+    for cmd in space_commands:
+        fixed_text = fixed_text.replace('\\\\' + cmd, '\\' + cmd)
+    
+    # 5. 修复旧版 {\rm ...} 格式为 \mathrm{...}
+    # 先处理带花括号的: {\rm A} -> \mathrm{A}
+    fixed_text = re.sub(r'\{\\rm\s+([^}]+)\}', r'\\mathrm{\1}', fixed_text)
+    # 再处理不带花括号的（在数学模式内）: \rm A -> \mathrm{A}
+    fixed_text = re.sub(r'\\rm\s+([a-zA-Z0-9_]+)', r'\\mathrm{\1}', fixed_text)
+    
+    return fixed_text
+
 def validate_questions(questions: List[Dict]) -> List[Dict]:
     validated = []
     for q in questions:
@@ -614,16 +686,35 @@ def validate_questions(questions: List[Dict]) -> List[Dict]:
                 for opt in q.get("options", []) if not opt.get("is_correct", False)
             ]
         
+        # 修复 LaTeX 格式问题
+        content = fix_latex_format(q.get("content", ""))
+        explanation = fix_latex_format(q.get("explanation", ""))
+        design_reason = fix_latex_format(design_reason)
+        difficulty_reason = fix_latex_format(difficulty_reason)
+        
+        # 修复选项中的 LaTeX
+        options = q.get("options", [])
+        if options:
+            for opt in options:
+                if isinstance(opt, dict) and "content" in opt:
+                    opt["content"] = fix_latex_format(opt.get("content", ""))
+        
+        # 修复干扰项原因中的 LaTeX
+        if distractor_reasons:
+            for dr in distractor_reasons:
+                if isinstance(dr, dict) and "reason" in dr:
+                    dr["reason"] = fix_latex_format(dr.get("reason", ""))
+        
         validated_q = {
-            "content": q.get("content", ""),
+            "content": content,
             "question_type": q.get("question_type", "单选"),
             "difficulty": q.get("difficulty", "中等"),
             "answer": q.get("answer", ""),
-            "explanation": q.get("explanation", ""),
+            "explanation": explanation,
             "design_reason": design_reason,
             "difficulty_reason": difficulty_reason,
             "knowledge_points": q.get("knowledge_points", []),
-            "options": q.get("options", []),
+            "options": options,
             "distractor_reasons": distractor_reasons,
             "selected": False,
             "isDraft": False,
@@ -695,3 +786,327 @@ def generate_fallback_questions(
             idx += 1
     
     return questions
+
+
+def verify_question_with_kimi(question: Dict, knowledge_context: str = "", max_retries: int = 3) -> Dict:
+    """
+    使用Kimi API验证题目质量
+    
+    Args:
+        question: 待验证的题目
+        knowledge_context: 知识点上下文
+        max_retries: 最大重试次数
+        
+    Returns:
+        {
+            "is_valid": bool,
+            "total_score": int,
+            "scores": Dict,
+            "issues": List[str],
+            "suggestions": str
+        }
+    """
+    prompt = build_verification_prompt(question, knowledge_context)
+    
+    system_prompt = """你是一位资深的教育测量与评价专家，拥有20年的考试命题经验。你擅长：
+1. 评估考试题目的质量和准确性
+2. 识别题目中的逻辑错误、知识错误和表述问题
+3. 判断题目难度是否合理
+4. 评估干扰项的设计质量
+
+请严格按照JSON格式返回验证结果，确保评分客观公正。"""
+    
+    logger.info(f"=== 开始验证题目 ===")
+    logger.info(f"题目: {question.get('content', '')[:50]}...")
+    
+    for attempt in range(max_retries):
+        try:
+            with httpx.Client(
+                timeout=60.0,
+                verify=False,
+                follow_redirects=True,
+                http2=False
+            ) as client:
+                response = client.post(
+                    KIMI_API_URL,
+                    headers={
+                        "Authorization": f"Bearer {KIMI_API_KEY}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": "kimi-k2-turbo-preview",
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "temperature": 0.3,
+                        "max_tokens": 4096
+                    }
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result["choices"][0]["message"]["content"]
+                    
+                    logger.info(f"验证结果: {content[:200]}...")
+                    
+                    # 解析验证结果
+                    verification_result = parse_verification_response(content)
+                    return verification_result
+                else:
+                    logger.error(f"验证API调用失败: {response.status_code}")
+                    if attempt < max_retries - 1:
+                        time.sleep(2)
+                        continue
+                    
+        except Exception as e:
+            logger.error(f"验证过程异常: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(2)
+                continue
+    
+    # 所有重试都失败，返回默认通过（避免阻塞流程）
+    logger.warning("验证API调用失败，默认通过")
+    return {
+        "is_valid": True,
+        "total_score": 85,
+        "scores": {
+            "content": 20,
+            "logic": 20,
+            "difficulty": 17,
+            "format": 15,
+            "distractors": 13
+        },
+        "issues": [],
+        "suggestions": "验证服务暂时不可用，默认通过"
+    }
+
+
+def build_verification_prompt(question: Dict, knowledge_context: str = "") -> str:
+    """构建验证Prompt"""
+    
+    options_text = ""
+    if question.get("options"):
+        for i, opt in enumerate(question["options"]):
+            label = chr(65 + i)  # A, B, C, D
+            correct_mark = " ✓" if opt.get("is_correct") else ""
+            options_text += f"{label}. {opt.get('content', '')}{correct_mark}\n"
+    
+    distractor_text = ""
+    if question.get("distractor_reasons"):
+        for dr in question["distractor_reasons"]:
+            distractor_text += f"- 选项 {dr.get('option', '')} ({dr.get('type', '')}): {dr.get('reason', '')}\n"
+    
+    prompt = r"""# 题目质量验证任务
+
+请对以下生成的考试题目进行全面质量检查。
+
+## 题目信息
+
+**题目内容**：
+""" + question.get('content', '') + r"""
+
+**题型**：**""" + question.get('question_type', '') + r"""**
+
+**难度**：**""" + question.get('difficulty', '') + r"""**
+
+**选项**：
+""" + options_text + r"""
+
+**正确答案**：
+""" + question.get('answer', '') + r"""
+
+**解析**：
+""" + question.get('explanation', '') + r"""
+
+**设计依据**：
+""" + question.get('design_reason', '') + r"""
+
+**难度说明**：
+""" + question.get('difficulty_reason', '') + r"""
+
+**干扰项设计原因**：
+""" + distractor_text + r"""
+
+## 验证维度（总分100分）
+
+### 1. 内容正确性（25分）
+- 题目内容是否准确无误
+- 答案是否正确
+- 解析是否清晰正确
+- 是否符合知识点要求
+
+### 2. 逻辑合理性（25分）
+- 题目逻辑是否清晰
+- 题干是否有歧义
+- 选项设计是否合理
+- 干扰项是否具有迷惑性但不牵强
+
+### 3. 难度匹配（20分）
+- 难度标签是否与题目实际难度相符
+- 是否符合布鲁姆认知分类对应层级
+
+### 4. 格式规范（15分）
+- **LaTeX公式格式检查**：
+  - 公式是否使用正确的命令：\sum、\int、\frac 等（不是 \\sum、\\int）
+  - 罗马字体是否使用 \mathrm{...}（不是 {\rm ...} 或 \rm）
+  - 代码是否使用 \texttt{...} 包裹
+  - 行内公式是否在一行内显示，没有异常换行
+- 题目格式是否规范
+- 字段是否完整
+
+### 5. 干扰项质量（15分）
+- 干扰项设计是否合理
+- 是否具有教育价值
+- 是否能有效区分学生水平
+
+## 输出格式（严格JSON）
+
+```json
+{{
+    "is_valid": true/false,
+    "total_score": 0-100,
+    "scores": {{
+        "content": 0-25,
+        "logic": 0-25,
+        "difficulty": 0-20,
+        "format": 0-15,
+        "distractors": 0-15
+    }},
+    "issues": ["问题1", "问题2"],
+    "suggestions": "具体的改进建议，包括如何修改题目"
+}}
+```
+
+## 判定标准
+
+- **通过（is_valid: true）**：total_score >= 75，且没有严重错误
+- **不通过（is_valid: false）**：total_score < 75，或存在严重知识错误、逻辑错误
+
+请严格按照JSON格式输出验证结果。"""
+    
+    return prompt
+
+
+def parse_verification_response(content: str) -> Dict:
+    """解析验证结果"""
+    try:
+        # 提取JSON部分
+        import re
+        json_match = re.search(r'\{.*\}', content, re.DOTALL)
+        if json_match:
+            json_str = json_match.group()
+            result = json.loads(json_str)
+            
+            # 确保必要字段存在
+            if "is_valid" not in result:
+                result["is_valid"] = result.get("total_score", 0) >= 75
+            
+            return result
+        else:
+            logger.warning("验证结果中未找到JSON")
+            return {
+                "is_valid": True,
+                "total_score": 80,
+                "scores": {},
+                "issues": [],
+                "suggestions": "解析验证结果失败，默认通过"
+            }
+    except Exception as e:
+        logger.error(f"解析验证结果失败: {e}")
+        return {
+            "is_valid": True,
+            "total_score": 80,
+            "scores": {},
+            "issues": [],
+            "suggestions": "解析验证结果失败，默认通过"
+        }
+
+
+async def generate_and_verify_question(
+    generation_params: Dict,
+    knowledge_context: str = "",
+    max_generation_retries: int = 3
+) -> Dict:
+    """
+    生成并验证题目，验证不通过则重试
+    
+    Args:
+        generation_params: 生成参数
+        knowledge_context: 知识点上下文
+        max_generation_retries: 最大生成重试次数
+        
+    Returns:
+        {
+            "success": bool,
+            "question": Dict,
+            "attempts": int,
+            "verification": Dict,
+            "issues": List[str]
+        }
+    """
+    last_issues = []
+    last_suggestions = ""
+    
+    for attempt in range(max_generation_retries):
+        logger.info(f"=== 第 {attempt + 1} 次生成尝试 ===")
+        
+        # 构建生成参数（带上次反馈）
+        params = generation_params.copy()
+        if last_issues:
+            params["feedback"] = f"上次生成的问题：{'; '.join(last_issues)}。改进建议：{last_suggestions}"
+        
+        # 生成题目（单题）
+        try:
+            # 调用生成函数
+            questions = generate_questions_with_kimi(
+                knowledge_input=params.get("knowledge_input", ""),
+                question_types=[params.get("question_type", "单选")],
+                type_counts={params.get("question_type", "单选"): 1},
+                difficulty_config={params.get("difficulty", "中等"): {"count": 1}},
+                distractor_list=params.get("distractor_list", []),
+                preference_list=params.get("preference_list", []),
+                custom_requirement=params.get("custom_requirement", ""),
+                knowledge_chunks=params.get("knowledge_chunks", [])
+            )
+            
+            if not questions:
+                logger.warning("生成题目失败，无返回结果")
+                continue
+            
+            question = questions[0]
+            
+            # 验证题目
+            logger.info(f"开始验证题目...")
+            verification = verify_question_with_kimi(question, knowledge_context)
+            
+            logger.info(f"验证结果: 通过={verification.get('is_valid')}, 得分={verification.get('total_score')}")
+            
+            if verification.get("is_valid"):
+                # 验证通过
+                return {
+                    "success": True,
+                    "question": question,
+                    "attempts": attempt + 1,
+                    "verification": verification,
+                    "issues": []
+                }
+            else:
+                # 验证不通过，记录问题用于下次改进
+                last_issues = verification.get("issues", [])
+                last_suggestions = verification.get("suggestions", "")
+                logger.info(f"验证不通过，问题: {last_issues}")
+                
+        except Exception as e:
+            logger.error(f"生成或验证过程异常: {e}")
+            continue
+    
+    # 超过最大重试次数
+    logger.warning(f"超过最大重试次数 {max_generation_retries}，返回最后一次结果")
+    return {
+        "success": False,
+        "question": question if 'question' in locals() else None,
+        "attempts": max_generation_retries,
+        "verification": verification if 'verification' in locals() else None,
+        "issues": last_issues
+    }

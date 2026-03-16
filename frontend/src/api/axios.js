@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
 // 响应拦截器
 axiosInstance.interceptors.response.use(
   response => {
-    return response
+    return response.data
   },
   error => {
     if (error.response) {

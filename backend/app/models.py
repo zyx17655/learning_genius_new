@@ -76,6 +76,7 @@ class Question(Base):
     design_reason = Column(Text, comment='题目设计依据')
     difficulty_reason = Column(Text, comment='难度设定理由')
     distractor_reasons = Column(Text, comment='干扰项设计理由JSON')
+    generated_question_id = Column(Integer, ForeignKey("generated_questions.id", ondelete="SET NULL"), nullable=True, comment='关联生成题目ID')
     creator = Column(String(50), default="系统", comment='创建者')
     reviewer = Column(String(50), comment='审核者')
     created_at = Column(DateTime, server_default=func.now(), comment='创建时间')

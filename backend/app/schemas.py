@@ -49,6 +49,10 @@ class QuestionCreate(QuestionBase):
     options: List[OptionBase] = []
     knowledge_point_ids: List[int] = []
     tag_names: List[str] = []
+    # 题目设计相关字段
+    design_reason: Optional[str] = None
+    difficulty_reason: Optional[str] = None
+    distractor_reasons: Optional[List[dict]] = None
 
 class QuestionUpdate(BaseModel):
     content: Optional[str] = None
@@ -62,6 +66,10 @@ class QuestionUpdate(BaseModel):
     options: Optional[List[OptionBase]] = None
     knowledge_point_ids: Optional[List[Union[int, str]]] = None
     tag_names: Optional[List[str]] = None
+    # 题目设计相关字段
+    design_reason: Optional[str] = None
+    difficulty_reason: Optional[str] = None
+    distractor_reasons: Optional[List[dict]] = None
 
 class QuestionResponse(QuestionBase):
     id: int
@@ -71,6 +79,12 @@ class QuestionResponse(QuestionBase):
     options: List[OptionResponse] = []
     knowledge_points: List[str] = []
     tags: List[str] = []
+    # 题目设计相关字段
+    design_reason: Optional[str] = None
+    difficulty_reason: Optional[str] = None
+    distractor_reasons: Optional[List[dict]] = None
+    # 关联生成题目ID
+    generated_question_id: Optional[int] = None
     
     class Config:
         from_attributes = True
@@ -107,6 +121,7 @@ class GeneratedQuestionResponse(BaseModel):
     answer: Optional[str] = None
     explanation: Optional[str] = None
     design_reason: Optional[str] = None
+    difficulty_reason: Optional[str] = None
     distractor_reasons: Optional[List[dict]] = None
     knowledge_points: List[str] = []
     options: List[dict] = []

@@ -260,15 +260,46 @@ def update_rule(rule_id: int, rule: RuleUpdate, db: Session = Depends(get_db)):
     if "role" in update_data:
         existing.role = update_data["role"]
     if "corePrinciples" in update_data:
-        existing.core_principles = json.dumps([p.dict() for p in update_data["corePrinciples"]])
+        principles = update_data["corePrinciples"]
+        if principles and len(principles) > 0:
+            # 处理可能是字典或Pydantic模型的情况
+            existing.core_principles = json.dumps([
+                p.dict() if hasattr(p, 'dict') else p for p in principles
+            ])
+        else:
+            existing.core_principles = json.dumps([])
     if "workflow" in update_data:
-        existing.workflow = json.dumps([w.dict() for w in update_data["workflow"]])
+        workflow = update_data["workflow"]
+        if workflow and len(workflow) > 0:
+            existing.workflow = json.dumps([
+                w.dict() if hasattr(w, 'dict') else w for w in workflow
+            ])
+        else:
+            existing.workflow = json.dumps([])
     if "specifications" in update_data:
-        existing.specifications = json.dumps([s.dict() for s in update_data["specifications"]])
+        specs = update_data["specifications"]
+        if specs and len(specs) > 0:
+            existing.specifications = json.dumps([
+                s.dict() if hasattr(s, 'dict') else s for s in specs
+            ])
+        else:
+            existing.specifications = json.dumps([])
     if "distractorMechanics" in update_data:
-        existing.distractor_mechanics = json.dumps([d.dict() for d in update_data["distractorMechanics"]])
+        mechanics = update_data["distractorMechanics"]
+        if mechanics and len(mechanics) > 0:
+            existing.distractor_mechanics = json.dumps([
+                d.dict() if hasattr(d, 'dict') else d for d in mechanics
+            ])
+        else:
+            existing.distractor_mechanics = json.dumps([])
     if "domainSkills" in update_data:
-        existing.domain_skills = json.dumps([s.dict() for s in update_data["domainSkills"]])
+        skills = update_data["domainSkills"]
+        if skills and len(skills) > 0:
+            existing.domain_skills = json.dumps([
+                s.dict() if hasattr(s, 'dict') else s for s in skills
+            ])
+        else:
+            existing.domain_skills = json.dumps([])
     if "outputTemplate" in update_data:
         existing.output_template = update_data["outputTemplate"]
     if "notationConvention" in update_data:

@@ -191,72 +191,79 @@
           <table class="table w-full">
             <thead class="bg-gradient-to-r from-slate-50 to-slate-100">
               <tr>
-                <th class="w-12">
+                <th class="w-10">
                   <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="selectAll" @change="handleSelectAll" />
                 </th>
-                <th class="w-16 text-slate-500 font-medium">ID</th>
-                <th class="w-24 text-slate-500 font-medium">知识点</th>
-                <th class="text-slate-500 font-medium min-w-[200px]">题目内容</th>
-                <th class="w-20 text-slate-500 font-medium">题型</th>
-                <th class="w-28 text-slate-500 font-medium">难度</th>
-                <th class="w-20 text-slate-500 font-medium">来源</th>
-                <th class="w-20 text-slate-500 font-medium">状态</th>
-                <th class="w-44 text-slate-500 font-medium">操作</th>
+                <th class="w-12 text-slate-500 font-medium text-xs">ID</th>
+                <th class="w-24 text-slate-500 font-medium text-xs">知识点</th>
+                <th class="text-slate-500 font-medium text-xs min-w-[120px] max-w-[180px]">题目内容</th>
+                <th class="w-20 text-slate-500 font-medium text-xs">题型</th>
+                <th class="w-20 text-slate-500 font-medium text-xs">难度</th>
+                <th class="w-20 text-slate-500 font-medium text-xs">来源</th>
+                <th class="w-20 text-slate-500 font-medium text-xs">状态</th>
+                <th class="w-44 text-slate-500 font-medium text-xs">操作</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in questions" :key="item.id" class="hover:bg-indigo-50/50 transition-colors border-b border-slate-100">
+              <tr v-for="item in questions" :key="item.id" class="hover:bg-indigo-50/50 transition-colors border-b border-slate-100 whitespace-nowrap">
                 <td>
                   <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="item.selected" @change="handleItemSelect" />
                 </td>
-                <td class="text-slate-400 font-mono text-sm">#{{ item.id }}</td>
+                <td class="text-slate-400 font-mono text-xs">#{{ item.id }}</td>
                 <td>
-                  <div class="flex flex-wrap gap-1">
-                    <span v-for="kp in (item.knowledgePoints || []).slice(0, 2)" :key="kp" class="px-1.5 py-0.5 text-xs rounded bg-cyan-50 text-cyan-600 whitespace-nowrap">{{ kp }}</span>
-                    <span v-if="(item.knowledgePoints || []).length > 2" class="text-xs text-slate-400 whitespace-nowrap">+{{ item.knowledgePoints.length - 2 }}</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="cursor-pointer group" @click="showDetail(item)">
-                    <div class="text-slate-700 group-hover:text-indigo-600 transition-colors line-clamp-2" :title="item.content">{{ item.content }}</div>
-                    <div v-if="item.tags && item.tags.length" class="flex gap-1 mt-1">
-                      <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="px-1.5 py-0.5 text-xs rounded bg-indigo-50 text-indigo-600">{{ tag }}</span>
-                      <span v-if="item.tags.length > 2" class="px-1.5 py-0.5 text-xs rounded bg-slate-100 text-slate-500">+{{ item.tags.length - 2 }}</span>
+                  <div class="relative group">
+                    <div class="flex flex-wrap gap-0.5">
+                      <span v-for="kp in (item.knowledgePoints || []).slice(0, 1)" :key="kp" class="px-1 py-0.5 text-xs rounded bg-cyan-50 text-cyan-600 whitespace-nowrap max-w-full truncate">{{ kp }}</span>
+                      <span v-if="(item.knowledgePoints || []).length > 1" class="text-xs text-slate-400 flex-shrink-0">+{{ item.knowledgePoints.length - 1 }}</span>
+                    </div>
+                    <!-- 鼠标悬停显示所有知识点 -->
+                    <div v-if="(item.knowledgePoints || []).length > 1" class="absolute top-full left-0 mt-1 hidden group-hover:block z-50">
+                      <div class="bg-slate-800 text-white text-xs rounded-lg p-2 shadow-xl whitespace-nowrap">
+                        <div class="font-semibold mb-1">全部知识点：</div>
+                        <div class="flex flex-col gap-1">
+                          <span v-for="kp in item.knowledgePoints" :key="kp" class="px-2 py-0.5 rounded bg-cyan-600/30 text-cyan-200">{{ kp }}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <span class="px-2 py-1 rounded-full text-xs font-medium" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
+                  <div class="cursor-pointer group" @click="showDetail(item)">
+                    <div class="text-slate-700 group-hover:text-indigo-600 transition-colors line-clamp-1 text-sm" :title="item.content">{{ item.content }}</div>
+                    <div v-if="item.tags && item.tags.length" class="flex gap-1 mt-0.5 flex-wrap">
+                      <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="px-1 py-0.5 text-xs rounded bg-indigo-50 text-indigo-600 whitespace-nowrap">{{ tag }}</span>
+                      <span v-if="item.tags.length > 2" class="px-1 py-0.5 text-xs rounded bg-slate-100 text-slate-500">+{{ item.tags.length - 2 }}</span>
+                    </div>
+                  </div>
                 </td>
                 <td>
-                  <span class="px-2 py-1 rounded text-xs font-bold" :class="getDifficultyBadgeClass(item.difficulty)">{{ getDifficultyName(item.difficulty) }}</span>
+                  <span class="px-1.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
                 </td>
                 <td>
-                  <span class="text-xs px-2 py-1 rounded-full whitespace-nowrap" :class="getSourceBadgeClass(item.source)">{{ item.source || '系统' }}</span>
+                  <span class="px-1.5 py-0.5 rounded text-xs font-bold whitespace-nowrap" :class="getDifficultyBadgeClass(item.difficulty)">{{ getDifficultyName(item.difficulty) }}</span>
                 </td>
                 <td>
-                  <div class="flex items-center gap-2 whitespace-nowrap">
-                    <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(item.status)"></span>
-                    <span class="text-sm" :class="getStatusTextClass(item.status)">{{ item.status }}</span>
+                  <span class="text-xs px-1.5 py-0.5 rounded-full whitespace-nowrap" :class="getSourceBadgeClass(item.source)">{{ item.source || '系统' }}</span>
+                </td>
+                <td>
+                  <div class="flex items-center gap-1 whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full" :class="getStatusDotClass(item.status)"></span>
+                    <span class="text-xs" :class="getStatusTextClass(item.status)">{{ item.status }}</span>
                   </div>
                 </td>
                 <td>
                   <div class="flex gap-1 items-center whitespace-nowrap">
-                    <button v-if="item.status === '待审核'" class="btn btn-xs bg-emerald-500 hover:bg-emerald-600 border-0 text-white gap-1" @click="reviewQuestion(item)" title="审核通过">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                      审核
+                    <button v-if="item.status === '待审核'" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="reviewQuestion(item)" title="审核通过">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     </button>
-                    <button class="btn btn-xs btn-ghost gap-1" @click="showDetail(item)" title="查看详情">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                      查看
+                    <button class="btn btn-sm btn-ghost text-slate-600 hover:text-indigo-600 hover:bg-indigo-50" @click="showDetail(item)" title="查看详情">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                     </button>
-                    <button class="btn btn-xs btn-ghost gap-1" @click="showEditDialog(item)" title="编辑">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                      编辑
+                    <button class="btn btn-sm btn-ghost text-slate-600 hover:text-amber-600 hover:bg-amber-50" @click="showEditDialog(item)" title="编辑">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     </button>
-                    <button class="btn btn-xs btn-ghost text-red-500 hover:text-red-600 hover:bg-red-50 gap-1" @click="deleteQuestion(item.id)" title="删除">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                      删除
+                    <button class="btn btn-sm btn-ghost bg-red-50 text-red-500 hover:bg-red-500 hover:text-white" @click="deleteQuestion(item.id)" title="删除">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     </button>
                   </div>
                 </td>
@@ -383,7 +390,46 @@
             </h4>
             <p class="text-slate-700 leading-relaxed"><latex-renderer :content="currentQuestion.explanation" /></p>
           </div>
-          
+
+          <!-- 题目设计依据 -->
+          <div v-if="currentQuestion.designReason" class="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
+            <h4 class="text-sm font-medium text-indigo-600 mb-2 flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              题目设计依据
+            </h4>
+            <p class="text-slate-700 leading-relaxed"><latex-renderer :content="currentQuestion.designReason" /></p>
+          </div>
+
+          <!-- 难度层级说明 -->
+          <div v-if="currentQuestion.difficultyReason" class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+            <h4 class="text-sm font-medium text-purple-600 mb-2 flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              难度层级说明
+            </h4>
+            <p class="text-slate-700 leading-relaxed"><latex-renderer :content="currentQuestion.difficultyReason" /></p>
+          </div>
+
+          <!-- 干扰项设计原因 -->
+          <div v-if="currentQuestion.distractorReasons && currentQuestion.distractorReasons.length" class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+            <h4 class="text-sm font-medium text-rose-600 mb-2 flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              干扰项设计原因
+            </h4>
+            <div class="space-y-2">
+              <div v-for="(reason, idx) in currentQuestion.distractorReasons" :key="idx" class="flex items-start gap-2 text-sm">
+                <span class="px-2 py-0.5 rounded-full bg-rose-200 text-rose-700 text-xs font-medium flex-shrink-0">{{ reason.option }}</span>
+                <span v-if="reason.type" class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 text-xs flex-shrink-0">{{ reason.type }}</span>
+                <span class="text-slate-700"><latex-renderer :content="reason.reason" /></span>
+              </div>
+            </div>
+          </div>
+
           <!-- 元信息 -->
           <div class="grid grid-cols-2 gap-4 text-sm text-slate-500 bg-slate-50 rounded-xl p-4">
             <div><span class="font-medium">创建时间：</span>{{ currentQuestion.createdAt || '2024-01-15 10:30' }}</div>
@@ -693,8 +739,8 @@
           <progress class="progress progress-primary w-80 h-3 mb-4" :value="generateProgress" max="100"></progress>
           <p class="text-sm text-slate-500">已生成 <span class="font-bold text-indigo-600">{{ generatedCount }}</span> / {{ totalDifficultyCount }} 题</p>
           <div class="mt-6 text-xs text-slate-400">
-            <p>正在分析知识点关联...</p>
-            <p>设计题目结构和干扰项...</p>
+            <p v-if="generationMessage">{{ generationMessage }}</p>
+            <p v-else>正在分析知识点关联...</p>
           </div>
         </div>
 
@@ -870,31 +916,34 @@
                       </svg>
                       题目设计依据
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.designReason || '暂无'" /></p>
+                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason || '暂无'" /></p>
                   </div>
                   
                   <!-- 难度层级说明 -->
-                  <div v-if="q.difficultyReason" class="bg-amber-50 rounded-lg p-3 border border-amber-100">
+                  <div v-if="q.difficulty_reason || q.difficultyReason" class="bg-amber-50 rounded-lg p-3 border border-amber-100">
                     <div class="text-xs font-medium text-amber-600 mb-1 flex items-center gap-1">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       难度层级说明
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.difficultyReason" /></p>
+                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.difficulty_reason || q.difficultyReason" /></p>
                   </div>
                   
                   <!-- 干扰项设计原因 - 仅选择题显示 -->
-                  <div v-if="['单选', '多选'].includes(q.question_type) && q.distractorReasons && q.distractorReasons.length" class="bg-purple-50 rounded-lg p-3 border border-purple-100">
+                  <div v-if="['单选', '多选'].includes(q.question_type) && ((q.distractor_reasons && q.distractor_reasons.length) || (q.distractorReasons && q.distractorReasons.length))" class="bg-purple-50 rounded-lg p-3 border border-purple-100">
                     <div class="text-xs font-medium text-purple-600 mb-2 flex items-center gap-1">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       干扰项设计原因
                     </div>
-                    <div class="space-y-1">
-                      <div v-for="(reason, rIdx) in q.distractorReasons" :key="rIdx" class="flex items-start gap-2 text-sm">
-                        <span class="text-purple-500 font-medium">{{ reason.option }}:</span>
+                    <div class="space-y-2">
+                      <div v-for="(reason, rIdx) in (q.distractor_reasons || q.distractorReasons)" :key="rIdx" class="text-sm">
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="text-purple-500 font-medium">{{ reason.option }}:</span>
+                          <span v-if="reason.type" class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 border border-purple-200">{{ reason.type }}</span>
+                        </div>
                         <span class="text-slate-600"><latex-renderer :content="reason.reason" /></span>
                       </div>
                     </div>
@@ -908,7 +957,7 @@
                       </svg>
                       出题说明
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.designReason" /></p>
+                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason" /></p>
                   </div>
                 </div>
               </div>
@@ -1189,6 +1238,7 @@ export default {
       isGenerating: false,
       generateProgress: 0,
       generatedCount: 0,
+      generationMessage: '',
       generatedQuestions: [],
       activeHelpTip: null,
       defaultRule: null,
@@ -1517,9 +1567,24 @@ export default {
       this.form = { ...item, knowledgePointsInput: (item.knowledgePoints || []).join(', '), tagsInput: (item.tags || []).join(', ') }
       this.showEditModal = true
     },
-    showDetail(item) {
-      this.currentQuestion = item
-      this.showDetailModal = true
+    async showDetail(item) {
+      // 获取完整的题目详情，包含 design_reason, difficulty_reason, distractor_reasons 等字段
+      try {
+        const res = await api.getQuestion(item.id)
+        this.currentQuestion = {
+          ...res,
+          knowledgePoints: res.knowledge_points || res.knowledgePoints || [],
+          designReason: res.design_reason || res.designReason || '',
+          difficultyReason: res.difficulty_reason || res.difficultyReason || '',
+          distractorReasons: res.distractor_reasons || res.distractorReasons || []
+        }
+        this.showDetailModal = true
+      } catch (e) {
+        console.error('获取题目详情失败:', e)
+        // 如果获取详情失败，仍然显示基本信息
+        this.currentQuestion = item
+        this.showDetailModal = true
+      }
     },
     saveQuestion() {
       const data = {
@@ -1532,7 +1597,11 @@ export default {
         explanation: this.form.explanation,
         options: this.form.options,
         knowledge_point_ids: this.form.knowledgePointsInput.split(',').map(s => s.trim()).filter(Boolean),
-        tag_names: this.form.tagsInput.split(',').map(s => s.trim()).filter(Boolean)
+        tag_names: this.form.tagsInput.split(',').map(s => s.trim()).filter(Boolean),
+        // 题目设计相关字段
+        design_reason: this.form.design_reason || this.form.designReason || '',
+        difficulty_reason: this.form.difficulty_reason || this.form.difficultyReason || '',
+        distractor_reasons: this.form.distractor_reasons || this.form.distractorReasons || []
       }
       
       if (this.isEdit) {
@@ -1645,20 +1714,23 @@ export default {
         this.aiCurrentStep--
       }
     },
-    startGenerate() {
+    async startGenerate() {
       if (!this.canStartGenerate) {
         if (!this.aiConfig.knowledgeInput && !this.aiConfig.knowledgeIds.length) return this.$message.error('请输入或选择知识范围')
         if (!this.aiConfig.types.length) return this.$message.error('请选择题型')
         if (this.totalDifficultyCount === 0) return this.$message.error('请设置题目数量')
         return
       }
-      
+
       this.aiCurrentStep = 1
       this.isGenerating = true
       this.generateProgress = 0
       this.generatedCount = 0
       this.generatedQuestions = []
-      
+      this.currentTaskId = null
+      this.generationMessage = ''
+      console.log('[生成] 开始生成，总题数:', this.totalDifficultyCount)
+
       const requestData = {
         knowledge_input: this.aiConfig.knowledgeInput,
         knowledge_categories: this.aiConfig.knowledgeIds,
@@ -1669,53 +1741,129 @@ export default {
         preference_list: this.aiConfig.preferenceList,
         custom_requirement: this.aiConfig.custom,
         total_count: this.totalDifficultyCount,
-        rule_id: this.aiConfig.customRuleId
+        rule_id: this.aiConfig.customRuleId,
+        enable_verification: true,
+        max_generation_retries: 3
       }
-      
-      const total = this.totalDifficultyCount
-      let progressInterval = setInterval(() => {
-        if (this.generateProgress < 90) {
-          this.generateProgress += 5
-          this.generatedCount = Math.floor((this.generateProgress / 100) * total)
-        }
-      }, 500)
-      
-      api.generateQuestions(requestData).then(res => {
-        clearInterval(progressInterval)
-        
+
+      try {
+        // 调用新的异步生成接口
+        const res = await api.generateQuestionsWithVerification(requestData)
+
         if (res.code === 0) {
-          this.generateProgress = 100
-          this.generatedCount = res.data.count
           this.currentTaskId = res.data.task_id
-          
-          setTimeout(() => {
-            api.getGeneratedQuestions(res.data.task_id).then(questionsRes => {
-              this.generatedQuestions = questionsRes.data.map(q => ({
-                ...q,
-                selected: q.is_selected,
-                isDraft: q.is_draft,
-                isDiscarded: q.is_discarded,
-                knowledgePoints: q.knowledge_points,
-                distractorReasons: q.distractor_reasons
-              }))
-              this.isGenerating = false
-              this.aiCurrentStep = 2
-              this.$message.success(`成功生成 ${this.generatedQuestions.length} 道题目`)
-            })
-          }, 500)
+          this.$message.success('生成任务已创建，开始生成题目...')
+
+          // 开始轮询任务状态
+          await this.pollTaskStatus()
         } else {
-          clearInterval(progressInterval)
           this.isGenerating = false
           this.aiCurrentStep = 0
           this.$message.error(res.message || '生成失败')
         }
-      }).catch(err => {
-        clearInterval(progressInterval)
+      } catch (err) {
         this.isGenerating = false
         this.aiCurrentStep = 0
         console.error('生成失败:', err)
         this.$message.error('AI生成服务暂时不可用，请稍后重试')
-      })
+      }
+    },
+
+    // 轮询任务状态
+    async pollTaskStatus() {
+      if (!this.currentTaskId) return
+
+      const checkStatus = async () => {
+        try {
+          console.log('[轮询] 查询任务状态...')
+          const statusRes = await api.getTaskStatus(this.currentTaskId)
+          console.log('[轮询] 状态响应:', statusRes)
+
+          if (statusRes.code === 0) {
+            const data = statusRes.data
+            console.log('[轮询] 状态数据:', data)
+
+            // 更新进度 - 优先使用 total_questions，兼容旧数据
+            const total = data.total_questions || data.total_count || 1
+            this.generateProgress = Math.round((data.current_question / total) * 100)
+            this.generatedCount = data.generated_count
+            this.generationMessage = data.message || ''
+            console.log('[轮询] 更新进度:', this.generateProgress, '%')
+
+            // 如果任务完成
+            if (data.status === 'completed') {
+              this.generateProgress = 100
+
+              try {
+                // 获取生成的题目
+                const questionsRes = await api.getGeneratedQuestions(this.currentTaskId)
+                if (questionsRes.code === 0) {
+                  const questions = questionsRes.data || []
+
+                  if (questions.length === 0) {
+                    this.isGenerating = false
+                    this.aiCurrentStep = 0
+                    this.$message.error('未获取到生成的题目')
+                    return true
+                  }
+
+                  this.generatedQuestions = questions.map(q => ({
+                    ...q,
+                    selected: q.is_selected,
+                    isDraft: q.is_draft,
+                    isDiscarded: q.is_discarded,
+                    knowledgePoints: q.knowledge_points,
+                    distractorReasons: q.distractor_reasons,
+                    designReason: q.design_reason,
+                    difficultyReason: q.difficulty_reason
+                  }))
+
+                  this.isGenerating = false
+                  this.aiCurrentStep = 2
+                  this.$message.success(`成功生成 ${this.generatedQuestions.length} 道题目`)
+                  return true
+                } else {
+                  this.isGenerating = false
+                  this.aiCurrentStep = 0
+                  this.$message.error('获取生成的题目失败: ' + (questionsRes.message || '未知错误'))
+                  return true
+                }
+              } catch (err) {
+                this.isGenerating = false
+                this.aiCurrentStep = 0
+                console.error('获取生成的题目失败:', err)
+                this.$message.error('获取生成的题目失败')
+                return true
+              }
+            }
+
+            // 如果任务失败
+            if (data.status === 'failed') {
+              this.isGenerating = false
+              this.aiCurrentStep = 0
+              this.$message.error('生成任务失败: ' + (data.message || '未知错误'))
+              return true
+            }
+
+            // 继续轮询
+            return false
+          }
+        } catch (err) {
+          console.error('查询任务状态失败:', err)
+        }
+        return false
+      }
+
+      console.log('[轮询] 开始轮询任务状态...')
+      // 每2秒查询一次
+      while (this.isGenerating) {
+        console.log('[轮询] 执行一次状态查询')
+        const shouldStop = await checkStatus()
+        if (shouldStop) break
+        console.log('[轮询] 等待2秒...')
+        await new Promise(resolve => setTimeout(resolve, 2000))
+      }
+      console.log('[轮询] 轮询结束')
     },
     selectAllGenerated() {
       const all = this.isAllSelected
@@ -1790,6 +1938,11 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/styles/variables.less';
+
+// 表格布局固定，防止列宽被内容撑开
+.table {
+  table-layout: fixed;
+}
 
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {

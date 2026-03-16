@@ -88,6 +88,17 @@ def get_question(question_id: int, db: Session = Depends(get_db)):
     knowledge_points = [kp.name for kp in q.knowledge_points]
     tags = [t.name for t in q.tags]
     
+    # 解析干扰项设计原因（如果存储为JSON字符串）
+    distractor_reasons = None
+    if hasattr(q, 'distractor_reasons') and q.distractor_reasons:
+        try:
+            if isinstance(q.distractor_reasons, str):
+                distractor_reasons = json.loads(q.distractor_reasons)
+            else:
+                distractor_reasons = q.distractor_reasons
+        except:
+            distractor_reasons = None
+    
     return QuestionResponse(
         id=q.id,
         content=q.content,
@@ -103,11 +114,25 @@ def get_question(question_id: int, db: Session = Depends(get_db)):
         updated_at=q.updated_at,
         options=[{"id": o.id, "content": o.content, "is_correct": o.is_correct} for o in options],
         knowledge_points=knowledge_points,
-        tags=tags
+        tags=tags,
+        # 题目设计相关字段
+        design_reason=getattr(q, 'design_reason', None),
+        difficulty_reason=getattr(q, 'difficulty_reason', None),
+        distractor_reasons=distractor_reasons,
+        # 关联生成题目ID
+        generated_question_id=getattr(q, 'generated_question_id', None)
     )
 
 @router.post("/questions", response_model=ApiResponse)
 def create_question(question: QuestionCreate, db: Session = Depends(get_db)):
+    # 处理干扰项设计原因（如果是列表则转为JSON字符串）
+    distractor_reasons_str = None
+    if question.distractor_reasons:
+        try:
+            distractor_reasons_str = json.dumps(question.distractor_reasons)
+        except:
+            distractor_reasons_str = None
+    
     q = Question(
         content=question.content,
         question_type=question.question_type,
@@ -116,7 +141,11 @@ def create_question(question: QuestionCreate, db: Session = Depends(get_db)):
         source=question.source,
         answer=question.answer,
         explanation=question.explanation,
-        creator=question.creator
+        creator=question.creator,
+        # 题目设计相关字段
+        design_reason=question.design_reason,
+        difficulty_reason=question.difficulty_reason,
+        distractor_reasons=distractor_reasons_str
     )
     db.add(q)
     db.flush()
@@ -160,6 +189,16 @@ def update_question(question_id: int, question: QuestionUpdate, db: Session = De
         raise HTTPException(status_code=404, detail="题目不存在")
     
     update_data = question.dict(exclude_unset=True)
+    
+    # 处理干扰项设计原因（列表转为JSON字符串）
+    if "distractor_reasons" in update_data:
+        if update_data["distractor_reasons"]:
+            try:
+                update_data["distractor_reasons"] = json.dumps(update_data["distractor_reasons"])
+            except:
+                update_data["distractor_reasons"] = None
+        else:
+            update_data["distractor_reasons"] = None
     
     if "options" in update_data:
         db.query(Option).filter(Option.question_id == q.id).delete()
@@ -301,6 +340,7 @@ def get_generated_questions(task_id: int, db: Session = Depends(get_db)):
             answer=q.answer,
             explanation=q.explanation,
             design_reason=q.design_reason,
+            difficulty_reason=q.difficulty_reason,
             distractor_reasons=distractor_reasons,
             knowledge_points=knowledge_points,
             options=options,
@@ -314,37 +354,57 @@ def get_generated_questions(task_id: int, db: Session = Depends(get_db)):
 @router.post("/generation-tasks/{task_id}/adopt", response_model=ApiResponse)
 def adopt_generated_questions(task_id: int, question_ids: List[int], db: Session = Depends(get_db)):
     count = 0
+    from sqlalchemy import text
+    
     for qid in question_ids:
         gq = db.query(GeneratedQuestion).filter(GeneratedQuestion.id == qid, GeneratedQuestion.task_id == task_id).first()
         if gq:
-            q = Question(
-                content=gq.content,
-                question_type=gq.question_type,
-                difficulty=gq.difficulty,
-                status="草稿" if gq.is_draft else "已审核",
-                source="AI生成",
-                answer=gq.answer,
-                explanation=gq.explanation,
-                design_reason=gq.design_reason,
-                difficulty_reason=gq.difficulty_reason,
-                distractor_reasons=gq.distractor_reasons,
-                creator="AI"
-            )
-            db.add(q)
+            # 使用原生 SQL 插入到 questions 表，确保所有字段都被正确保存
+            result = db.execute(text("""
+                INSERT INTO questions (
+                    content, question_type, difficulty, status, source,
+                    answer, explanation, design_reason, difficulty_reason,
+                    distractor_reasons, generated_question_id, creator,
+                    created_at, updated_at
+                ) VALUES (
+                    :content, :question_type, :difficulty, :status, :source,
+                    :answer, :explanation, :design_reason, :difficulty_reason,
+                    :distractor_reasons, :generated_question_id, :creator,
+                    NOW(), NOW()
+                )
+            """), {
+                "content": gq.content,
+                "question_type": gq.question_type,
+                "difficulty": gq.difficulty,
+                "status": "草稿" if gq.is_draft else "已审核",
+                "source": "AI生成",
+                "answer": gq.answer,
+                "explanation": gq.explanation,
+                "design_reason": gq.design_reason,
+                "difficulty_reason": gq.difficulty_reason,
+                "distractor_reasons": gq.distractor_reasons,
+                "generated_question_id": gq.id,
+                "creator": "AI"
+            })
             db.flush()
             
+            # 获取刚才插入的题目 ID
+            q_id = result.lastrowid
+            
+            # 插入选项
             if gq.options_json:
                 options = json.loads(gq.options_json)
                 for idx, opt in enumerate(options):
-                    option = Option(
-                        question_id=q.id,
-                        content=opt.get("content", ""),
-                        is_correct=opt.get("is_correct", False),
-                        order_index=idx
-                    )
-                    db.add(option)
+                    db.execute(text("""
+                        INSERT INTO options (question_id, content, is_correct, order_index)
+                        VALUES (:question_id, :content, :is_correct, :order_index)
+                    """), {
+                        "question_id": q_id,
+                        "content": opt.get("content", ""),
+                        "is_correct": opt.get("is_correct", False),
+                        "order_index": idx
+                    })
             
-            db.delete(gq)
             count += 1
     
     db.commit()

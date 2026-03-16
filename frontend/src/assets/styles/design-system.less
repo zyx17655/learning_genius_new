@@ -1,0 +1,637 @@
+// ========================================
+// 智能教学系统 - 设计系统组件样式
+// 基于 vue2-and-ui.mdc 规范
+// ========================================
+
+@import './variables.less';
+
+// ========================================
+// 欢迎区域
+// ========================================
+.welcome-section {
+  background: linear-gradient(135deg, @primary-color 0%, @primary-light 100%);
+  border-radius: @radius-xl;
+  padding: @spacing-2xl @spacing-3xl;
+  margin-bottom: @spacing-xl;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 10%;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+  }
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-title {
+  font-size: @font-size-2xl;
+  font-weight: 700;
+  color: @text-white;
+  margin-bottom: @spacing-sm;
+}
+
+.welcome-subtitle {
+  font-size: @font-size-md;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+// ========================================
+// 统计卡片网格
+// ========================================
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: @spacing-lg;
+  margin-bottom: @spacing-xl;
+
+  @media (max-width: @breakpoint-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: @breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card-new {
+  background: @bg-card;
+  border-radius: @radius-lg;
+  padding: @spacing-lg;
+  box-shadow: @shadow-card;
+  transition: all @transition-base;
+
+  &:hover {
+    box-shadow: @shadow-card-hover;
+    transform: translateY(-2px);
+  }
+}
+
+.stat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.stat-value {
+  font-size: @font-size-3xl;
+  font-weight: 700;
+  color: @primary-color;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: @font-size-sm;
+  color: @text-secondary;
+  margin-top: @spacing-sm;
+}
+
+.stat-trend {
+  font-size: @font-size-xs;
+  margin-top: @spacing-xs;
+
+  &.trend-up {
+    color: @success-color;
+  }
+
+  &.trend-down {
+    color: @error-color;
+  }
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: @radius-md;
+  background: @primary-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: @text-white;
+  }
+}
+
+// ========================================
+// 内容卡片
+// ========================================
+.content-card {
+  background: @bg-card;
+  border-radius: @radius-lg;
+  padding: @spacing-lg;
+  box-shadow: @shadow-card;
+  margin-bottom: @spacing-xl;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: @spacing-lg;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: @spacing-sm;
+  font-size: @font-size-lg;
+  font-weight: 600;
+  color: @text-primary;
+}
+
+.title-icon {
+  width: 20px;
+  height: 20px;
+  color: @primary-color;
+}
+
+.card-subtitle {
+  font-size: @font-size-xs;
+  color: @text-muted;
+}
+
+.card-body {
+  color: @text-primary;
+}
+
+// ========================================
+// 按钮组件
+// ========================================
+.btn-new {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: @spacing-sm;
+  padding: @spacing-sm @spacing-lg;
+  font-size: @font-size-md;
+  font-weight: 500;
+  border-radius: @radius-md;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all @transition-fast;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary-new {
+  background: @primary-color;
+  color: @text-white;
+
+  &:hover:not(:disabled) {
+    background: @primary-light;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+.btn-ghost-new {
+  background: transparent;
+  color: @text-secondary;
+  border-color: @border-color;
+
+  &:hover:not(:disabled) {
+    background: @bg-hover;
+    color: @text-primary;
+    border-color: @border-dark;
+  }
+}
+
+.btn-sm-new {
+  padding: @spacing-xs @spacing-md;
+  font-size: @font-size-sm;
+}
+
+.btn-lg-new {
+  padding: @spacing-md @spacing-xl;
+  font-size: @font-size-lg;
+}
+
+// ========================================
+// 表格组件
+// ========================================
+.table-new {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: @spacing-md;
+    text-align: left;
+    border-bottom: 1px solid @border-light;
+  }
+
+  th {
+    font-weight: 600;
+    font-size: @font-size-sm;
+    color: @text-secondary;
+    background: @bg-subtle;
+  }
+
+  td {
+    font-size: @font-size-md;
+    color: @text-primary;
+  }
+
+  tr:hover td {
+    background: @bg-hover;
+  }
+}
+
+// ========================================
+// 标签组件
+// ========================================
+.tag-new {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px @spacing-sm;
+  font-size: @font-size-xs;
+  font-weight: 500;
+  border-radius: @radius-sm;
+}
+
+.tag-primary {
+  background: fade(@primary-color, 10%);
+  color: @primary-color;
+}
+
+.tag-success {
+  background: fade(@success-color, 10%);
+  color: @success-color;
+}
+
+.tag-warning {
+  background: fade(@warning-color, 10%);
+  color: @warning-color;
+}
+
+.tag-error {
+  background: fade(@error-color, 10%);
+  color: @error-color;
+}
+
+.tag-info {
+  background: fade(@info-color, 10%);
+  color: @info-color;
+}
+
+.tag-secondary {
+  background: @bg-tag;
+  color: @text-secondary;
+}
+
+// ========================================
+// 搜索框组件
+// ========================================
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: @spacing-md;
+  width: 16px;
+  height: 16px;
+  color: @text-muted;
+  pointer-events: none;
+}
+
+.search-box input {
+  width: 100%;
+  padding: @spacing-sm @spacing-md @spacing-sm @spacing-2xl;
+  font-size: @font-size-md;
+  border: 1px solid @border-color;
+  border-radius: @radius-md;
+  background: @bg-card;
+  transition: all @transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: @primary-color;
+    box-shadow: 0 0 0 3px fade(@primary-color, 10%);
+  }
+
+  &::placeholder {
+    color: @text-light;
+  }
+}
+
+// ========================================
+// 模态框组件
+// ========================================
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: @spacing-xl;
+}
+
+.modal-content {
+  background: @bg-card;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-xl;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: @spacing-lg @spacing-xl;
+  border-bottom: 1px solid @border-light;
+}
+
+.modal-title {
+  font-size: @font-size-lg;
+  font-weight: 600;
+  color: @text-primary;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: @radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: @text-muted;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all @transition-fast;
+
+  &:hover {
+    background: @bg-hover;
+    color: @text-primary;
+  }
+}
+
+.modal-body {
+  padding: @spacing-xl;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: @spacing-md;
+  padding: @spacing-lg @spacing-xl;
+  border-top: 1px solid @border-light;
+}
+
+// ========================================
+// 分页组件
+// ========================================
+.pagination-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: @spacing-xl;
+}
+
+.pagination-info {
+  font-size: @font-size-sm;
+  color: @text-secondary;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: @spacing-xs;
+}
+
+.page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 @spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: @font-size-sm;
+  font-weight: 500;
+  color: @text-secondary;
+  background: @bg-card;
+  border: 1px solid @border-color;
+  border-radius: @radius-sm;
+  cursor: pointer;
+  transition: all @transition-fast;
+
+  &:hover:not(:disabled) {
+    background: @bg-hover;
+    border-color: @primary-color;
+    color: @primary-color;
+  }
+
+  &.active {
+    background: @primary-color;
+    border-color: @primary-color;
+    color: @text-white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ========================================
+// 复选框组件
+// ========================================
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: @spacing-sm;
+  cursor: pointer;
+  font-size: @font-size-md;
+  color: @text-primary;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: @primary-color;
+  }
+}
+
+// ========================================
+// 知识点树组件
+// ========================================
+.knowledge-tree-container {
+  background: @bg-subtle;
+  border-radius: @radius-md;
+  padding: @spacing-md;
+}
+
+.tree-node-item {
+  margin-bottom: @spacing-sm;
+}
+
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  gap: @spacing-sm;
+  padding: @spacing-sm;
+  border-radius: @radius-sm;
+  cursor: pointer;
+  transition: background @transition-fast;
+
+  &:hover {
+    background: @bg-hover;
+  }
+}
+
+.tree-icon {
+  width: 16px;
+  height: 16px;
+  color: @text-muted;
+  transition: transform @transition-fast;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.tree-children {
+  margin-left: @spacing-xl;
+  padding-left: @spacing-sm;
+  border-left: 1px solid @border-light;
+}
+
+.tree-child-item {
+  padding: @spacing-xs @spacing-sm;
+  margin: @spacing-xs 0;
+}
+
+// ========================================
+// 进度条组件
+// ========================================
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: @bg-tag;
+  border-radius: @radius-sm;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, @primary-color, @accent-color);
+  border-radius: @radius-sm;
+  transition: width @transition-base;
+}
+
+.progress-bar-mini {
+  width: 100px;
+  height: 6px;
+  background: @bg-tag;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+// ========================================
+// 空状态组件
+// ========================================
+.empty-state-new {
+  text-align: center;
+  padding: @spacing-3xl;
+  color: @text-muted;
+}
+
+.empty-icon-new {
+  font-size: 48px;
+  margin-bottom: @spacing-lg;
+  opacity: 0.5;
+}
+
+.empty-text-new {
+  font-size: @font-size-lg;
+  margin-bottom: @spacing-sm;
+}
+
+.empty-hint-new {
+  font-size: @font-size-sm;
+}
+
+// ========================================
+// 响应式适配
+// ========================================
+@media (max-width: @breakpoint-md) {
+  .welcome-section {
+    padding: @spacing-lg;
+  }
+
+  .welcome-title {
+    font-size: @font-size-xl;
+  }
+
+  .stats-grid {
+    gap: @spacing-md;
+  }
+
+  .stat-card-new {
+    padding: @spacing-md;
+  }
+
+  .stat-value {
+    font-size: @font-size-2xl;
+  }
+
+  .content-card {
+    padding: @spacing-md;
+  }
+
+  .modal-content {
+    margin: @spacing-md;
+    max-height: calc(100vh - @spacing-2xl);
+  }
+
+  .modal-body {
+    padding: @spacing-lg;
+  }
+}
