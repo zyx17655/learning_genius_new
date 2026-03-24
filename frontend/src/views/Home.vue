@@ -1,282 +1,230 @@
 <template>
   <div>
-    <main class="p-6">
-      <section class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-6 text-white shadow-xl shadow-indigo-200">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div class="absolute bottom-0 left-1/4 w-32 h-32 bg-white/5 rounded-full translate-y-1/2"></div>
-        <div class="relative z-10 flex items-center justify-between">
+    <main class="p-4">
+      <!-- 统一标题区域 -->
+      <section class="mb-8">
+        <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold mb-2">欢迎使用智能题库系统 👋</h1>
-            <p class="text-indigo-100">让AI助力教学，轻松创建高质量试题</p>
+            <h1 class="text-2xl font-bold text-slate-800 mb-1">题库管理</h1>
+            <p class="text-sm text-slate-500">管理所有题目，支持AI智能出题</p>
           </div>
-          <button class="btn bg-white/20 hover:bg-white/30 border-none text-white backdrop-blur-sm" @click="openAIDialog">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            立即AI出题
-          </button>
-        </div>
-      </section>
-
-      <!-- 统计卡片 -->
-      <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-3xl font-bold text-slate-800">{{ stats.total }}</div>
-                <div class="text-sm text-slate-500 mt-1">题目总数</div>
-                <div class="text-xs text-emerald-500 mt-1">↑ 较上月 +{{ stats.monthlyNew }}</div>
-              </div>
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-3xl font-bold text-emerald-600">{{ stats.reviewed }}</div>
-                <div class="text-sm text-slate-500 mt-1">已审核</div>
-                <div class="text-xs text-emerald-500 mt-1">↑ 较上月 +{{ stats.reviewedMonthly }}</div>
-              </div>
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-200">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-3xl font-bold text-amber-500">{{ stats.pending }}</div>
-                <div class="text-sm text-slate-500 mt-1">待审核</div>
-                <div class="text-xs text-amber-500 mt-1">待处理</div>
-              </div>
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-3xl font-bold text-slate-400">{{ stats.draft }}</div>
-                <div class="text-sm text-slate-500 mt-1">草稿箱</div>
-                <div class="text-xs text-slate-400 mt-1">未提交</div>
-              </div>
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-lg shadow-slate-200">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 题型分布 -->
-      <section class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 mb-6">
-        <div class="card-body p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="font-semibold text-slate-700 flex items-center gap-2">
-              <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          <div class="flex items-center gap-3">
+            <button class="btn bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm" @click="showImportDialog = true">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
               </svg>
-              题型分布统计
-            </h3>
-            <span class="text-xs text-slate-400">实时更新</span>
+              导入
+            </button>
+            <button class="btn bg-slate-800 hover:bg-slate-700 border-0 text-white shadow-md" @click="openAIDialog">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              AI智能生题
+            </button>
+            <button class="btn bg-slate-700 hover:bg-slate-600 border-0 text-white shadow-md" @click="showAddDialog">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              新增题目
+            </button>
           </div>
-          <div class="grid grid-cols-5 gap-3">
-            <div v-for="item in typeStats" :key="item.label" class="text-center p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 hover:shadow-md transition-all cursor-pointer">
-              <div class="text-2xl font-bold" :class="item.textClass">{{ item.value }}</div>
-              <div class="text-xs text-slate-500 mt-1">{{ item.label }}</div>
-              <div class="text-xs text-emerald-500 mt-0.5">↑ +{{ item.monthlyNew }}</div>
-              <div class="mt-2 h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                <div class="h-full rounded-full transition-all duration-500" :class="item.barClass" :style="{ width: item.percent + '%' }"></div>
-              </div>
+        </div>
+      </section>
+
+      <!-- 统计数据 + 题型分布整合区域 -->
+      <section class="bg-slate-800 rounded-xl shadow-sm border border-slate-700 p-6 mb-6">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-base font-semibold text-white">数据概览</h3>
+          <span class="text-xs text-slate-400">共 {{ stats.total }} 道题目</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-slate-600">
+              <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-white">{{ stats.total }}</div>
+              <div class="text-xs text-slate-400">题目总数</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-slate-600">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-white">{{ stats.reviewed }}</div>
+              <div class="text-xs text-slate-400">已审核</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-slate-600">
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-white">{{ stats.pending }}</div>
+              <div class="text-xs text-slate-400">待审核</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-slate-600">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xl font-bold text-white">{{ stats.draft }}</div>
+              <div class="text-xs text-slate-400">草稿箱</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 操作栏 -->
-      <section class="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <!-- 筛选区域 -->
+      <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
         <div class="flex flex-wrap items-center gap-3">
-          <div class="join shadow-md">
-            <input class="input input-bordered join-item w-64 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="searchKeyword" placeholder="搜索题目内容、标签..." @keyup.enter="handleSearch" />
-            <button class="btn join-item bg-indigo-500 hover:bg-indigo-600 border-indigo-500 text-white" @click="handleSearch">
+          <div class="join flex-1 min-w-[200px] max-w-[320px]">
+            <input class="input input-bordered join-item flex-1 bg-slate-50 border-slate-200 focus:bg-white" v-model="searchKeyword" placeholder="搜索题目内容、标签..." @keyup.enter="handleSearch" />
+            <button class="btn join-item bg-slate-800 hover:bg-slate-700 border-slate-800 text-white" @click="handleSearch">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </button>
           </div>
-          <select v-model="filterType" class="select select-bordered bg-white shadow-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-            <option value="">📚 全部题型</option>
+          <select v-model="filterType" class="select select-bordered bg-slate-50 border-slate-200 text-sm" @change="handleSearch">
+            <option value="">全部题型</option>
             <option value="单选">单选题</option>
             <option value="多选">多选题</option>
             <option value="判断">判断题</option>
             <option value="填空">填空题</option>
             <option value="主观">主观题</option>
           </select>
-          <select v-model="filterDifficulty" class="select select-bordered bg-white shadow-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-            <option value="">📊 全部难度</option>
+          <select v-model="filterDifficulty" class="select select-bordered bg-slate-50 border-slate-200 text-sm" @change="handleSearch">
+            <option value="">全部难度</option>
             <option value="简单">简单</option>
             <option value="中等">中等</option>
             <option value="困难">困难</option>
           </select>
-          <select v-model="filterStatus" class="select select-bordered bg-white shadow-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-            <option value="">📋 全部状态</option>
+          <select v-model="filterStatus" class="select select-bordered bg-slate-50 border-slate-200 text-sm" @change="handleSearch">
+            <option value="">全部状态</option>
             <option value="已审核">已审核</option>
             <option value="待审核">待审核</option>
             <option value="草稿">草稿</option>
           </select>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <button class="btn bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 shadow-sm" @click="showImportDialog = true">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-            </svg>
-            导入
-          </button>
-          <button class="btn bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 shadow-sm" @click="handleExport">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            导出
-          </button>
-          <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white shadow-lg shadow-indigo-200" @click="openAIDialog">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            AI智能生题
-          </button>
-          <button class="btn bg-slate-800 hover:bg-slate-900 border-0 text-white shadow-md" @click="showAddDialog">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            新增题目
+          <button v-if="searchKeyword || filterType || filterDifficulty || filterStatus" class="btn btn-ghost text-slate-500 text-sm" @click="clearFilters">
+            清除筛选
           </button>
         </div>
       </section>
 
       <!-- 批量操作栏 -->
-      <section v-if="selectedIds.length > 0" class="alert bg-indigo-50 border border-indigo-200 mb-4 shadow-sm">
-        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <section v-if="selectedIds.length > 0" class="alert bg-slate-100 border border-slate-200 mb-4 shadow-sm">
+        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
-        <span class="text-indigo-700 font-medium">已选择 {{ selectedIds.length }} 项</span>
+        <span class="text-slate-700 font-medium">已选择 {{ selectedIds.length }} 项</span>
         <div class="flex gap-2">
-          <button class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="batchReview">审核通过</button>
+          <button class="btn btn-sm bg-slate-700 hover:bg-slate-600 border-0 text-white" @click="batchReview">审核通过</button>
           <button class="btn btn-sm bg-slate-500 hover:bg-slate-600 border-0 text-white" @click="batchDraft">设为草稿</button>
-          <button class="btn btn-sm bg-red-500 hover:bg-red-600 border-0 text-white" @click="batchDelete">删除</button>
+          <button class="btn btn-sm bg-slate-600 hover:bg-slate-700 border-0 text-white" @click="batchDelete">删除</button>
         </div>
         <button class="btn btn-sm btn-ghost text-slate-500" @click="clearSelection">取消</button>
       </section>
 
       <!-- 题目列表 -->
-      <section class="card bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="table w-full">
-            <thead class="bg-gradient-to-r from-slate-50 to-slate-100">
-              <tr>
-                <th class="w-10">
-                  <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="selectAll" @change="handleSelectAll" />
-                </th>
-                <th class="w-12 text-slate-500 font-medium text-xs">ID</th>
-                <th class="w-24 text-slate-500 font-medium text-xs">知识点</th>
-                <th class="text-slate-500 font-medium text-xs min-w-[120px] max-w-[180px]">题目内容</th>
-                <th class="w-20 text-slate-500 font-medium text-xs">题型</th>
-                <th class="w-20 text-slate-500 font-medium text-xs">难度</th>
-                <th class="w-20 text-slate-500 font-medium text-xs">来源</th>
-                <th class="w-20 text-slate-500 font-medium text-xs">状态</th>
-                <th class="w-44 text-slate-500 font-medium text-xs">操作</th>
-              </tr>
-            </thead>
+      <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <table class="table w-full table-fixed">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="w-[3%]">
+                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="selectAll" @change="handleSelectAll" />
+              </th>
+              <th class="w-[4%] text-slate-500 font-medium text-xs">ID</th>
+              <th class="w-[10%] text-slate-500 font-medium text-xs">知识点</th>
+              <th class="w-[48%] text-slate-500 font-medium text-xs">题目内容</th>
+              <th class="w-[6%] text-slate-500 font-medium text-xs">题型</th>
+              <th class="w-[6%] text-slate-500 font-medium text-xs">难度</th>
+              <th class="w-[7%] text-slate-500 font-medium text-xs">来源</th>
+              <th class="w-[6%] text-slate-500 font-medium text-xs">状态</th>
+              <th class="min-w-[180px] text-slate-500 font-medium text-xs">操作</th>
+            </tr>
+          </thead>
             <tbody>
-              <tr v-for="item in questions" :key="item.id" class="hover:bg-indigo-50/50 transition-colors border-b border-slate-100 whitespace-nowrap">
-                <td>
+              <tr v-for="item in questions" :key="item.id" class="hover:bg-slate-50 transition-colors border-b border-slate-100">
+                <td class="p-1.5">
                   <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" v-model="item.selected" @change="handleItemSelect" />
                 </td>
-                <td class="text-slate-400 font-mono text-xs">#{{ item.id }}</td>
-                <td>
+                <td class="text-slate-400 font-mono text-xs p-1.5">#{{ item.id }}</td>
+                <td class="p-1.5">
                   <div class="relative group">
                     <div class="flex flex-wrap gap-0.5">
-                      <span v-for="kp in (item.knowledgePoints || []).slice(0, 1)" :key="kp" class="px-1 py-0.5 text-xs rounded bg-cyan-50 text-cyan-600 whitespace-nowrap max-w-full truncate">{{ kp }}</span>
+                      <span v-for="kp in (item.knowledgePoints || []).slice(0, 1)" :key="kp" class="px-1 py-0.5 text-xs rounded bg-slate-100 text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">{{ kp }}</span>
                       <span v-if="(item.knowledgePoints || []).length > 1" class="text-xs text-slate-400 flex-shrink-0">+{{ item.knowledgePoints.length - 1 }}</span>
                     </div>
-                    <!-- 鼠标悬停显示所有知识点 -->
                     <div v-if="(item.knowledgePoints || []).length > 1" class="absolute top-full left-0 mt-1 hidden group-hover:block z-50">
                       <div class="bg-slate-800 text-white text-xs rounded-lg p-2 shadow-xl whitespace-nowrap">
                         <div class="font-semibold mb-1">全部知识点：</div>
                         <div class="flex flex-col gap-1">
-                          <span v-for="kp in item.knowledgePoints" :key="kp" class="px-2 py-0.5 rounded bg-cyan-600/30 text-cyan-200">{{ kp }}</span>
+                          <span v-for="kp in item.knowledgePoints" :key="kp" class="px-2 py-0.5 rounded bg-slate-600/30 text-slate-200">{{ kp }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </td>
-                <td>
+                <td class="p-1.5">
                   <div class="cursor-pointer group" @click="showDetail(item)">
-                    <div class="text-slate-700 group-hover:text-indigo-600 transition-colors line-clamp-1 text-sm" :title="item.content">{{ item.content }}</div>
+                    <div class="text-slate-700 group-hover:text-slate-600 transition-colors truncate text-sm" :title="item.content">{{ item.content }}</div>
                     <div v-if="item.tags && item.tags.length" class="flex gap-1 mt-0.5 flex-wrap">
-                      <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="px-1 py-0.5 text-xs rounded bg-indigo-50 text-indigo-600 whitespace-nowrap">{{ tag }}</span>
+                      <span v-for="tag in item.tags.slice(0, 2)" :key="tag" class="px-1 py-0.5 text-xs rounded bg-slate-100 text-slate-600 whitespace-nowrap">{{ tag }}</span>
                       <span v-if="item.tags.length > 2" class="px-1 py-0.5 text-xs rounded bg-slate-100 text-slate-500">+{{ item.tags.length - 2 }}</span>
                     </div>
                   </div>
                 </td>
-                <td>
-                  <span class="px-1.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
+                <td class="p-1.5">
+                  <span class="px-1 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" :class="getTypeBadgeClass(item.question_type)">{{ item.question_type }}</span>
                 </td>
-                <td>
-                  <span class="px-1.5 py-0.5 rounded text-xs font-bold whitespace-nowrap" :class="getDifficultyBadgeClass(item.difficulty)">{{ getDifficultyName(item.difficulty) }}</span>
+                <td class="p-1.5">
+                  <span class="px-1 py-0.5 rounded text-xs font-bold whitespace-nowrap" :class="getDifficultyBadgeClass(item.difficulty)">{{ getDifficultyName(item.difficulty) }}</span>
                 </td>
-                <td>
-                  <span class="text-xs px-1.5 py-0.5 rounded-full whitespace-nowrap" :class="getSourceBadgeClass(item.source)">{{ item.source || '系统' }}</span>
+                <td class="p-1.5">
+                  <span class="text-xs px-1 py-0.5 rounded-full whitespace-nowrap" :class="getSourceBadgeClass(item.source)">{{ item.source || '系统' }}</span>
                 </td>
-                <td>
+                <td class="p-1.5">
                   <div class="flex items-center gap-1 whitespace-nowrap">
                     <span class="w-1.5 h-1.5 rounded-full" :class="getStatusDotClass(item.status)"></span>
                     <span class="text-xs" :class="getStatusTextClass(item.status)">{{ item.status }}</span>
                   </div>
                 </td>
-                <td>
-                  <div class="flex gap-1 items-center whitespace-nowrap">
-                    <button v-if="item.status === '待审核'" class="btn btn-sm bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="reviewQuestion(item)" title="审核通过">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <td class="p-1.5">
+                  <div class="flex gap-0.5 items-center whitespace-nowrap">
+                    <button class="btn btn-xs bg-slate-700 hover:bg-slate-600 border-0 text-white px-1" @click="reviewQuestion(item)" title="审核通过">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     </button>
-                    <button class="btn btn-sm btn-ghost text-slate-600 hover:text-indigo-600 hover:bg-indigo-50" @click="showDetail(item)" title="查看详情">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <button class="btn btn-xs btn-ghost text-slate-600 hover:text-slate-600 hover:bg-indigo-50 px-1" @click="showDetail(item)" title="查看详情">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                     </button>
-                    <button class="btn btn-sm btn-ghost text-slate-600 hover:text-amber-600 hover:bg-amber-50" @click="showEditDialog(item)" title="编辑">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <button class="btn btn-xs btn-ghost text-slate-500 hover:text-slate-700 hover:bg-slate-100 px-1" @click="showEditDialog(item)" title="编辑">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     </button>
-                    <button class="btn btn-sm btn-ghost bg-red-50 text-red-500 hover:bg-red-500 hover:text-white" @click="deleteQuestion(item.id)" title="删除">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <button class="btn btn-xs btn-ghost text-slate-500 hover:text-red-500 hover:bg-slate-100 px-1" @click="deleteQuestion(item.id)" title="删除">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     </button>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
       </section>
 
       <!-- 分页 -->
       <section class="flex items-center justify-between mt-6">
         <div class="flex items-center gap-4">
-          <span class="text-sm text-slate-500">共 <span class="font-semibold text-indigo-600">{{ total }}</span> 条记录</span>
+          <span class="text-sm text-slate-500">共 <span class="font-semibold text-slate-700">{{ total }}</span> 条记录</span>
           <div class="flex items-center gap-2">
             <span class="text-sm text-slate-500">每页</span>
             <select class="select select-sm select-bordered w-20" v-model="pageSize" @change="handlePageSizeChange">
@@ -297,7 +245,7 @@
             </button>
             <template v-for="(page, idx) in visiblePages">
               <button v-if="page === '...'" :key="'ellipsis-' + idx" class="join-item btn btn-sm bg-white border-slate-200">...</button>
-              <button v-else :key="page" class="join-item btn btn-sm" :class="page === currentPage ? 'bg-indigo-500 border-indigo-500 text-white' : 'bg-white border-slate-200'" @click="goToPage(page)">{{ page }}</button>
+              <button v-else :key="page" class="join-item btn btn-sm" :class="page === currentPage ? 'bg-slate-700 border-slate-700 text-white' : 'bg-white border-slate-200'" @click="goToPage(page)">{{ page }}</button>
             </template>
             <button class="join-item btn btn-sm bg-white border-slate-200" :disabled="currentPage >= totalPages" @click="goToPage(currentPage + 1)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,7 +268,7 @@
       <div class="modal-box w-11/12 max-w-3xl bg-white rounded-2xl shadow-2xl">
         <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
           <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
-            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
             题目详情
@@ -339,11 +287,11 @@
           <!-- 知识点 -->
           <div v-if="currentQuestion.knowledgePoints && currentQuestion.knowledgePoints.length" class="flex flex-wrap gap-2">
             <span class="text-sm text-slate-500">知识点：</span>
-            <span v-for="kp in currentQuestion.knowledgePoints" :key="kp" class="px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-600 border border-cyan-100">{{ kp }}</span>
+            <span v-for="kp in currentQuestion.knowledgePoints" :key="kp" class="px-2 py-0.5 text-xs rounded-full bg-slate-100 text-slate-600 border border-slate-200">{{ kp }}</span>
           </div>
           
           <!-- 题目内容 -->
-          <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
             <h4 class="text-sm font-medium text-indigo-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -363,15 +311,15 @@
             </h4>
             <div v-for="(opt, idx) in currentQuestion.options" :key="idx" 
                  :class="['flex items-center gap-3 p-3 rounded-xl transition-all', opt.is_correct ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200' : 'bg-slate-50 border border-slate-100']">
-              <span :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold', opt.is_correct ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">{{ String.fromCharCode(65 + idx) }}</span>
+              <span :class="['w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold', opt.is_correct ? 'bg-slate-600 text-white' : 'bg-white text-slate-500 border border-slate-200']">{{ String.fromCharCode(65 + idx) }}</span>
               <span class="flex-1 text-slate-700"><latex-renderer :content="opt.content" /></span>
-              <span v-if="opt.is_correct" class="px-2 py-1 text-xs rounded-full bg-emerald-500 text-white font-medium">✓ 正确答案</span>
+              <span v-if="opt.is_correct" class="px-2 py-1 text-xs rounded-full bg-slate-600 text-white font-medium">✓ 正确答案</span>
             </div>
           </div>
           
           <!-- 正确答案 -->
-          <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-            <h4 class="text-sm font-medium text-emerald-600 mb-2 flex items-center gap-1">
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -381,8 +329,8 @@
           </div>
           
           <!-- 解析 -->
-          <div v-if="currentQuestion.explanation" class="bg-amber-50 rounded-xl p-4 border border-amber-100">
-            <h4 class="text-sm font-medium text-amber-600 mb-2 flex items-center gap-1">
+          <div v-if="currentQuestion.explanation" class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
@@ -392,8 +340,8 @@
           </div>
 
           <!-- 题目设计依据 -->
-          <div v-if="currentQuestion.designReason" class="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
-            <h4 class="text-sm font-medium text-indigo-600 mb-2 flex items-center gap-1">
+          <div v-if="currentQuestion.designReason" class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
@@ -403,8 +351,8 @@
           </div>
 
           <!-- 难度层级说明 -->
-          <div v-if="currentQuestion.difficultyReason" class="bg-purple-50 rounded-xl p-4 border border-purple-100">
-            <h4 class="text-sm font-medium text-purple-600 mb-2 flex items-center gap-1">
+          <div v-if="currentQuestion.difficultyReason" class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -414,8 +362,8 @@
           </div>
 
           <!-- 干扰项设计原因 -->
-          <div v-if="currentQuestion.distractorReasons && currentQuestion.distractorReasons.length" class="bg-rose-50 rounded-xl p-4 border border-rose-100">
-            <h4 class="text-sm font-medium text-rose-600 mb-2 flex items-center gap-1">
+          <div v-if="currentQuestion.distractorReasons && currentQuestion.distractorReasons.length" class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <h4 class="text-sm font-medium text-slate-600 mb-2 flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -423,8 +371,8 @@
             </h4>
             <div class="space-y-2">
               <div v-for="(reason, idx) in currentQuestion.distractorReasons" :key="idx" class="flex items-start gap-2 text-sm">
-                <span class="px-2 py-0.5 rounded-full bg-rose-200 text-rose-700 text-xs font-medium flex-shrink-0">{{ reason.option }}</span>
-                <span v-if="reason.type" class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 text-xs flex-shrink-0">{{ reason.type }}</span>
+                <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-xs font-medium flex-shrink-0">{{ reason.option }}</span>
+                <span v-if="reason.type" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs flex-shrink-0">{{ reason.type }}</span>
                 <span class="text-slate-700"><latex-renderer :content="reason.reason" /></span>
               </div>
             </div>
@@ -440,13 +388,13 @@
         </div>
         <div class="modal-action pt-4 border-t border-slate-100">
           <button class="btn btn-ghost" @click="showDetailModal = false">关闭</button>
-          <button v-if="currentQuestion && currentQuestion.status === '待审核'" class="btn bg-emerald-500 hover:bg-emerald-600 border-0 text-white" @click="reviewQuestion(currentQuestion); showDetailModal = false">
+          <button v-if="currentQuestion && currentQuestion.status === '待审核'" class="btn bg-slate-600 hover:bg-emerald-600 border-0 text-white" @click="reviewQuestion(currentQuestion); showDetailModal = false">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             审核通过
           </button>
-          <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white" @click="showEditDialog(currentQuestion); showDetailModal = false">
+          <button class="btn bg-slate-700 hover:bg-slate-600 border-0 text-white" @click="showEditDialog(currentQuestion); showDetailModal = false">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
@@ -476,7 +424,7 @@
           <div class="grid grid-cols-4 gap-4">
             <div class="form-control">
               <label class="label"><span class="label-text font-medium text-slate-700">题型 <span class="text-red-500">*</span></span></label>
-              <select class="select select-bordered focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" v-model="form.question_type">
+              <select class="select select-bordered focus:border-slate-400" v-model="form.question_type">
                 <option value="单选">单选题</option>
                 <option value="多选">多选题</option>
                 <option value="判断">判断题</option>
@@ -532,7 +480,7 @@
                 </button>
               </div>
             </div>
-            <button class="btn btn-sm btn-ghost mt-2 text-indigo-600 hover:bg-indigo-50" @click="form.options.push({ content: '', is_correct: false })">
+            <button class="btn btn-sm btn-ghost mt-2 text-slate-600 hover:bg-slate-100" @click="form.options.push({ content: '', is_correct: false })">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
@@ -572,7 +520,7 @@
             </svg>
             存为草稿
           </button>
-          <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white shadow-lg shadow-indigo-200" @click="saveQuestion">
+          <button class="btn bg-slate-700 hover:bg-slate-600 border-0 text-white shadow-lg shadow-slate-200" @click="saveQuestion">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -589,9 +537,9 @@
     <dialog :class="['modal', { 'modal-open': showAIDialog }]">
       <div class="modal-box w-11/12 max-w-6xl bg-white rounded-2xl shadow-2xl p-0 overflow-hidden">
         <!-- 弹窗头部 -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-purple-50">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+            <div class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center shadow-lg">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
@@ -608,11 +556,11 @@
         <div class="px-6 py-4 bg-white border-b border-slate-100">
           <div class="flex items-center justify-center gap-4">
             <div v-for="(step, idx) in aiSteps" :key="idx" class="flex items-center">
-              <div :class="['flex items-center gap-2 px-4 py-2 rounded-full transition-all', aiCurrentStep === idx ? 'bg-indigo-500 text-white shadow-lg' : aiCurrentStep > idx ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400']">
-                <span :class="['w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold', aiCurrentStep === idx ? 'bg-white/20' : aiCurrentStep > idx ? 'bg-emerald-500 text-white' : 'bg-slate-200']">{{ aiCurrentStep > idx ? '✓' : idx + 1 }}</span>
+              <div :class="['flex items-center gap-2 px-4 py-2 rounded-full transition-all', aiCurrentStep === idx ? 'bg-slate-700 text-white shadow-lg' : aiCurrentStep > idx ? 'bg-slate-100 text-slate-700' : 'bg-slate-100 text-slate-400']">
+                <span :class="['w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold', aiCurrentStep === idx ? 'bg-white/20' : aiCurrentStep > idx ? 'bg-slate-700 text-white' : 'bg-slate-200']">{{ aiCurrentStep > idx ? '✓' : idx + 1 }}</span>
                 <span class="font-medium">{{ step }}</span>
               </div>
-              <div v-if="idx < aiSteps.length - 1" :class="['w-12 h-0.5 mx-2', aiCurrentStep > idx ? 'bg-emerald-400' : 'bg-slate-200']"></div>
+              <div v-if="idx < aiSteps.length - 1" :class="['w-12 h-0.5 mx-2', aiCurrentStep > idx ? 'bg-slate-400' : 'bg-slate-200']"></div>
             </div>
           </div>
         </div>
@@ -629,20 +577,20 @@
                 出题规则
               </span></label>
               <div class="grid grid-cols-2 gap-3">
-                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', !aiConfig.customRuleId ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-slate-200 hover:border-indigo-200 hover:bg-slate-50']" @click="aiConfig.customRuleId = null">
+                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', 'border-indigo-500 bg-indigo-50 shadow-md']">
                   <div class="flex items-center gap-2 mb-2">
                     <span class="px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">默认规则</span>
-                    <svg v-if="!aiConfig.customRuleId" class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                   </div>
                   <div class="font-medium text-slate-800 text-sm">{{ defaultRule?.name || '大学通用出题规则' }}</div>
                   <div class="text-xs text-slate-500 mt-1 line-clamp-2">{{ defaultRule?.description || '适用于大学各学科的通用出题规则' }}</div>
                 </div>
-                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', aiConfig.customRuleId ? 'border-purple-500 bg-purple-50 shadow-md' : 'border-slate-200 hover:border-purple-200 hover:bg-slate-50']" @click="showRuleSelector = true">
+                <div :class="['p-4 rounded-xl cursor-pointer transition-all border-2', aiConfig.customRuleId ? 'border-slate-700 bg-slate-50 shadow-md' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50']" @click="showRuleSelector = true">
                   <div class="flex items-center gap-2 mb-2">
-                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">自定义规则</span>
-                    <svg v-if="aiConfig.customRuleId" class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">自定义规则</span>
+                    <svg v-if="aiConfig.customRuleId" class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                   </div>
@@ -720,7 +668,7 @@
                   <p class="text-xs text-slate-500 leading-relaxed">{{ diff.description }}</p>
                 </div>
               </div>
-              <div :class="['mt-2 p-2 rounded-lg flex items-center justify-between text-white', totalDifficultyCount > totalTypeCount ? 'bg-red-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500']">
+              <div :class="['mt-2 p-2 rounded-lg flex items-center justify-between text-white', totalDifficultyCount > totalTypeCount ? 'bg-red-500' : 'bg-slate-700']">
                 <span class="text-sm">{{ totalDifficultyCount > totalTypeCount ? '超出上限' : '总计' }}</span>
                 <span class="font-bold">{{ totalDifficultyCount }} / {{ totalTypeCount }} 题</span>
               </div>
@@ -759,7 +707,7 @@
                   <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>草稿 <span class="font-bold text-amber-600">{{ draftCount }}</span></span>
                   <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-400"></span>废弃 <span class="font-bold text-red-500">{{ discardedCount }}</span></span>
                 </div>
-                <button class="btn btn-sm bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 border-0 text-white" @click="confirmAdopt" :disabled="selectedCount + draftCount === 0">
+                <button class="btn btn-sm bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white" @click="confirmAdopt" :disabled="selectedCount + draftCount === 0">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                   </svg>
@@ -772,7 +720,7 @@
           <!-- 题目列表 - 左右布局 -->
           <div class="p-4 space-y-4">
             <div v-for="(q, idx) in generatedQuestions" :key="idx" 
-                 :class="['bg-white rounded-xl border-2 transition-all overflow-hidden', q.isDraft ? 'border-amber-400 bg-amber-50/30' : q.isDiscarded ? 'border-red-300 bg-red-50/30' : q.selected ? 'border-emerald-400 shadow-lg' : 'border-slate-200 hover:border-indigo-300']">
+                 :class="['bg-white rounded-xl border-2 transition-all overflow-hidden', q.isDraft ? 'border-slate-400 bg-slate-50/30' : q.isDiscarded ? 'border-slate-300 bg-slate-50/30' : q.selected ? 'border-slate-700 shadow-lg' : 'border-slate-200 hover:border-slate-300']">
               <!-- 题目头部 -->
               <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                 <div class="flex items-center gap-3">
@@ -780,24 +728,24 @@
                   <span class="px-2 py-0.5 rounded text-xs font-bold" :class="getTypeBadgeClass(q.question_type)">{{ q.question_type }}</span>
                   <span class="px-2 py-0.5 rounded text-xs font-bold" :class="getDifficultyBadgeClass(q.difficulty)">{{ getDifficultyName(q.difficulty) }}</span>
                   <span class="text-xs text-slate-400">题目 #{{ idx + 1 }}</span>
-                  <span v-if="q.isDraft" class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700 font-medium">草稿</span>
-                  <span v-if="q.isDiscarded" class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-600 font-medium">废弃</span>
+                  <span v-if="q.isDraft" class="px-2 py-0.5 text-xs rounded-full bg-slate-100 text-slate-700 font-medium">草稿</span>
+                  <span v-if="q.isDiscarded" class="px-2 py-0.5 text-xs rounded-full bg-slate-100 text-slate-600 font-medium">废弃</span>
                 </div>
                 <div class="flex gap-2">
-                  <button class="btn btn-xs btn-ghost text-indigo-600" @click="editQuestion(q)" :disabled="q.isDiscarded">
+                  <button class="btn btn-xs btn-ghost text-slate-700" @click="editQuestion(q)" :disabled="q.isDiscarded">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
                     编辑
                   </button>
-                  <button class="btn btn-xs btn-ghost text-amber-600" @click="saveSingleAsDraft(q)" v-if="!q.isDraft && !q.isDiscarded">
+                  <button class="btn btn-xs btn-ghost text-slate-700" @click="saveSingleAsDraft(q)" v-if="!q.isDraft && !q.isDiscarded">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
                     存为草稿
                   </button>
-                  <button class="btn btn-xs btn-ghost text-emerald-600" @click="q.selected = true" v-if="!q.selected && !q.isDiscarded">采纳</button>
-                  <button class="btn btn-xs btn-ghost text-red-500" @click="toggleDiscard(q)">{{ q.isDiscarded ? '恢复' : '废弃' }}</button>
+                  <button class="btn btn-xs btn-ghost text-slate-700" @click="q.selected = true" v-if="!q.selected && !q.isDiscarded">采纳</button>
+                  <button class="btn btn-xs btn-ghost text-slate-700" @click="toggleDiscard(q)">{{ q.isDiscarded ? '恢复' : '废弃' }}</button>
                 </div>
               </div>
               
@@ -807,89 +755,89 @@
                 <div class="p-4 border-r border-slate-100 space-y-3">
                   <!-- 题目 -->
                   <div>
-                    <div class="text-xs font-medium text-indigo-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       题目
                     </div>
-                    <p class="text-sm text-slate-700 leading-relaxed"><latex-renderer :content="q.content" /></p>
+                    <p class="text-base text-slate-700 leading-relaxed"><latex-renderer :content="q.content" /></p>
                   </div>
                   
                   <!-- 单选/多选选项 -->
                   <div v-if="['单选', '多选'].includes(q.question_type) && q.options && q.options.length">
-                    <div class="text-xs font-medium text-slate-500 mb-1">选项</div>
+                    <div class="text-sm font-medium text-slate-500 mb-1">选项</div>
                     <div class="space-y-1">
                       <div v-for="(opt, optIdx) in q.options" :key="optIdx" 
                            :class="['flex items-start gap-2 p-2 rounded-lg text-sm', opt.is_correct ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-50']">
-                        <span :class="['w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0', opt.is_correct ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">{{ String.fromCharCode(65 + optIdx) }}</span>
+                        <span :class="['w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0', opt.is_correct ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">{{ String.fromCharCode(65 + optIdx) }}</span>
                         <span class="flex-1 text-slate-600"><latex-renderer :content="opt.content" /></span>
-                        <span v-if="opt.is_correct" class="text-xs text-emerald-600 font-medium">✓ 正确</span>
+                        <span v-if="opt.is_correct" class="text-sm text-emerald-600 font-medium">✓ 正确</span>
                       </div>
                     </div>
                   </div>
                   
                   <!-- 判断题选项 -->
                   <div v-if="q.question_type === '判断'">
-                    <div class="text-xs font-medium text-slate-500 mb-1">选项</div>
+                    <div class="text-sm font-medium text-slate-500 mb-1">选项</div>
                     <div class="flex gap-3">
-                      <div :class="['flex items-center gap-2 px-4 py-2 rounded-lg text-sm', q.answer === '正确' || q.answer === 'A' ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-50 border border-slate-100']">
-                        <span :class="['w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold', q.answer === '正确' || q.answer === 'A' ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">✓</span>
-                        <span class="text-slate-600">正确</span>
+                      <div :class="['flex items-center gap-2 px-4 py-2 rounded-lg text-sm', isCorrectAnswer(q.answer, '正确') ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-50 border border-slate-100']">
+                        <span :class="['w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold', isCorrectAnswer(q.answer, '正确') ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">✓</span>
+                        <span :class="isCorrectAnswer(q.answer, '正确') ? 'text-emerald-600' : 'text-slate-600'">正确</span>
                       </div>
-                      <div :class="['flex items-center gap-2 px-4 py-2 rounded-lg text-sm', q.answer === '错误' || q.answer === 'B' ? 'bg-red-50 border border-red-200' : 'bg-slate-50 border border-slate-100']">
-                        <span :class="['w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold', q.answer === '错误' || q.answer === 'B' ? 'bg-red-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">✗</span>
-                        <span class="text-slate-600">错误</span>
+                      <div :class="['flex items-center gap-2 px-4 py-2 rounded-lg text-sm', isCorrectAnswer(q.answer, '错误') ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-50 border border-slate-100']">
+                        <span :class="['w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold', isCorrectAnswer(q.answer, '错误') ? 'bg-emerald-500 text-white' : 'bg-white text-slate-500 border border-slate-200']">✗</span>
+                        <span :class="isCorrectAnswer(q.answer, '错误') ? 'text-emerald-600' : 'text-slate-600'">错误</span>
                       </div>
                     </div>
                   </div>
                   
                   <!-- 填空题答案 -->
                   <div v-if="q.question_type === '填空'">
-                    <div class="text-xs font-medium text-emerald-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       填空答案
                     </div>
                     <div class="p-2 bg-emerald-50 rounded-lg border border-emerald-200">
-                      <p class="text-sm text-slate-700 font-medium"><latex-renderer :content="q.answer" /></p>
+                      <p class="text-base text-slate-700 font-medium"><latex-renderer :content="q.answer" /></p>
                     </div>
                   </div>
                   
                   <!-- 主观题参考答案 -->
                   <div v-if="q.question_type === '主观'">
-                    <div class="text-xs font-medium text-emerald-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       参考答案
                     </div>
                     <div class="p-2 bg-emerald-50 rounded-lg border border-emerald-200">
-                      <p class="text-sm text-slate-700 leading-relaxed"><latex-renderer :content="q.answer" /></p>
+                      <p class="text-base text-slate-700 leading-relaxed"><latex-renderer :content="q.answer" /></p>
                     </div>
                   </div>
                   
                   <!-- 单选/多选题答案 -->
                   <div v-if="['单选', '多选'].includes(q.question_type)">
-                    <div class="text-xs font-medium text-emerald-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-emerald-600 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       正确答案
                     </div>
-                    <p class="text-sm text-slate-700 font-medium"><latex-renderer :content="q.answer" /></p>
+                    <p class="text-base text-slate-700 font-medium"><latex-renderer :content="q.answer" /></p>
                   </div>
                   
                   <!-- 解析 -->
                   <div>
-                    <div class="text-xs font-medium text-amber-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                       </svg>
                       解析
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.explanation" /></p>
+                    <p class="text-base text-slate-600 leading-relaxed"><latex-renderer :content="q.explanation" /></p>
                   </div>
                 </div>
                 
@@ -897,52 +845,52 @@
                 <div class="p-4 bg-slate-50 space-y-3">
                   <!-- 考察知识点 -->
                   <div class="bg-white rounded-lg p-3 border border-slate-100">
-                    <div class="text-xs font-medium text-cyan-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                       </svg>
                       考察知识点
                     </div>
                     <div class="flex flex-wrap gap-1">
-                      <span v-for="tag in q.knowledgePoints" :key="tag" class="px-2 py-0.5 text-xs rounded-full bg-cyan-50 text-cyan-700 border border-cyan-100">{{ tag }}</span>
+                      <span v-for="tag in q.knowledgePoints" :key="tag" class="px-2 py-0.5 text-sm rounded-full bg-slate-100 text-slate-600 border border-slate-200">{{ tag }}</span>
                     </div>
                   </div>
                   
                   <!-- 题目设计原因 -->
-                  <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-100">
-                    <div class="text-xs font-medium text-indigo-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="bg-slate-100 rounded-lg p-3 border border-slate-200">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                       </svg>
                       题目设计依据
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason || '暂无'" /></p>
+                    <p class="text-base text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason || '暂无'" /></p>
                   </div>
                   
                   <!-- 难度层级说明 -->
-                  <div v-if="q.difficulty_reason || q.difficultyReason" class="bg-amber-50 rounded-lg p-3 border border-amber-100">
-                    <div class="text-xs font-medium text-amber-600 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div v-if="q.difficulty_reason || q.difficultyReason" class="bg-slate-100 rounded-lg p-3 border border-slate-200">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       难度层级说明
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.difficulty_reason || q.difficultyReason" /></p>
+                    <p class="text-base text-slate-600 leading-relaxed"><latex-renderer :content="q.difficulty_reason || q.difficultyReason" /></p>
                   </div>
                   
                   <!-- 干扰项设计原因 - 仅选择题显示 -->
-                  <div v-if="['单选', '多选'].includes(q.question_type) && ((q.distractor_reasons && q.distractor_reasons.length) || (q.distractorReasons && q.distractorReasons.length))" class="bg-purple-50 rounded-lg p-3 border border-purple-100">
-                    <div class="text-xs font-medium text-purple-600 mb-2 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div v-if="['单选', '多选'].includes(q.question_type) && ((q.distractor_reasons && q.distractor_reasons.length) || (q.distractorReasons && q.distractorReasons.length))" class="bg-slate-100 rounded-lg p-3 border border-slate-200">
+                    <div class="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       干扰项设计原因
                     </div>
                     <div class="space-y-2">
-                      <div v-for="(reason, rIdx) in (q.distractor_reasons || q.distractorReasons)" :key="rIdx" class="text-sm">
+                      <div v-for="(reason, rIdx) in (q.distractor_reasons || q.distractorReasons)" :key="rIdx" class="text-base">
                         <div class="flex items-center gap-2 mb-1">
-                          <span class="text-purple-500 font-medium">{{ reason.option }}:</span>
-                          <span v-if="reason.type" class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 border border-purple-200">{{ reason.type }}</span>
+                          <span class="text-slate-700 font-medium">{{ reason.option }}:</span>
+                          <span v-if="reason.type" class="px-2 py-0.5 text-sm rounded-full bg-slate-100 text-slate-700 border border-slate-200">{{ reason.type }}</span>
                         </div>
                         <span class="text-slate-600"><latex-renderer :content="reason.reason" /></span>
                       </div>
@@ -951,13 +899,13 @@
                   
                   <!-- 非选择题的设计提示 -->
                   <div v-if="!['单选', '多选'].includes(q.question_type)" class="bg-slate-100 rounded-lg p-3 border border-slate-200">
-                    <div class="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-sm font-medium text-slate-700 mb-1 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       出题说明
                     </div>
-                    <p class="text-sm text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason" /></p>
+                    <p class="text-base text-slate-600 leading-relaxed"><latex-renderer :content="q.design_reason || q.designReason" /></p>
                   </div>
                 </div>
               </div>
@@ -1118,7 +1066,7 @@
         </div>
         <div class="modal-action pt-4 border-t border-slate-100">
           <button class="btn btn-ghost" @click="showRuleSelector = false">取消</button>
-          <button class="btn bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0 text-white" @click="showRuleSelector = false">确认选择</button>
+          <button class="btn bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 text-white" @click="showRuleSelector = false">确认选择</button>
         </div>
       </div>
       <form method="dialog" class="modal-backdrop bg-slate-900/50">
@@ -1352,21 +1300,24 @@ export default {
     },
     getTypeBadgeClass(type) {
       const map = {
-        '单选': 'bg-indigo-100 text-indigo-700',
-        '多选': 'bg-emerald-100 text-emerald-700',
-        '判断': 'bg-amber-100 text-amber-700',
-        '填空': 'bg-purple-100 text-purple-700',
-        '主观': 'bg-cyan-100 text-cyan-700'
+        '单选': 'bg-slate-100 text-slate-700',
+        '多选': 'bg-slate-100 text-slate-700',
+        '判断': 'bg-slate-100 text-slate-700',
+        '填空': 'bg-slate-100 text-slate-700',
+        '主观': 'bg-slate-100 text-slate-700'
       }
       return map[type] || 'bg-slate-100 text-slate-700'
     },
     getDifficultyBadgeClass(difficulty) {
       const map = {
         'L1': 'bg-slate-100 text-slate-600',
-        'L2': 'bg-blue-100 text-blue-700',
-        'L3': 'bg-amber-100 text-amber-700',
-        'L4': 'bg-orange-100 text-orange-700',
-        'L5': 'bg-red-100 text-red-700'
+        'L2': 'bg-slate-100 text-slate-600',
+        'L3': 'bg-slate-100 text-slate-600',
+        'L4': 'bg-slate-100 text-slate-600',
+        'L5': 'bg-slate-100 text-slate-600',
+        '简单': 'bg-slate-100 text-slate-600',
+        '中等': 'bg-slate-100 text-slate-600',
+        '困难': 'bg-slate-100 text-slate-600'
       }
       return map[difficulty] || 'bg-slate-100 text-slate-700'
     },
@@ -1394,6 +1345,18 @@ export default {
       }
       return map[status] || 'bg-slate-100 text-slate-600'
     },
+    isCorrectAnswer(answer, option) {
+      if (!answer) return false
+      const answerStr = String(answer).trim().toLowerCase()
+      const optionStr = String(option).trim().toLowerCase()
+      
+      if (option === '正确') {
+        return answerStr === '正确' || answerStr === '对' || answerStr === 'true' || answerStr === 'a' || answerStr === '是'
+      } else if (option === '错误') {
+        return answerStr === '错误' || answerStr === '错' || answerStr === 'false' || answerStr === 'b' || answerStr === '否'
+      }
+      return false
+    },
     getDifficultyName(difficulty) {
       const map = {
         'Easy': '简单',
@@ -1410,12 +1373,12 @@ export default {
     },
     getSourceBadgeClass(source) {
       const map = {
-        '系统生成': 'bg-indigo-50 text-indigo-600',
-        '手动录入': 'bg-emerald-50 text-emerald-600',
-        '导入': 'bg-amber-50 text-amber-600',
-        'AI生成': 'bg-purple-50 text-purple-600'
+        '系统生成': 'bg-slate-100 text-slate-600',
+        '手动录入': 'bg-slate-100 text-slate-600',
+        '导入': 'bg-slate-100 text-slate-600',
+        'AI生成': 'bg-slate-100 text-slate-600'
       }
-      return map[source] || 'bg-slate-50 text-slate-500'
+      return map[source] || 'bg-slate-100 text-slate-600'
     },
     updateDifficultyPercent() {
       const total = this.totalDifficultyCount
@@ -1526,6 +1489,14 @@ export default {
         this.goToPage(page)
       }
     },
+    clearFilters() {
+      this.searchKeyword = ''
+      this.filterType = ''
+      this.filterDifficulty = ''
+      this.filterStatus = ''
+      this.currentPage = 1
+      this.loadQuestions()
+    },
     updateVisiblePages() {
       const pages = []
       const total = this.totalPages
@@ -1609,6 +1580,7 @@ export default {
           this.$message.success('更新成功')
           this.showEditModal = false
           this.loadQuestions()
+          this.loadStats()
         }).catch(err => {
           console.error('更新失败:', err)
           this.$message.error('更新失败')
@@ -1618,6 +1590,7 @@ export default {
           this.$message.success('创建成功')
           this.showEditModal = false
           this.loadQuestions()
+          this.loadStats()
         }).catch(err => {
           console.error('创建失败:', err)
           this.$message.error('创建失败')
@@ -1629,12 +1602,14 @@ export default {
       this.showEditModal = false
       this.$message.success('已存为草稿')
       this.loadQuestions()
+      this.loadStats()
     },
     deleteQuestion(id) {
       if (confirm('确定删除该题目？')) {
         api.deleteQuestion(id).then(() => {
           this.$message.success('删除成功')
           this.loadQuestions()
+          this.loadStats()
         }).catch(err => {
           console.error('删除失败:', err)
           this.$message.error('删除失败')
@@ -1650,6 +1625,7 @@ export default {
         this.$message.success(`已审核通过 ${this.selectedIds.length} 题`)
         this.clearSelection()
         this.loadQuestions()
+        this.loadStats()
       }).catch(err => {
         console.error('批量审核失败:', err)
         this.$message.error('批量审核失败')
@@ -1660,6 +1636,7 @@ export default {
         this.$message.success(`已设为草稿 ${this.selectedIds.length} 题`)
         this.clearSelection()
         this.loadQuestions()
+        this.loadStats()
       }).catch(err => {
         console.error('批量设为草稿失败:', err)
         this.$message.error('批量设为草稿失败')
@@ -1671,6 +1648,7 @@ export default {
           this.$message.success(`已删除 ${this.selectedIds.length} 题`)
           this.clearSelection()
           this.loadQuestions()
+          this.loadStats()
         }).catch(err => {
           console.error('批量删除失败:', err)
           this.$message.error('批量删除失败')
@@ -1682,21 +1660,11 @@ export default {
         item.status = '已审核'
         this.$message.success('审核成功')
         this.loadQuestions()
+        this.loadStats()
       }).catch(err => {
         console.error('审核失败:', err)
         this.$message.error('审核失败')
       })
-    },
-    batchDraft() {
-      this.$message.success(`已设为草稿 ${this.selectedIds.length} 题`)
-      this.clearSelection()
-    },
-    batchDelete() {
-      this.$confirm(`确定删除 ${this.selectedIds.length} 题？`, '提示', { type: 'warning' }).then(() => {
-        this.$message.success('删除成功')
-        this.clearSelection()
-        this.loadQuestions()
-      }).catch(() => {})
     },
     handleExport() {
       this.$message.success('导出成功')

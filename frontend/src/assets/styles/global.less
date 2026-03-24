@@ -52,12 +52,14 @@ button {
 // 卡片样式
 .card {
   background: @bg-card;
-  border-radius: @radius-lg;
-  box-shadow: @shadow-card;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   transition: box-shadow @transition-base, transform @transition-base;
+  border: 1px solid rgba(0, 0, 0, 0.03);
 
   &:hover {
-    box-shadow: @shadow-card-hover;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
   }
 }
 
@@ -102,17 +104,19 @@ button {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 20px;
-  background: @primary-color;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, @primary-color 0%, @primary-light 100%);
   color: @text-white;
-  border-radius: @radius-md;
+  border-radius: 12px;
   font-size: @font-size-sm;
   font-weight: 500;
   transition: all @transition-fast;
   white-space: nowrap;
+  box-shadow: 0 4px 12px fade(@primary-color, 20%);
 
   &:hover {
-    background: @primary-light;
+    background: linear-gradient(135deg, @primary-light 0%, @primary-lighter 100%);
+    box-shadow: 0 6px 20px fade(@primary-color, 25%);
   }
 
   &:active {

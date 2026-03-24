@@ -51,6 +51,18 @@ const routes = [
     name: 'Analysis',
     component: () => import('./views/Analysis.vue'),
     meta: { title: '数据分析', navIndex: 3 }
+  },
+  {
+    path: '/question-compare',
+    name: 'QuestionCompare',
+    component: () => import('./views/QuestionCompare.vue'),
+    meta: { title: '题目对比', navIndex: 4 }
+  },
+  {
+    path: '/mcp-logs',
+    name: 'MCPLogs',
+    component: () => import('./views/MCPLogs.vue'),
+    meta: { title: 'MCP日志', navIndex: 5 }
   }
 ]
 

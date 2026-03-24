@@ -202,3 +202,15 @@ class AICallLog(Base):
     created_at = Column(DateTime, server_default=func.now(), comment='创建时间')
     
     task = relationship("GenerationTask", back_populates="ai_call_logs")
+
+class McpCallLog(Base):
+    __tablename__ = "mcp_call_logs"
+    __table_args__ = {'comment': 'MCP调用日志表 - 记录外部系统调用MCP的请求和响应'}
+    
+    id = Column(Integer, primary_key=True, comment='主键ID')
+    request_params = Column(Text, nullable=False, comment='请求参数字JSON')
+    response_result = Column(Text, comment='响应结果JSON')
+    status = Column(String(20), default="pending", comment='调用状态：pending-等待中, running-执行中, completed-完成, failed-失败')
+    error_message = Column(Text, comment='错误信息')
+    duration_ms = Column(Integer, default=0, comment='调用耗时(毫秒)')
+    created_at = Column(DateTime, server_default=func.now(), comment='创建时间')

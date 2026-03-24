@@ -442,14 +442,14 @@ def build_generation_prompt(
 
 ## 特别提醒
 
-1. ⚠️ 必须生成 {total_count} 道题目，严格按照题型数量分配，不能多也不能少
+1. ⚠️ 必须生成 """ + str(total_count) + r""" 道题目，严格按照题型数量分配，不能多也不能少
 2. 题目内容必须是真正的问题，不能是知识点的简单复述
 3. 选项必须是具体的内容，不能是"正确描述"、"错误描述"这样的占位符
 4. 每道题都要有完整的解析和设计原因
 5. design_reason、difficulty_reason、distractor_reasons 必须填写完整
 6. **选择题的所有错误选项都必须在 distractor_reasons 中说明干扰原因**
 
-现在请开始生成 {total_count} 道高质量的考试题目："""
+现在请开始生成 """ + str(total_count) + r""" 道高质量的考试题目："""
     
     return prompt
 

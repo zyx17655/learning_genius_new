@@ -14,8 +14,8 @@
             </div>
             
             <nav class="main-nav">
-              <router-link 
-                to="/" 
+              <router-link
+                to="/"
                 :class="['nav-link', $route.path === '/' ? 'nav-link-active' : '']"
               >
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,14 +23,32 @@
                 </svg>
                 题库管理
               </router-link>
-              <router-link 
-                to="/rules" 
+              <router-link
+                to="/rules"
                 :class="['nav-link', $route.path === '/rules' ? 'nav-link-active' : '']"
               >
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                 </svg>
                 规则管理
+              </router-link>
+              <router-link
+                to="/question-compare"
+                :class="['nav-link', $route.path === '/question-compare' ? 'nav-link-active' : '']"
+              >
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                题目对比
+              </router-link>
+              <router-link
+                to="/mcp-logs"
+                :class="['nav-link', $route.path === '/mcp-logs' ? 'nav-link-active' : '']"
+              >
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                MCP服务
               </router-link>
             </nav>
           </div>
@@ -41,7 +59,9 @@
               <div class="user-dept">Python课程组</div>
             </div>
             <div class="user-avatar">
-              李
+              <svg class="avatar-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
             </div>
           </div>
         </div>
@@ -74,9 +94,9 @@ export default {
 }
 
 .app-header {
-  background: @bg-card;
-  border-bottom: 1px solid @border-color;
-  box-shadow: @shadow-sm;
+  background: @primary-color;
+  border-bottom: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -86,7 +106,7 @@ export default {
   max-width: @max-width;
   margin: 0 auto;
   padding: 0 @spacing-xl;
-  height: @header-height;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,25 +125,27 @@ export default {
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  background: @primary-color;
+  width: 40px;
+  height: 40px;
+  background: @text-white;
   border-radius: @radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .logo-svg {
-  width: 20px;
-  height: 20px;
-  color: @text-white;
+  width: 22px;
+  height: 22px;
+  color: @primary-color;
 }
 
 .logo-text {
   font-size: @font-size-lg;
   font-weight: 600;
-  color: @text-primary;
+  color: @text-white;
+  letter-spacing: 0.5px;
 }
 
 .main-nav {
@@ -139,25 +161,26 @@ export default {
   padding: @spacing-sm @spacing-md;
   font-size: @font-size-md;
   font-weight: 500;
-  color: @text-secondary;
+  color: rgba(255, 255, 255, 0.75);
   border-radius: @radius-md;
   text-decoration: none;
   transition: all @transition-fast;
 
   &:hover {
-    color: @text-primary;
-    background: @bg-hover;
+    color: @text-white;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   &.nav-link-active {
-    color: @primary-color;
-    background: fade(@primary-color, 8%);
+    color: @text-white;
+    background: rgba(255, 255, 255, 0.15);
+    font-weight: 600;
   }
 }
 
 .nav-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .header-right {
@@ -173,31 +196,37 @@ export default {
 .user-name {
   font-size: @font-size-md;
   font-weight: 500;
-  color: @text-primary;
+  color: @text-white;
 }
 
 .user-dept {
   font-size: @font-size-xs;
-  color: @text-muted;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
-  background: @primary-color;
-  color: @text-white;
+  width: 40px;
+  height: 40px;
+  background: @text-white;
+  color: @primary-color;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: @font-size-md;
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-svg {
+  width: 22px;
+  height: 22px;
 }
 
 .app-main {
   max-width: @max-width;
   margin: 0 auto;
-  padding: @spacing-xl;
-  min-height: calc(100vh - @header-height);
+  padding: @spacing-lg @spacing-lg;
+  min-height: calc(100vh - 64px);
 }
 </style>

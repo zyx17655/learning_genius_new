@@ -20,8 +20,8 @@
     <section class="content-card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="title-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          <svg class="title-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-6.165 3.583A.75.75 0 015.25 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd"/>
           </svg>
           筛选条件
         </div>
@@ -62,8 +62,9 @@
           <div class="form-group">
             <label class="form-label">搜索</label>
             <div class="search-box">
-              <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              <svg class="search-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M9 3.75a5.25 5.25 0 1010.5 0A5.25 5.25 0 009 3.75zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd"/>
               </svg>
               <input type="text" v-model="filter.keyword" placeholder="搜索题目内容" @keyup.enter="loadQuestions" />
             </div>
@@ -75,22 +76,22 @@
     <section class="content-card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="title-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          <svg class="title-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
           </svg>
           题目列表
           <span class="card-subtitle">共 {{ total }} 道题目</span>
         </div>
         <div class="batch-actions">
           <button class="btn-new btn-sm-new btn-ghost-new" @click="selectAll">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" clip-rule="evenodd"/>
             </svg>
             全选
           </button>
           <button class="btn-new btn-sm-new btn-ghost-new" @click="clearSelection">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M6 18l3-3m0 0l3 3m-3-3v12" clip-rule="evenodd"/>
             </svg>
             清空
           </button>
@@ -156,6 +157,12 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
                     编辑
+                  </button>
+                  <button v-if="question.status !== '已审核'" class="btn-new btn-sm-new" style="color: #10b981; border-color: #a7f3d0; background: #ecfdf5;" @click="approveQuestion(question.id)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    审核
                   </button>
                   <button class="btn-new btn-sm-new" style="color: #dc2626;" @click="deleteQuestion(question.id)">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -369,6 +376,7 @@ export default {
           status: this.filter.status || undefined,
           keyword: this.filter.keyword || undefined
         }
+        console.log('Filter params:', params)
         const data = await this.$axios.get('/questions', { params })
         console.log('API Response:', data)
         this.questions = data.questions || []
@@ -530,6 +538,16 @@ export default {
       } catch (error) {
         console.error('删除题目失败:', error)
         this.$message.error('删除失败')
+      }
+    },
+    async approveQuestion(id) {
+      try {
+        await this.$axios.post(`/questions/${id}/review`)
+        this.$message.success('审核成功')
+        this.loadQuestions()
+      } catch (error) {
+        console.error('审核题目失败:', error)
+        this.$message.error('审核失败')
       }
     },
     async batchApprove() {

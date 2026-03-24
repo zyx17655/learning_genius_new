@@ -1,22 +1,20 @@
 <template>
-  <div class="p-6">
+  <div class="p-8">
     <main>
-      <section class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-6 text-white shadow-xl shadow-indigo-200">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div class="absolute bottom-0 left-1/4 w-32 h-32 bg-white/5 rounded-full translate-y-1/2"></div>
-        <div class="relative z-10 flex items-center justify-between">
+      <section class="mb-8">
+        <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold mb-2">规则管理中心 📋</h1>
-            <p class="text-indigo-100">定义AI出题提示词模板，精准控制生题质量</p>
+            <h1 class="text-2xl font-bold text-slate-800 mb-1">规则管理</h1>
+            <p class="text-sm text-slate-500">定义AI出题提示词模板，精准控制生题质量</p>
           </div>
           <div class="flex gap-3">
-            <button class="btn bg-white/20 hover:bg-white/30 border-none text-white backdrop-blur-sm" @click="openAnalysisDialog">
+            <button class="btn bg-slate-800 hover:bg-slate-700 border-0 text-white shadow-md" @click="openAnalysisDialog">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
               试题分析生成规则
             </button>
-            <button class="btn bg-white hover:bg-indigo-50 border-none text-indigo-700" @click="openCreateDialog">
+            <button class="btn bg-slate-700 hover:bg-slate-600 border-0 text-white shadow-md" @click="openCreateDialog">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
@@ -28,10 +26,10 @@
 
       <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="space-y-4">
-          <div class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-            <div class="card-header bg-gradient-to-r from-slate-50 to-slate-100 px-4 py-3 border-b border-slate-100">
-              <div class="card-title flex items-center gap-2 text-slate-700 font-semibold">
-                <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+              <div class="flex items-center gap-2 text-slate-700 font-semibold">
+                <svg class="w-5 h-5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
                 默认规则
@@ -61,10 +59,10 @@
             </div>
           </div>
 
-          <div class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-            <div class="card-header bg-gradient-to-r from-indigo-50 to-purple-50 px-4 py-3 border-b border-slate-100">
-              <div class="card-title flex items-center gap-2 text-slate-700 font-semibold">
-                <svg class="w-5 h-5 text-purple-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+              <div class="flex items-center gap-2 text-slate-700 font-semibold">
+                <svg class="w-5 h-5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
                 自定义规则
@@ -117,7 +115,7 @@
           </div>
 
           <div v-else class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-            <div class="card-header bg-gradient-to-r from-indigo-50 to-purple-50 px-4 py-3 border-b border-slate-100">
+            <div class="card-header bg-gradient-to-r from-slate-50 to-slate-100 px-4 py-3 border-b border-slate-100">
               <div class="rule-detail-header">
                 <div class="rule-detail-title">
                   <span :class="['tag-new', selectedRule.isDefault ? 'tag-primary' : 'tag-success']">
@@ -170,7 +168,7 @@
                 <p class="detail-text">{{ selectedRule.description }}</p>
               </div>
 
-              <div class="detail-block detail-block-indigo">
+              <div class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -182,7 +180,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.isDefault && selectedRule.corePrinciples?.length" class="detail-block detail-block-amber">
+              <div v-if="selectedRule.isDefault && selectedRule.corePrinciples?.length" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
@@ -191,7 +189,7 @@
                 </div>
                 <div class="detail-list">
                   <div v-for="(principle, idx) in selectedRule.corePrinciples" :key="idx" class="detail-list-item">
-                    <span class="detail-list-number" style="background: #f59e0b;">{{ idx + 1 }}</span>
+                    <span class="detail-list-number">{{ idx + 1 }}</span>
                     <div>
                       <div class="detail-list-title">{{ principle.title }}</div>
                       <div class="detail-list-desc">{{ principle.content }}</div>
@@ -200,7 +198,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.isDefault && selectedRule.workflow?.length" class="detail-block detail-block-purple">
+              <div v-if="selectedRule.isDefault && selectedRule.workflow?.length" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -209,7 +207,7 @@
                 </div>
                 <div class="detail-list">
                   <div v-for="(step, idx) in selectedRule.workflow" :key="idx" class="detail-list-item">
-                    <span class="detail-list-number" style="background: #9333ea;">{{ idx + 1 }}</span>
+                    <span class="detail-list-number">{{ idx + 1 }}</span>
                     <div>
                       <div class="detail-list-title">{{ step.title }}</div>
                       <div class="detail-list-desc">{{ step.content }}</div>
@@ -218,7 +216,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.isDefault && selectedRule.specifications?.length" class="detail-block detail-block-cyan">
+              <div v-if="selectedRule.isDefault && selectedRule.specifications?.length" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -234,7 +232,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.isDefault && selectedRule.distractorMechanics?.length" class="detail-block detail-block-rose">
+              <div v-if="selectedRule.isDefault && selectedRule.distractorMechanics?.length" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -249,7 +247,7 @@
                 </div>
               </div>
 
-              <div v-if="selectedRule.isDefault && selectedRule.domainSkills?.length" class="detail-block detail-block-emerald">
+              <div v-if="selectedRule.isDefault && selectedRule.domainSkills?.length" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
@@ -264,7 +262,7 @@
                 </div>
               </div>
 
-              <div v-if="!selectedRule.isDefault && selectedRule.notationConvention" class="detail-block detail-block-blue">
+              <div v-if="!selectedRule.isDefault && selectedRule.notationConvention" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -276,7 +274,7 @@
                 </div>
               </div>
 
-              <div v-if="!selectedRule.isDefault && selectedRule.assessmentFocus" class="detail-block detail-block-violet">
+              <div v-if="!selectedRule.isDefault && selectedRule.assessmentFocus" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
@@ -288,7 +286,7 @@
                 </div>
               </div>
 
-              <div v-if="!selectedRule.isDefault && selectedRule.subjectTraps" class="detail-block detail-block-orange">
+              <div v-if="!selectedRule.isDefault && selectedRule.subjectTraps" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -300,7 +298,7 @@
                 </div>
               </div>
 
-              <div v-if="!selectedRule.isDefault && selectedRule.stemStyle" class="detail-block detail-block-teal">
+              <div v-if="!selectedRule.isDefault && selectedRule.stemStyle" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
@@ -312,7 +310,7 @@
                 </div>
               </div>
 
-              <div v-if="!selectedRule.isDefault && selectedRule.solutionBlueprint" class="detail-block detail-block-pink">
+              <div v-if="!selectedRule.isDefault && selectedRule.solutionBlueprint" class="detail-block detail-block-slate">
                 <div class="detail-block-title">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -664,7 +662,7 @@
 
         <!-- 步骤1：上传试题 -->
         <div v-if="analysisStep === 0" style="flex: 1; display: flex; flex-direction: column; padding: 0 20px 20px;">
-          <div class="detail-block detail-block-indigo" style="margin-bottom: 16px;">
+          <div class="detail-block detail-block-slate" style="margin-bottom: 16px;">
             <div class="detail-block-title">功能说明</div>
             <p class="detail-text">上传已有试题文件，系统将自动分析试题特征，提取出题原则、质量标准等信息，生成对应的出题规则提示词模板。</p>
           </div>
@@ -1288,8 +1286,8 @@ export default {
   }
 
   &.rule-item-active-custom {
-    border-color: #9333ea;
-    background: fade(#9333ea, 5%);
+    border-color: @primary-color;
+    background: fade(@primary-color, 5%);
     box-shadow: @shadow-sm;
   }
 }
@@ -1425,12 +1423,12 @@ export default {
   margin-bottom: @spacing-lg;
   background: white;
 
-  &.detail-block-indigo {
-    background: linear-gradient(135deg, #e0e7ff 0%, #f0f9ff 100%);
-    border: 1px solid #c7d2fe;
+  &.detail-block-slate {
+    background: linear-gradient(135deg, #f1f5f9 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
 
     .detail-block-title {
-      color: #3730a3;
+      color: #475569;
     }
   }
 
@@ -1443,12 +1441,12 @@ export default {
     }
   }
 
-  &.detail-block-purple {
-    background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%);
-    border: 1px solid #e9d5ff;
+  &.detail-block-slate-secondary {
+    background: linear-gradient(135deg, #f1f5f9 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
 
     .detail-block-title {
-      color: #7c3aed;
+      color: #64748b;
     }
   }
 
